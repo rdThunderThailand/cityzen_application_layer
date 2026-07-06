@@ -1,14 +1,12 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { verifyAppSession, APP_SESSION_COOKIE } from "@/lib/app-session";
+import OverviewClient from "@/features/overview/OverviewClient";
 
-// "/" sends the signed-in user to the CityZen overview hub.
-// proxy.ts already redirects here to /login when there is no cityzen_session; the
-// check below is the fail-closed backstop.
-export default async function RootPage() {
+export default async function OverviewPage() {
   const cookieStore = await cookies();
   const token = cookieStore.get(APP_SESSION_COOKIE)?.value;
   const claims = token ? await verifyAppSession(token) : null;
   if (!claims) redirect("/login");
-  redirect("/overview");
+  return <OverviewClient role={claims.role} tenantId={claims.tenant_id} email={claims.email} />;
 }
