@@ -17,7 +17,6 @@ export interface LoginCardProps {
     title?: string;
     subtitle?: string;
     className?: string;
-    isLoading?: boolean;
     onSubmit?: (values: LoginCardValues) => void | Promise<void>;
     onGoogleSignIn?: () => void;
     onMicrosoftSignIn?: () => void;
@@ -30,7 +29,6 @@ export const LoginCard = ({
     title = 'Welcome back',
     subtitle = 'Sign in to your account to continue',
     className,
-    isLoading = false,
     onSubmit,
     onGoogleSignIn,
     onMicrosoftSignIn,
@@ -41,11 +39,11 @@ export const LoginCard = ({
     const [password, setPassword] = useState('');
     const [rememberMe, setRememberMe] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [loading, setLoading] = useState(false);
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        setIsSubmitting(true);
+        setLoading(true);
         try {
             if (onSubmit) {
                 await onSubmit({ email, password, rememberMe });
@@ -54,7 +52,7 @@ export const LoginCard = ({
                 await new Promise((resolve) => setTimeout(resolve, 1000));
             }
         } finally {
-            setIsSubmitting(false);
+            setLoading(false);
         }
     };
 
@@ -153,7 +151,7 @@ export const LoginCard = ({
                     </button>
                 </div>
 
-                <Button type="submit" isLoading={isLoading || isSubmitting} className='rounded-lg'>
+                <Button type="submit" isLoading={loading} className='rounded-lg'>
                     Sign in
                 </Button>
             </form>

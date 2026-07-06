@@ -39,8 +39,8 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
                 onClick={handleMockClick}
                 {...props}
             >
-                {isLoading && <LoaderCircle className="w-4 h-4 animate-spin" />}
                 {children}
+                {isLoading && <LoaderCircle className="w-4 h-4 animate-spin" />}
             </button>
         );
     }

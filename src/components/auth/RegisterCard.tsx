@@ -15,7 +15,6 @@ export interface RegisterCardProps {
     title?: string;
     subtitle?: string;
     className?: string;
-    isLoading?: boolean;
     onSubmit?: (values: RegisterCardValues) => void | Promise<void>;
     onGoogleSignUp?: () => void;
     onMicrosoftSignUp?: () => void;
@@ -26,7 +25,6 @@ export const RegisterCard = ({
     title = 'Create an account',
     subtitle = 'Sign up to get started',
     className,
-    isLoading = false,
     onSubmit,
     onGoogleSignUp,
     onMicrosoftSignUp,
@@ -37,7 +35,7 @@ export const RegisterCard = ({
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [error, setError] = useState<string | null>(null);
-    const [isSubmitting, setIsSubmitting] = useState(false);
+    const [loading, setLoading] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
@@ -50,7 +48,7 @@ export const RegisterCard = ({
         }
         setError(null);
 
-        setIsSubmitting(true);
+        setLoading(true);
         try {
             if (onSubmit) {
                 await onSubmit({ name, email, password, confirmPassword });
@@ -59,7 +57,7 @@ export const RegisterCard = ({
                 await new Promise((resolve) => setTimeout(resolve, 1000));
             }
         } finally {
-            setIsSubmitting(false);
+            setLoading(false);
         }
     };
 
@@ -159,7 +157,7 @@ export const RegisterCard = ({
                     <p className="w-[328px] -mt-2 mb-4 text-xs font-medium text-rose-600">{error}</p>
                 )}
 
-                <Button type="submit" isLoading={isLoading || isSubmitting} className='rounded-lg'>
+                <Button type="submit" isLoading={loading} className='rounded-lg'>
                     Create account
                 </Button>
             </form>
