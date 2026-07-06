@@ -1,6 +1,17 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
 import { verifyAppSession, APP_SESSION_COOKIE } from "./lib/app-session";
+import type { CityzenRole } from "./lib/roles";
+
+// Reachable without a cityzen_session (login + the two exchange routes + the dead end).
+const PUBLIC_PATHS = ["/login", "/auth/launch", "/auth/session", "/no-access"];
+
+// Each role may only enter its own /organic subtree.
+const ROLE_PREFIX: Record<CityzenRole, string> = {
+  owner: "/organic/owner",
+  executive_viewer: "/organic/executive",
+  operator: "/organic/operator",
+};
 
 export async function proxy(request: NextRequest) {
   let supabaseResponse = NextResponse.next({
@@ -30,28 +41,34 @@ export async function proxy(request: NextRequest) {
     }
   );
 
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+  // Keep the Supabase session cookie fresh (the /auth/session exchange needs a live token).
+  await supabase.auth.getUser();
 
-  const isPublicRoute =
-    request.nextUrl.pathname === "/login" ||
-    request.nextUrl.pathname === "/auth/launch";
+  const { pathname } = request.nextUrl;
+  const isPublic = PUBLIC_PATHS.some(
+    (p) => pathname === p || pathname.startsWith(p + "/")
+  );
 
-  let hasValidAppSession = false;
-  if (!user) {
-    const sessionCookie = request.cookies.get(APP_SESSION_COOKIE)?.value;
-    if (sessionCookie) {
-      const claims = await verifyAppSession(sessionCookie);
-      if (claims) {
-        hasValidAppSession = true;
-      }
-    }
-  }
+  // Authorization is gated on cityzen_session — a bare Supabase session is NOT enough.
+  const sessionCookie = request.cookies.get(APP_SESSION_COOKIE)?.value;
+  const claims = sessionCookie ? await verifyAppSession(sessionCookie) : null;
 
-  if (!user && !hasValidAppSession && !isPublicRoute) {
+  if (!claims) {
+    if (isPublic) return supabaseResponse;
     const url = request.nextUrl.clone();
     url.pathname = "/login";
+    return NextResponse.redirect(url);
+  }
+
+  // Role/prefix guard for the sub-app area — Thunder super_admin bypasses it (god mode).
+  const allowedPrefix = ROLE_PREFIX[claims.role];
+  if (
+    !claims.isSuperAdmin &&
+    pathname.startsWith("/organic/") &&
+    !pathname.startsWith(allowedPrefix)
+  ) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/no-access";
     return NextResponse.redirect(url);
   }
 

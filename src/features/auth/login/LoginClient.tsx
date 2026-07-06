@@ -1,11 +1,9 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { supabase } from "@/utils/supabase/client";
 
 export default function LoginClient() {
-  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -25,8 +23,8 @@ export default function LoginClient() {
       setError(error.message);
       setLoading(false);
     } else {
-      router.push("/");
-      router.refresh();
+      // Full navigation so the /auth/session route handler runs and sets cityzen_session.
+      window.location.href = "/auth/session";
     }
   };
 

@@ -1,0 +1,16 @@
+import Link from "next/link";
+
+export default function NoAccessPage() {
+  return (
+    <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-gray-50 p-8 text-center">
+      <h1 className="text-2xl font-bold text-gray-900">No access</h1>
+      <p className="max-w-md text-sm text-gray-600">
+        Your account has no CityZen workspace membership for this organization.
+        Contact your organization owner to be granted a role.
+      </p>
+      <Link href="/login" className="text-sm font-medium text-indigo-600 hover:text-indigo-500">
+        Back to sign in
+      </Link>
+    </div>
+  );
+}
