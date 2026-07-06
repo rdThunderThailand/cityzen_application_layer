@@ -1,4 +1,1 @@
-
-export default async function LoginPage(props: any) {
-    return ""
-}
+export { default } from "@/features/auth/login/LoginClient";
