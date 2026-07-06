@@ -1,6 +1,11 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient } from "@supabase/ssr";
-import { verifyAppSession, APP_SESSION_COOKIE } from "./lib/app-session";
+import {
+  verifyAppSession,
+  APP_SESSION_COOKIE,
+  DEV_BYPASS_ENABLED,
+  devBypassClaims,
+} from "./lib/app-session";
 import type { CityzenRole } from "./lib/roles";
 
 // Reachable without a cityzen_session (login + the two exchange routes + the dead end).
@@ -51,7 +56,11 @@ export async function proxy(request: NextRequest) {
 
   // Authorization is gated on cityzen_session — a bare Supabase session is NOT enough.
   const sessionCookie = request.cookies.get(APP_SESSION_COOKIE)?.value;
-  const claims = sessionCookie ? await verifyAppSession(sessionCookie) : null;
+  const claims = DEV_BYPASS_ENABLED
+    ? devBypassClaims()
+    : sessionCookie
+      ? await verifyAppSession(sessionCookie)
+      : null;
 
   if (!claims) {
     if (isPublic) return supabaseResponse;

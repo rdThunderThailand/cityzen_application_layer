@@ -32,4 +32,29 @@ export function setAppSessionCookie(res: NextResponse, value: string): void {
   });
 }
 
+// --- Dev-only auth bypass -------------------------------------------------
+// Skip login and enter as a mock Thunder super_admin (god mode → every page).
+// Toggle with DEV_AUTH_BYPASS=true. Double-guarded on NODE_ENV so a production
+// build can NEVER honor it, even if the env var leaks in.
+export const DEV_BYPASS_ENABLED =
+  process.env.NODE_ENV !== "production" && process.env.DEV_AUTH_BYPASS === "true";
+
+export function devBypassClaims(): AppSessionClaims {
+  return {
+    sub: "dev-superadmin",
+    email: "dev@cityzen.local",
+    tenant_id: "dev-tenant",
+    role: "owner", // any real role; isSuperAdmin bypasses the prefix guard anyway
+    isSuperAdmin: true,
+    app_name: "organic",
+    profile: {
+      id: "dev-superadmin",
+      email: "dev@cityzen.local",
+      display_name: "Dev Super Admin",
+      is_super_admin: true,
+    },
+    memberships: [],
+  };
+}
+
 export { COOKIE as APP_SESSION_COOKIE };
