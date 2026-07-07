@@ -57,7 +57,8 @@ src/
   - **Launch จาก Thunder**: `/auth/launch?token=` (launch token อายุ 1 นาที)
   - **Login ตรง**: `/login` (Supabase password) → `/auth/session`
 - Role resolve **ครั้งเดียว**ตอนสร้าง session จาก `membership_roles[].roles.code` ของ Thunder:
-  `owner` → Organization Owner, `operator*` → Operator, `executive_viewer` → Executive Viewer
+  `admin_company`/`company_admin` → Organization Owner, `operator*` → Operator, `executive_viewer` → Executive Viewer (`viewer_auditor` → ไม่มีสิทธิ์ → /no-access)
+- Thunder platform `super_admin` = **god mode**: ข้าม role/prefix guard ทั้งหมด (`isSuperAdmin` claim ใน App Session, เช็คแยกจาก `resolveCityzenRole` — ดู `isThunderSuperAdmin` ใน `src/lib/roles.ts`)
   (priority เมื่อมีหลาย role: `owner` > `executive_viewer` > `operator`)
 - **ห้ามใช้ claim `role` จาก launch token ทำ RBAC** — นั่นคือ platform role ของ Thunder
 - ไม่มี membership → หน้า `/no-access`

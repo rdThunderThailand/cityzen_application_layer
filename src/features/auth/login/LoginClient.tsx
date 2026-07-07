@@ -1,8 +1,8 @@
 "use client";
 
 import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { supabase } from "@/utils/supabase/client";
+import { useRouter } from "next/navigation";
 import LoginCard, { LoginCardValues } from "@/components/auth/LoginCard";
 
 export default function LoginClient() {
@@ -21,8 +21,8 @@ export default function LoginClient() {
     if (error) {
       setError(error.message);
     } else {
-      router.push("/");
-      router.refresh();
+      // Full navigation so the /auth/session route handler runs and sets cityzen_session.
+      window.location.href = "/auth/session";
     }
   };
 

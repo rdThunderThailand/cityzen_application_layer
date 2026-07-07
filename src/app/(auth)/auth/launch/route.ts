@@ -1,8 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
-import { signAppSession, APP_SESSION_COOKIE } from "@/lib/app-session";
+import { signAppSession, setAppSessionCookie } from "@/lib/app-session";
 import { getMe, getMyMemberships } from "@/lib/thunder";
-import { resolveCityzenRole } from "@/lib/roles";
+import { resolveCityzenRole, isThunderSuperAdmin } from "@/lib/roles";
 
 export async function GET(request: NextRequest) {
   const token = request.nextUrl.searchParams.get("token");
@@ -39,7 +39,8 @@ export async function GET(request: NextRequest) {
 
   // RBAC from membership roles, NOT payload.role (that is Thunder's platform role).
   const role = resolveCityzenRole(memberships, tenantId);
-  if (!role) {
+  const isSuperAdmin = isThunderSuperAdmin(memberships, tenantId);
+  if (!role && !isSuperAdmin) {
     return NextResponse.redirect(new URL("/no-access", request.url));
   }
 
@@ -47,22 +48,14 @@ export async function GET(request: NextRequest) {
     sub: payload.sub as string,
     email: payload.email as string,
     tenant_id: tenantId,
-    role,
+    role: role ?? "owner", // super_admin has no tenant role; isSuperAdmin bypasses the prefix guard anyway
+    isSuperAdmin,
     app_name: payload.app_name as string | undefined,
     profile,
     memberships,
   });
 
-  const redirectUrl = new URL("/", request.url);
-  const response = NextResponse.redirect(redirectUrl);
-  
-  response.cookies.set(APP_SESSION_COOKIE, appSessionCookie, {
-    httpOnly: true,
-    sameSite: "lax",
-    path: "/",
-    maxAge: 8 * 60 * 60, // 8 hours in seconds
-    secure: process.env.NODE_ENV === "production",
-  });
-
+  const response = NextResponse.redirect(new URL("/", request.url));
+  setAppSessionCookie(response, appSessionCookie);
   return response;
 }
