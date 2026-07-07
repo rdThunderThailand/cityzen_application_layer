@@ -36,7 +36,6 @@ export async function GET(request: NextRequest) {
   } catch {
     // Fail closed: no memberships → no role → /no-access below.
   }
-
   // RBAC from membership roles, NOT payload.role (that is Thunder's platform role).
   const role = resolveCityzenRole(memberships, tenantId);
   const isSuperAdmin = isThunderSuperAdmin(memberships, tenantId);
@@ -56,6 +55,6 @@ export async function GET(request: NextRequest) {
   });
 
   const response = NextResponse.redirect(new URL("/", request.url));
-  setAppSessionCookie(response, appSessionCookie);
+  setAppSessionCookie(response.cookies, appSessionCookie);
   return response;
 }
