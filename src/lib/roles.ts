@@ -25,6 +25,15 @@ function toCityzenRole(code: string): CityzenRole | null {
   return null;
 }
 
+// Highest-priority CityZen role from raw Thunder role codes. Shared by auth-time resolution
+// (membership snapshot) and the Phase 2 liveness check (cache row's role_codes).
+export function resolveCityzenRoleFromCodes(codes: readonly string[]): CityzenRole | null {
+  const cityzenRoles = new Set(
+    codes.map(toCityzenRole).filter((r): r is CityzenRole => r !== null)
+  );
+  return PRIORITY.find((r) => cityzenRoles.has(r)) ?? null;
+}
+
 // RBAC source of truth = membership_roles[].roles.code for the launched tenant.
 // NEVER the launch token's platform `role` claim (that is Thunder's platform role).
 // Thunder's /me/memberships already filters status to invited|active, so no status check here.
@@ -34,14 +43,10 @@ export function resolveCityzenRole(
 ): CityzenRole | null {
   const membership = memberships?.find((m) => m.tenant_id === tenantId);
   if (!membership) return null;
-  const codes = new Set(
-    membership.membership_roles
-      .map((mr) => mr.roles?.code)
-      .filter((c): c is string => !!c)
-      .map(toCityzenRole)
-      .filter((r): r is CityzenRole => r !== null)
-  );
-  return PRIORITY.find((r) => codes.has(r)) ?? null;
+  const codes = membership.membership_roles
+    .map((mr) => mr.roles?.code)
+    .filter((c): c is string => !!c);
+  return resolveCityzenRoleFromCodes(codes);
 }
 
 // Thunder platform super_admin — bypasses CityZen RBAC entirely (god mode),

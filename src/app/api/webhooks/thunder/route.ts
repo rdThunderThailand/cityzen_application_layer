@@ -1,5 +1,6 @@
 import { jwtVerify, type JWTPayload } from "jose";
 import { NextRequest } from "next/server";
+import { applyMembershipEvent } from "@/lib/directory-cache";
 
 export async function POST(req: NextRequest) {
   const secret = process.env.WEBHOOK_SECRET;
@@ -20,8 +21,6 @@ export async function POST(req: NextRequest) {
     return new Response("Invalid signature", { status: 401 });
   }
 
-  // Stub: log only. NO database write — no cache table exists yet (Phase 0).
-  // Interpolated into one string so dev loggers that drop object args stay inspectable.
   console.log(
     `[webhook] thunder event ${JSON.stringify({
       event: claims.event,
@@ -30,6 +29,15 @@ export async function POST(req: NextRequest) {
       occurred_at: claims.occurred_at,
     })}`,
   );
+
+  // Warm update the Directory Cache from the event (no-op until cache DB is plugged in).
+  // Awaited so a write failure returns 500 → Thunder's retry/backoff redelivers.
+  try {
+    await applyMembershipEvent(claims);
+  } catch (e) {
+    console.error("[webhook] directory cache update failed:", e);
+    return new Response("cache update failed", { status: 500 });
+  }
 
   return new Response("ok", { status: 200 });
 }

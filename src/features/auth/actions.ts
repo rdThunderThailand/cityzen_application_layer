@@ -6,6 +6,7 @@ import { z } from "zod";
 import { loginWithPassword, getMe, getMyMemberships } from "@/lib/thunder";
 import { resolveCityzenRole, isThunderSuperAdmin } from "@/lib/roles";
 import { signAppSession, setAppSessionCookie, APP_SESSION_COOKIE } from "@/lib/app-session";
+import { upsertDirectorySnapshot } from "@/lib/directory-cache";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -56,6 +57,12 @@ export async function loginAction(
   if (!tenantId || (!role && !isSuperAdmin)) {
     redirect("/no-access");
   }
+
+  // Cold populate the Directory Cache. Fire-and-forget: a cache write must never block sign-in
+  // (no-op until the cache DB is plugged in). No rollback — next login re-populates.
+  void upsertDirectorySnapshot(profile, memberships).catch((e) =>
+    console.error("[loginAction] directory cache populate failed:", e),
+  );
 
   const cookie = await signAppSession({
     sub: session.user_id ?? "",

@@ -39,20 +39,20 @@
 
 ## Phase 1 — Directory Cache (**build now, plug link later** — ไม่บล็อกอีกทีมแล้ว)
 
-- [ ] Config seam: env `CITYZEN_DIRECTORY_DB_URL`/key — dev ชี้ Supabase ที่มี/local, production swap ตอนอีกทีมพร้อม (zero code change)
-- [ ] Migration cache tables (cityzen เป็นเจ้าของ prefix `cityzen_`): `user_directory_cache`, `tenant_directory_cache`, `org_directory_cache`, **`membership_directory_cache`** (PK composite `(user_id, tenant_id)`, cols `status` enum + `role_codes` + `synced_at`) — typed column เท่าที่ใช้ (§ ADR 0001)
-- [ ] **Payload enrichment ฝั่ง Thunder** (decision B): `emitMembershipEvent` created/updated ส่ง `status`+`role_codes` เพิ่มใน JWT claims (invite→invited, accept→active, update→data.status; role จาก membership_roles) — revoked ไม่ต้องเพิ่ม (self-describing)
-- [ ] Cold populate: `/auth/launch`+`/auth/session` upsert snapshot ลง cache (upsert ทับ ไม่ compare)
-- [ ] Warm update (receiver): Phase 0 stub → upsert จริง — revoked set `status='suspended'` จาก event, created/updated upsert `status`+`role_codes` จาก payload (**ไม่ pull** — ดู ADR 0002 §Clarification)
+- [x] Config seam: env `CITYZEN_DIRECTORY_DB_URL`/key — dev ชี้ Supabase ที่มี/local, production swap ตอนอีกทีมพร้อม (zero code change) — `src/lib/directory-cache.ts` (no-op จนกว่า env จะ set)
+- [x] Migration cache tables (cityzen เป็นเจ้าของ prefix `cityzen_`): `user_directory_cache`, `tenant_directory_cache`, `org_directory_cache`, **`membership_directory_cache`** (PK composite `(user_id, tenant_id)`, cols `status` enum + `role_codes` + `synced_at`) — typed column เท่าที่ใช้ (§ ADR 0001) — `supabase/migrations/0001_directory_cache.sql`
+- [x] **Payload enrichment ฝั่ง Thunder** (decision B): `emitMembershipEvent` created/updated ส่ง `status`+`role_codes` เพิ่มใน JWT claims — enrich ใน emit เอง (self-fetch membership status+membership_roles→code); revoked ไม่เพิ่ม (self-describing) — `../Thunder_Core/src/lib/core/webhook.ts`
+- [x] Cold populate: `/auth/launch`+`/auth/session` upsert snapshot ลง cache (upsert ทับ ไม่ compare) — fire-and-forget
+- [x] Warm update (receiver): Phase 0 stub → upsert จริง — revoked set `status='suspended'` จาก event, created/updated upsert `status`+`role_codes` จาก payload (**ไม่ pull** — ดู ADR 0002 §Clarification)
 
 **Definition of done ของ Phase 1:** login/launch populate cache, webhook event เปลี่ยน `membership_directory_cache` ได้จริง (revoke→suspended, role-change→role_codes ใหม่) — เทสต์บน dev DB ก่อน link จริงมา
 
 ## Phase 2 — ย้าย display ออกจาก JWT + guard อ่าน cache (ผูกกับ Phase 1)
 
-- [ ] `cityzen_session` = identity proof เปล่า (`sub`, `tenant_id`, `isSuperAdmin`, `role` fallback) — ตัด `profile`/`memberships` ออก (cookie size, §3 [AUTH_CONTRACT.md](AUTH_CONTRACT.md))
-- [ ] จุดที่ใช้ display (name/avatar/tenant) → อ่าน `*_directory_cache`
-- [ ] **Liveness check ใน proxy.ts** (ADR 0004): helper `assertMembershipActive(userId, tenantId)` query `membership_directory_cache` ต่อ request → `status !== 'active'` เด้ง `/no-access`, resolve role จาก `role_codes` สด (revoke + role-change near-real-time) — ห่อ helper เดียวเพื่อเติม TTL/short-token ทีหลัง
-- [ ] `/no-access` เพิ่มข้อความ "สิทธิ์ถูกถอน/ระงับ" (ไม่ force logout)
+- [ ] `cityzen_session` = identity proof เปล่า (`sub`, `tenant_id`, `isSuperAdmin`, `role` fallback) — ตัด `profile`/`memberships` ออก (cookie size, §3 [AUTH_CONTRACT.md](AUTH_CONTRACT.md)) — **DEFERRED: brick display จนกว่า DB live; ทำตอน plug DB**
+- [ ] จุดที่ใช้ display (name/avatar/tenant) → อ่าน `*_directory_cache` — **DEFERRED: คู่กับ cookie strip, รอ DB live**
+- [x] **Liveness check ใน proxy.ts** (ADR 0004): helper `checkMembershipLiveness(userId, tenantId)` query `membership_directory_cache` ต่อ request → `status !== 'active'` เด้ง `/no-access?reason=revoked`, resolve role จาก `role_codes` สด (`resolveCityzenRoleFromCodes`) — **fail-open** เมื่อ cache ปิด/ไม่มี row (inert จนกว่า DB plug); super_admin+dev-bypass ข้าม; เช็คเฉพาะ `/organic/`
+- [x] `/no-access` เพิ่มข้อความ "สิทธิ์ถูกถอน/ระงับ" (query `?reason=revoked`, ไม่ force logout)
 
 ## นอกขอบเขตของแผนนี้ (บันทึกไว้กันสับสน)
 
