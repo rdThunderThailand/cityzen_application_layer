@@ -2,7 +2,7 @@ import type { ComponentType } from 'react';
 import { cn } from '../../utils/cn';
 import { ArrowDown, ArrowUp, Leaf } from 'lucide-react';
 
-export interface CardMetricProps {
+export interface CardMetricWLineChartProps {
     title: string;
     value: number;
     unit: string;
@@ -14,7 +14,7 @@ export interface CardMetricProps {
     className?: string;
 }
 
-export const CardMetric = ({
+export const CardMetricWLineChart = ({
     title,
     value,
     unit,
@@ -25,7 +25,7 @@ export const CardMetric = ({
     date,
     className,
     ...props
-}: CardMetricProps) => {
+}: CardMetricWLineChartProps) => {
     const isTrendingUp = subValue > 0;
     const isPositiveOutcome = positiveData ? isTrendingUp : !isTrendingUp;
 
@@ -34,7 +34,7 @@ export const CardMetric = ({
     return (
         <div
             className={cn(
-                "flex flex-row items-center gap-3 sm:gap-3 md:gap-4 p-3 border border-slate-100 rounded-xl shadow-sm w-full min-w-[160px] font-sans max-h-[105px]",
+                "flex flex-row items-center gap-3 sm:gap-3 md:gap-4 p-3 border border-slate-100 rounded-xl shadow-sm w-full min-w-[160px] max-w-[200px] font-sans max-h-[105px]",
                 className
             )}
             {...props}

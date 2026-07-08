@@ -68,7 +68,7 @@ export const Tabs = ({
             </div>
 
             {activeTab?.content && (
-                <div className="px-4 py-4 text-sm text-slate-600">
+                <div className="py-4 text-sm text-slate-600">
                     {activeTab.content()}
                 </div>
             )}
