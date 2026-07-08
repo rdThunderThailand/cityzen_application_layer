@@ -20,5 +20,13 @@ export const cardEventData = {
       status: 'warning', // เฝ้าระวัง
       tone: 'amber',
     },
+    {
+      title: 'นักท่องเที่ยวเพิ่มขึ้นช่วงไฮซีซั่น',
+      subtitle: 'คาดการณ์',
+      description: 'สถิตินักท่องเที่ยวปีนี้เพิ่มขึ้น 18% จากสถิติทั้งจังหวัด',
+      locations: ['ทั้งจังหวัด'],
+      status: 'warning', // เฝ้าระวัง
+      tone: 'blue',
+    },
   ] satisfies CardDataItemProps[],
 };

@@ -9,11 +9,18 @@ import CardScoreGauge from "@/components/dashboard/CardScoreGauge";
 import CardTrend from "@/components/dashboard/CardTrend";
 import { defaultUser } from "@/components/global/mockUserData";
 import { headerTrendItems } from "../../../../../../../migration/seed_trend_items";
+import { WandSparkles } from "lucide-react";
 
 export default function DailyBrief() {
     return(
         <div className="w-full flex">     
             <div className="w-full p-6">
+                {/* AI dropdown */}
+                <div className="w-full flex justify-end mb-4">
+                    <WandSparkles/>
+                    <p>AI Executive Assistant</p>
+                </div>
+
                 <div className="flex flex-col lg:flex-row gap-4 w-full">
                     <CardGreeting
                         className="flex-1 h-[139px]"
@@ -41,9 +48,11 @@ export default function DailyBrief() {
                 </div>
                 <Tabs tabs={executiveTabs}/>
             </div>
-            <div className="bg-red-500 w-[350px] min-h-screen">
+
+            {/* AI panel */}
+            {/* <div className="bg-red-500 w-[350px] min-h-screen">
                 Ai
-            </div>
+            </div> */}
         </div>
     )
 }

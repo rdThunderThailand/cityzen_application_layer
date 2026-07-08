@@ -1,65 +1,121 @@
 import type { ComponentType } from 'react';
 import { cn } from '../../utils/cn';
-import { ArrowDown, ArrowUp, Leaf } from 'lucide-react';
+import { CloudRain } from 'lucide-react';
 
 export interface CardMetricWLineChartProps {
     title: string;
-    value: number;
-    unit: string;
     icon?: ComponentType<{ className?: string }>;
-    subValue: number;
-    subUnit?: string;
+    valueLabel: string;
+    valueText: string;
+    subLabel: string;
+    percentage: number;
     positiveData: boolean;
-    date?: Date;
+    chartData: number[];
+    chartColorClass?: string;
     className?: string;
 }
 
+export interface SparklinePoint {
+    x: number;
+    y: number;
+}
+
+const VIEWBOX_WIDTH = 100;
+const VIEWBOX_HEIGHT = 40;
+const VERTICAL_PADDING = 4;
+
+export function getSparklinePoints(data: number[]): SparklinePoint[] {
+    const min = Math.min(...data);
+    const max = Math.max(...data);
+    const range = max - min;
+
+    const usableHeight = VIEWBOX_HEIGHT - VERTICAL_PADDING * 2;
+
+    return data.map((value, index) => {
+        const x = data.length === 1 ? 0 : (index / (data.length - 1)) * VIEWBOX_WIDTH;
+        const normalized = range === 0 ? 0.5 : (value - min) / range;
+        const y = VERTICAL_PADDING + (1 - normalized) * usableHeight;
+
+        return { x, y };
+    });
+}
+
+const getTrendColorClass = (percentage: number, positiveData: boolean) => {
+    const isTrendingUp = percentage > 0;
+    const isPositiveOutcome = positiveData ? isTrendingUp : !isTrendingUp;
+
+    return isPositiveOutcome ? 'text-emerald-500' : 'text-rose-500';
+};
+
 export const CardMetricWLineChart = ({
     title,
-    value,
-    unit,
-    icon: Icon = Leaf,
-    subValue,
-    subUnit,
+    icon: Icon = CloudRain,
+    valueLabel,
+    valueText,
+    subLabel,
+    percentage,
     positiveData,
-    date,
+    chartData,
+    chartColorClass = 'text-blue-500',
     className,
     ...props
 }: CardMetricWLineChartProps) => {
-    const isTrendingUp = subValue > 0;
-    const isPositiveOutcome = positiveData ? isTrendingUp : !isTrendingUp;
+    const trendColorClass = getTrendColorClass(percentage, positiveData);
+    const signedPercentage = `${percentage > 0 ? '+' : ''}${percentage}%`;
 
-    const trendColorClass = isPositiveOutcome ? 'text-green-500' : 'text-red-500';
+    const points = chartData.length >= 2 ? getSparklinePoints(chartData) : null;
+    const polylinePoints = points?.map((point) => `${point.x},${point.y}`).join(' ');
 
     return (
         <div
             className={cn(
-                "flex flex-row items-center gap-3 sm:gap-3 md:gap-4 p-3 border border-slate-100 rounded-xl shadow-sm w-full min-w-[160px] max-w-[200px] font-sans max-h-[105px]",
+                "flex flex-col w-full p-4 gap-1 min-w-0 min-h-[280px] border border-slate-100 rounded-xl shadow-sm font-sans bg-white",
                 className
             )}
             {...props}
         >
-            <div className="flex items-center justify-center w-8 h-8 bg-emerald-50 text-emerald-600 rounded-full shrink-0">
-                <Icon className="w-4.5 h-4.5" />
+            <div className="flex items-center gap-2">
+                <Icon className="text-slate-500 w-6 h-6" />
+                <span className="text-sm font-semibold text-slate-600 truncate">{title}</span>
             </div>
 
-            <div className="flex flex-col gap-1 min-w-0">
-                <span className="text-xs font-medium text-slate-500 truncate">{title}</span>
-                <div className="flex items-baseline gap-1">
-                    <span className="text-xl font-bold text-slate-800 tracking-tight">
-                        {(value !== undefined && value !== null)
-                            ? Number(value).toLocaleString(undefined, { minimumFractionDigits: 1 })
-                            : '-'}
-                    </span>
-                    {unit && <span className="text-[11px] font-light text-slate-500">{unit}</span>}
-                </div>
-                <div className="flex whitespace-nowrap items-center gap-1.5 sm:gap-2 text-xs">
-                    <span className={trendColorClass}>
-                        {isTrendingUp ? <ArrowUp size={14} /> : <ArrowDown size={14} />}
-                    </span>
-                    <p className={cn("font-semibold -ml-2", trendColorClass)}>{subValue} {subUnit}</p>
-                </div>
+            <div className="mt-3 min-w-0">
+                <span className="block text-xl font-bold text-slate-900 tracking-tight truncate">
+                    {valueLabel} {valueText}
+                </span>
+            </div>
+
+            <div className="flex items-center gap-1.5 text-sm min-w-0">
+                <span className="text-slate-500 truncate">{subLabel}</span>
+                <span className={cn("font-semibold whitespace-nowrap shrink-0", trendColorClass)}>
+                    {signedPercentage}
+                </span>
+            </div>
+
+            <div className="flex-1" />
+
+            <div className="-mx-1">
+                {points ? (
+                    <svg
+                        viewBox={`0 0 ${VIEWBOX_WIDTH} ${VIEWBOX_HEIGHT}`}
+                        preserveAspectRatio="none"
+                        className={cn("w-full h-[70px]", chartColorClass)}
+                    >
+                        <polyline
+                            points={polylinePoints}
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth={2.5}
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                        />
+                    </svg>
+                ) : (
+                    <div className="w-full h-[70px]" />
+                )}
             </div>
         </div>
     );
 };
+
+export default CardMetricWLineChart;

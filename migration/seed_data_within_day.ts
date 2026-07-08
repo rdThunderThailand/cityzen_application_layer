@@ -1,54 +1,60 @@
-import { Wallet, Trash2, Recycle, Cloud, Sprout, TriangleAlert, FileCheckCorner, ShieldPlus, ChartLine, Plane, UsersRound } from 'lucide-react';
+import { CloudRain, Thermometer, Wind, Users } from 'lucide-react';
+import type { CardMetricWLineChartProps } from '@/components/dashboard/CardMetricWLineChart';
 
-export const withinDayData = [
+export const dataWithinDay: Omit<CardMetricWLineChartProps, 'className'>[] = [
     {
-        title: "เหตุการณ์สำคัญ",
-        value: 2,
-        unit: "เรื่อง",
-        icon: TriangleAlert,
-        subValue: 10,
-        subUnit: "%",
-        positiveData: false, //ถ้าเพิ่มจะเป็นสีแดง ลูกศรขึ้น
-        date: new Date()
-    },
-    {
-        title: "ประชาชนได้รับผลกระทบ",
-        value: 842.35,
-        unit: "kg",
-        icon: UsersRound,
-        subValue: -7.47,
-        subUnit: "%",
-        positiveData: false,
-        date: new Date()
-    },
-    {
-        title: "นักท่องเที่ยววันนี้",
-        value: 87.8,
-        unit: "%",
-        icon: Plane,
-        subValue: 17,
-        subUnit: "%",
-        positiveData: true, //ถ้าเพิ่มจะเป็นสีเขียว ลูกศรขึ้น
-        date: new Date()
-    },
-    {
-        title: "ผลกระทบเชิงบวก (มูลค่า)",
-        value: 532.4,
-        unit: "kg",
-        icon: ChartLine,
-        subValue: 10.2,
-        subUnit: "%",
+        title: "สภาพอากาศ",
+        icon: CloudRain,
+        valueLabel: "ฝน",
+        valueText: "60%",
+        subLabel: "ช่วงบ่าย - ค่ำ",
+        percentage: 10,
         positiveData: true,
-        date: new Date()
+        chartData: [12, 15, 18, 24, 32, 46, 40, 30, 26, 22],
+        chartColorClass: "text-blue-500",
     },
     {
-        title: "ความพร้อมรับมือ",
-        value: 340.2,
-        unit: "kg",
-        icon: ShieldPlus,
-        subValue: 12.5,
-        subUnit: "%",
+        title: "อุณหภูมิ",
+        icon: Thermometer,
+        valueLabel: "อุณหภูมิ",
+        valueText: "34°C",
+        subLabel: "เทียบกับเมื่อวาน",
+        percentage: 4.2,
         positiveData: false,
-        date: new Date()
+        chartData: [27, 28, 29, 31, 33, 34, 34, 33, 31, 29],
+        chartColorClass: "text-orange-500",
     },
-]
+    {
+        title: "ความเร็วลม",
+        icon: Wind,
+        valueLabel: "ลม",
+        valueText: "18 กม./ชม.",
+        subLabel: "ช่วงเช้า - เที่ยง",
+        percentage: -6.5,
+        positiveData: true,
+        chartData: [10, 12, 14, 20, 18, 15, 13, 11, 9, 8],
+        chartColorClass: "text-emerald-500",
+    },
+    {
+        title: "นักท่องเที่ยว",
+        icon: Users,
+        valueLabel: "จำนวน",
+        valueText: "1,240 คน",
+        subLabel: "เทียบกับเมื่อวาน",
+        percentage: 18,
+        positiveData: true,
+        chartData: [400, 520, 680, 820, 950, 1100, 1180, 1240, 1200, 1150],
+        chartColorClass: "text-violet-500",
+    },
+    {
+        title: "ความเร็วลม",
+        icon: Wind,
+        valueLabel: "ลม",
+        valueText: "18 กม./ชม.",
+        subLabel: "ช่วงเช้า - เที่ยง",
+        percentage: -6.5,
+        positiveData: true,
+        chartData: [10, 12, 14, 20, 18, 15, 13, 11, 9, 8],
+        chartColorClass: "text-emerald-500",
+    },
+];
