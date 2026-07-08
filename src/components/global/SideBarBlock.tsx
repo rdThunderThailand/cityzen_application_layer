@@ -20,6 +20,7 @@ import { defaultUser } from './mockUserData';
 import type { UserProfile } from './mockUserData';
 import Image from 'next/image';
 import { executiveNavigationItems } from '@/app/(dashboard)/(workspace)/organic/executive/navItem';
+import { logoutAction } from '@/features/auth/actions';
 
 export interface NavItem {
     label: string;
@@ -57,7 +58,7 @@ export const SideBarBlock = ({
     brandFullLogo = <Image src={logoFull} alt="brand-logo" className="w-full h-full object-contain" />,
     navigationItems = executiveNavigationItems,
     user = defaultUser,
-    onLogout = () => console.log("Logout clicked"),
+    onLogout = () => logoutAction(),
     customStyles = {}
 }: SidebarProps) => {
     const pathname = usePathname();
