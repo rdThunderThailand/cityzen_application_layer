@@ -34,7 +34,7 @@ export const CardMetric = ({
     return (
         <div
             className={cn(
-                "flex flex-row items-center gap-3 sm:gap-3 md:gap-4 p-4 border border-slate-100 rounded-xl shadow-sm w-full min-w-[190px] max-w-[200px] font-sans max-h-[105px]",
+                "flex flex-row items-center gap-3 sm:gap-3 md:gap-4 p-3 border border-slate-100 rounded-xl shadow-sm w-full min-w-[170px] max-w-[200px] font-sans max-h-[105px]",
                 className
             )}
             {...props}

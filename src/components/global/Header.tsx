@@ -46,7 +46,7 @@ export const Header = ({
         <div className="w-full shadow-md h-[8vh] px-4 flex items-center justify-between">
             <div className="flex flex-col justify-center">
                 <h3 className="text-lg font-semibold text-slate-800 leading-tight uppercase">{displayText} สรุปภาพรวมจังหวัดภูเก็ต</h3>
-                <p className="text-xs text-slate-400">{dateText} | {timeText}</p>
+                <p className="text-xs text-slate-400" suppressHydrationWarning>{dateText} | {timeText}</p>
             </div>
 
             <div className="flex items-center gap-6">
