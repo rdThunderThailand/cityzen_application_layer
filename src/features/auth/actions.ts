@@ -68,7 +68,7 @@ export async function loginAction(
     sub: session.user_id ?? "",
     email: parsed.data.email,
     tenant_id: tenantId,
-    role: role ?? "owner", // super_admin has no tenant role; isSuperAdmin bypasses the prefix guard anyway
+    role: role ?? "manager", // super_admin has no tenant role; isSuperAdmin bypasses the prefix guard anyway
     isSuperAdmin,
   });
 

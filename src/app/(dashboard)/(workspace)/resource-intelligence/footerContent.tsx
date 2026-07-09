@@ -14,7 +14,7 @@ const footerContent: FooterProps['content'] = () => {
                 <Button className="border border-gray-200 rounded-lg text-gray-500 bg-white w-fit text-[13px] px-3 py-1.5"><Calendar className="w-5 h-5" /> นักหมายประชุม</Button>
             </div>
             <Link
-                href="/organic/executive/decision"
+                href="/resource-intelligence/executive/decision"
                 className="rounded-lg text-white bg-[#0166FF] hover:bg-[#0055d4] transition-colors w-fit text-[13px] px-3 py-1.5 whitespace-nowrap flex items-center gap-1 shrink-0 font-medium select-none cursor-pointer"
             >
                 ไปหน้า Decision <ChevronRight className="w-4 h-4" />

@@ -1,1 +1,1 @@
-export { default } from "@/features/organic/owner/dashboard/OwnerDashboardClient";
+export { default } from "@/features/resource-intelligence/manager/dashboard/OwnerDashboardClient";

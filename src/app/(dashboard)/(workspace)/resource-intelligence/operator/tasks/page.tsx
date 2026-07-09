@@ -1,1 +1,1 @@
-export { default } from "@/features/organic/operator/tasks/OperatorTasksClient";
+export { default } from "@/features/resource-intelligence/operator/tasks/OperatorTasksClient";

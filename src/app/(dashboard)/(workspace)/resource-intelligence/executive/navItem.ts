@@ -10,10 +10,10 @@ import {
 
 
 export const executiveNavigationItems: NavItem[] = [
-    { label: "Daily Brief", labelTh: "ภาพรวมวันนี้", href: "/organic/executive/daily-brief", icon: SquareKanban },
-    { label: "Situation", labelTh: "สถานการณ์", href: "/organic/executive/situation", icon: Camera },
-    { label: "Decision", labelTh: "การตัดสินใจ", href: "/organic/executive/decision", icon: Split },
-    { label: "War Room", labelTh: "ศูนย์ปฏิบัติการ", href: "/organic/executive/war-room", icon: UsersRound },
-    { label: "Communication", labelTh: "การสื่อสาร", href: "/organic/executive/communication", icon: Megaphone },
-    { label: "Outcome", labelTh: "ผลลัพธ์", href: "/organic/executive/outcome", icon: LaptopMinimalCheck },
+    { label: "Daily Brief", labelTh: "ภาพรวมวันนี้", href: "/resource-intelligence/executive/daily-brief", icon: SquareKanban },
+    { label: "Situation", labelTh: "สถานการณ์", href: "/resource-intelligence/executive/situation", icon: Camera },
+    { label: "Decision", labelTh: "การตัดสินใจ", href: "/resource-intelligence/executive/decision", icon: Split },
+    { label: "War Room", labelTh: "ศูนย์ปฏิบัติการ", href: "/resource-intelligence/executive/war-room", icon: UsersRound },
+    { label: "Communication", labelTh: "การสื่อสาร", href: "/resource-intelligence/executive/communication", icon: Megaphone },
+    { label: "Outcome", labelTh: "ผลลัพธ์", href: "/resource-intelligence/executive/outcome", icon: LaptopMinimalCheck },
 ];

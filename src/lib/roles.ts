@@ -1,25 +1,26 @@
 import type { ThunderMembership } from "./thunder";
 
 // The 3 CityZen application roles (RBAC), distinct from Thunder platform roles.
-export const CITYZEN_ROLES = ["owner", "executive_viewer", "operator"] as const;
+export const CITYZEN_ROLES = ["manager", "executive_viewer", "operator"] as const;
 export type CityzenRole = (typeof CITYZEN_ROLES)[number];
 
-// Priority when one membership carries several roles: owner > executive_viewer > operator.
+// Priority when one membership carries several roles: manager > executive_viewer > operator.
 const PRIORITY: readonly CityzenRole[] = CITYZEN_ROLES;
 
-// Each role's home page — "/" dispatches here (super_admin's role claim falls back to owner).
+// Each role's home page — "/" dispatches here (super_admin's role claim falls back to manager).
 export const ROLE_HOME: Record<CityzenRole, string> = {
-  owner: "/organic/owner/dashboard",
-  executive_viewer: "/organic/executive/daily-brief",
-  operator: "/organic/operator/tasks",
+  manager: "/resource-intelligence/manager/dashboard",
+  executive_viewer: "/resource-intelligence/executive/daily-brief",
+  operator: "/resource-intelligence/operator/tasks",
 };
 
 // Maps Thunder role codes → CityZen roles.
-// Thunder is inconsistent about the org-admin code: seed uses `admin_company`,
-// the UserRole type uses `company_admin` — accept both.
+// Thunder's department-admin code is `department_admin`; older seeds used
+// `admin_company` / `company_admin` — accept all three → manager.
 // super_admin / viewer_auditor have no CityZen role → null (→ /no-access).
 function toCityzenRole(code: string): CityzenRole | null {
-  if (code === "admin_company" || code === "company_admin") return "owner";
+  if (code === "department_admin" || code === "admin_company" || code === "company_admin")
+    return "manager";
   if (code === "executive_viewer") return "executive_viewer";
   if (code.startsWith("operator")) return "operator"; // operator, operator_supervisor, …
   return null;

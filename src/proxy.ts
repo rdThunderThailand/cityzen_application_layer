@@ -13,11 +13,11 @@ import { checkMembershipLiveness } from "./lib/directory-cache";
 // it never carries a cityzen_session, so the auth guard must not redirect it to /login).
 const PUBLIC_PATHS = ["/login", "/auth/launch", "/auth/login", "/no-access", "/api/webhooks/thunder"];
 
-// Each role may only enter its own /organic subtree.
+// Each role may only enter its own /resource-intelligence subtree.
 const ROLE_PREFIX: Record<CityzenRole, string> = {
-  owner: "/organic/owner",
-  executive_viewer: "/organic/executive",
-  operator: "/organic/operator",
+  manager: "/resource-intelligence/manager",
+  executive_viewer: "/resource-intelligence/executive",
+  operator: "/resource-intelligence/operator",
 };
 
 // Auth is gated solely on cityzen_session (JWT). Identity/credentials live in Thunder;
@@ -43,7 +43,7 @@ export async function proxy(request: NextRequest) {
   }
 
   // Sub-app guard. super_admin (god mode) and the dev bypass skip both liveness and prefix checks.
-  const isGuardedApp = pathname.startsWith("/organic/");
+  const isGuardedApp = pathname.startsWith("/resource-intelligence/");
   if (claims.isSuperAdmin || DEV_BYPASS_ENABLED || !isGuardedApp) {
     return NextResponse.next();
   }
@@ -61,7 +61,7 @@ export async function proxy(request: NextRequest) {
   }
   const effectiveRole = (liveness.roleCodes && resolveCityzenRoleFromCodes(liveness.roleCodes)) || claims.role;
 
-  // Prefix guard — each role may only enter its own /organic subtree.
+  // Prefix guard — each role may only enter its own /resource-intelligence subtree.
   const allowedPrefix = ROLE_PREFIX[effectiveRole];
   if (!pathname.startsWith(allowedPrefix)) {
     const url = request.nextUrl.clone();

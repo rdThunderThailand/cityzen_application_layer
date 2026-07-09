@@ -54,7 +54,7 @@ export async function GET(request: NextRequest) {
     sub: payload.sub as string,
     email: payload.email as string,
     tenant_id: tenantId,
-    role: role ?? "owner", // super_admin has no tenant role; isSuperAdmin bypasses the prefix guard anyway
+    role: role ?? "manager", // super_admin has no tenant role; isSuperAdmin bypasses the prefix guard anyway
     isSuperAdmin,
     app_name: payload.app_name as string | undefined,
   });
