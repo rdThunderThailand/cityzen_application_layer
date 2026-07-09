@@ -5,16 +5,19 @@ import {
   DEV_BYPASS_ENABLED,
   devBypassClaims,
 } from "./lib/app-session";
-import type { CityzenRole } from "./lib/roles";
+import { type CityzenRole, resolveCityzenRoleFromCodes } from "./lib/roles";
+import { checkMembershipLiveness } from "./lib/directory-cache";
 
-// Reachable without a cityzen_session (login page + the two exchange routes + the dead end).
-const PUBLIC_PATHS = ["/login", "/auth/launch", "/auth/login", "/no-access"];
+// Reachable without a cityzen_session (login page + the two exchange routes + the dead end
+// + the Thunder webhook receiver, which self-authenticates via WEBHOOK_SECRET JWT signature —
+// it never carries a cityzen_session, so the auth guard must not redirect it to /login).
+const PUBLIC_PATHS = ["/login", "/auth/launch", "/auth/login", "/no-access", "/api/webhooks/thunder"];
 
-// Each role may only enter its own /organic subtree.
+// Each role may only enter its own /resource-intelligence subtree.
 const ROLE_PREFIX: Record<CityzenRole, string> = {
-  owner: "/organic/owner",
-  executive_viewer: "/organic/executive",
-  operator: "/organic/operator",
+  manager: "/resource-intelligence/manager",
+  executive_viewer: "/resource-intelligence/executive",
+  operator: "/resource-intelligence/operator",
 };
 
 // Auth is gated solely on cityzen_session (JWT). Identity/credentials live in Thunder;
@@ -39,13 +42,28 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  // Role/prefix guard for the sub-app area — Thunder super_admin bypasses it (god mode).
-  const allowedPrefix = ROLE_PREFIX[claims.role];
-  if (
-    !claims.isSuperAdmin &&
-    pathname.startsWith("/organic/") &&
-    !pathname.startsWith(allowedPrefix)
-  ) {
+  // Sub-app guard. super_admin (god mode) and the dev bypass skip both liveness and prefix checks.
+  const isGuardedApp = pathname.startsWith("/resource-intelligence/");
+  if (claims.isSuperAdmin || DEV_BYPASS_ENABLED || !isGuardedApp) {
+    return NextResponse.next();
+  }
+
+  // Liveness check (ADR 0004): the live cache row is the authorization state, not the 8h JWT.
+  // Inert until the directory DB is plugged in (checkMembershipLiveness fail-opens). When live:
+  // status !== 'active' → revoked/suspended, and role resolves fresh from role_codes so a
+  // role change takes effect immediately. Falls back to the JWT role when the cache has no row.
+  const liveness = await checkMembershipLiveness(claims.sub, claims.tenant_id);
+  if (!liveness.allow) {
+    const url = request.nextUrl.clone();
+    url.pathname = "/no-access";
+    url.searchParams.set("reason", "revoked");
+    return NextResponse.redirect(url);
+  }
+  const effectiveRole = (liveness.roleCodes && resolveCityzenRoleFromCodes(liveness.roleCodes)) || claims.role;
+
+  // Prefix guard — each role may only enter its own /resource-intelligence subtree.
+  const allowedPrefix = ROLE_PREFIX[effectiveRole];
+  if (!pathname.startsWith(allowedPrefix)) {
     const url = request.nextUrl.clone();
     url.pathname = "/no-access";
     return NextResponse.redirect(url);

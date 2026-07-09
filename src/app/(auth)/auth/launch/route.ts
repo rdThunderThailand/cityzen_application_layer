@@ -3,6 +3,7 @@ import { jwtVerify } from "jose";
 import { signAppSession, setAppSessionCookie } from "@/lib/app-session";
 import { getMe, getMyMemberships } from "@/lib/thunder";
 import { resolveCityzenRole, isThunderSuperAdmin } from "@/lib/roles";
+import { upsertDirectorySnapshot } from "@/lib/directory-cache";
 
 export async function GET(request: NextRequest) {
   const token = request.nextUrl.searchParams.get("token");
@@ -43,15 +44,19 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL("/no-access", request.url));
   }
 
+  // Cold populate the Directory Cache. Fire-and-forget: a cache write must never block sign-in
+  // (no-op until the cache DB is plugged in). No rollback — next login re-populates.
+  void upsertDirectorySnapshot(profile, memberships, token).catch((e) =>
+    console.error("[auth/launch] directory cache populate failed:", e),
+  );
+
   const appSessionCookie = await signAppSession({
     sub: payload.sub as string,
     email: payload.email as string,
     tenant_id: tenantId,
-    role: role ?? "owner", // super_admin has no tenant role; isSuperAdmin bypasses the prefix guard anyway
+    role: role ?? "manager", // super_admin has no tenant role; isSuperAdmin bypasses the prefix guard anyway
     isSuperAdmin,
     app_name: payload.app_name as string | undefined,
-    profile,
-    memberships,
   });
 
   const response = NextResponse.redirect(new URL("/", request.url));
