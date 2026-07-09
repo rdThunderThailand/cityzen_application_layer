@@ -19,7 +19,7 @@ import logoFull from "../../../public/logo-full.png";
 import { defaultUser } from './mockUserData';
 import type { UserProfile } from './mockUserData';
 import Image from 'next/image';
-import { executiveNavigationItems } from '@/app/(dashboard)/(workspace)/organic/executive/navItem';
+import { executiveNavigationItems } from '@/app/(dashboard)/(workspace)/resource-intelligence/executive/navItem';
 import { logoutAction } from '@/features/auth/actions';
 
 export interface NavItem {
