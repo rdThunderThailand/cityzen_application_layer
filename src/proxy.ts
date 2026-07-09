@@ -8,8 +8,10 @@ import {
 import { type CityzenRole, resolveCityzenRoleFromCodes } from "./lib/roles";
 import { checkMembershipLiveness } from "./lib/directory-cache";
 
-// Reachable without a cityzen_session (login page + the two exchange routes + the dead end).
-const PUBLIC_PATHS = ["/login", "/auth/launch", "/auth/login", "/no-access"];
+// Reachable without a cityzen_session (login page + the two exchange routes + the dead end
+// + the Thunder webhook receiver, which self-authenticates via WEBHOOK_SECRET JWT signature —
+// it never carries a cityzen_session, so the auth guard must not redirect it to /login).
+const PUBLIC_PATHS = ["/login", "/auth/launch", "/auth/login", "/no-access", "/api/webhooks/thunder"];
 
 // Each role may only enter its own /organic subtree.
 const ROLE_PREFIX: Record<CityzenRole, string> = {

@@ -8,8 +8,8 @@ export type AppSessionClaims = {
   sub: string; email: string; tenant_id: string; role: CityzenRole; app_name?: string;
   // Thunder platform super_admin — bypasses the /organic/<role> prefix guard (see proxy.ts).
   isSuperAdmin?: boolean;
-  // trimmed Thunder snapshot captured at launch (launch token is 1-min, no refresh)
-  profile?: unknown; memberships?: unknown;
+  // Note: profile/memberships snapshot removed from the cookie (Phase 2) — never read by any
+  // consumer; display data now lives in the Directory Cache (user_directory_cache).
 };
 
 export async function signAppSession(claims: AppSessionClaims): Promise<string> {
@@ -50,13 +50,6 @@ export function devBypassClaims(): AppSessionClaims {
     role: "owner", // any real role; isSuperAdmin bypasses the prefix guard anyway
     isSuperAdmin: true,
     app_name: "organic",
-    profile: {
-      id: "dev-superadmin",
-      email: "dev@cityzen.local",
-      display_name: "Dev Super Admin",
-      is_super_admin: true,
-    },
-    memberships: [],
   };
 }
 

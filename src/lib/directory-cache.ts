@@ -1,4 +1,4 @@
-import { createClient, type SupabaseClient } from "@supabase/supabase-js";
+import { createClient } from "@supabase/supabase-js";
 import { getTenantOrganizations, type ThunderMe, type ThunderMembership, type ThunderOrg } from "./thunder";
 
 // Directory Cache: local identity mirror of Thunder (user/tenant/membership) so cityzen
@@ -7,12 +7,16 @@ import { getTenantOrganizations, type ThunderMe, type ThunderMembership, type Th
 // Config seam (build-now-plug-link-later): the cache lives in its own DB. Until
 // CITYZEN_DIRECTORY_DB_URL/KEY are set, every op below is a no-op — auth + webhook flows
 // keep working unchanged. Plug the env in later → cache turns on, zero code change.
-let cached: SupabaseClient | null | undefined;
-function directoryDb(): SupabaseClient | null {
+// Tables live in the `core` schema (not public); service-role key bypasses RLS.
+const makeDirectoryClient = (url: string, key: string) =>
+  createClient(url, key, { auth: { persistSession: false }, db: { schema: "core" } });
+
+let cached: ReturnType<typeof makeDirectoryClient> | null | undefined;
+function directoryDb(): ReturnType<typeof makeDirectoryClient> | null {
   if (cached !== undefined) return cached;
   const url = process.env.CITYZEN_DIRECTORY_DB_URL;
   const key = process.env.CITYZEN_DIRECTORY_DB_KEY;
-  cached = url && key ? createClient(url, key, { auth: { persistSession: false } }) : null;
+  cached = url && key ? makeDirectoryClient(url, key) : null;
   if (!cached) console.warn("[directory-cache] CITYZEN_DIRECTORY_DB_URL/KEY unset — cache ops are no-ops");
   return cached;
 }
@@ -84,11 +88,11 @@ export async function upsertDirectorySnapshot(
         const orgs = flattenOrgs(await getTenantOrganizations(tenantId, accessToken));
         for (const org of orgs) {
           const abbrev = org.name_en ?? org.code;
-          const { error } = await db.from("org_directory_cache").upsert({
-            thundercore_org_id: org.id,
+          const { error } = await db.from("department_directory_cache").upsert({
+            thundercore_department_id: org.id,
             thundercore_tenant_id: tenantId,
             name: org.name || org.id,
-            ...(org.department_type !== null ? { org_type: org.department_type } : {}),
+            ...(org.department_type !== null ? { department_type: org.department_type } : {}),
             ...(abbrev !== null ? { abbreviation: abbrev } : {}),
             ...(org.status !== null ? { status: org.status } : {}),
             synced_at,
@@ -241,11 +245,11 @@ export async function applyMembershipEvent(claims: Record<string, unknown>): Pro
     const abbreviation = s(claims.abbreviation);
     const status = s(claims.status);
 
-    const { error: oErr } = await db.from("org_directory_cache").upsert({
-      thundercore_org_id: orgId,
+    const { error: oErr } = await db.from("department_directory_cache").upsert({
+      thundercore_department_id: orgId,
       thundercore_tenant_id: tenantId,
       name,
-      ...(orgType !== undefined ? { org_type: orgType } : {}),
+      ...(orgType !== undefined ? { department_type: orgType } : {}),
       ...(abbreviation !== undefined ? { abbreviation } : {}),
       ...(status !== undefined ? { status } : {}),
       synced_at,
@@ -257,7 +261,7 @@ export async function applyMembershipEvent(claims: Record<string, unknown>): Pro
   if (event === "org.deleted") {
     const orgId = s(claims.org_id);
     if (!orgId) return;
-    const { error } = await db.from("org_directory_cache").delete().eq("thundercore_org_id", orgId);
+    const { error } = await db.from("department_directory_cache").delete().eq("thundercore_department_id", orgId);
     if (error) throw error;
     return;
   }

@@ -57,8 +57,6 @@ export async function GET(request: NextRequest) {
     role: role ?? "owner", // super_admin has no tenant role; isSuperAdmin bypasses the prefix guard anyway
     isSuperAdmin,
     app_name: payload.app_name as string | undefined,
-    profile,
-    memberships,
   });
 
   const response = NextResponse.redirect(new URL("/", request.url));

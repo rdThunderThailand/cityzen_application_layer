@@ -70,8 +70,6 @@ export async function loginAction(
     tenant_id: tenantId,
     role: role ?? "owner", // super_admin has no tenant role; isSuperAdmin bypasses the prefix guard anyway
     isSuperAdmin,
-    profile,
-    memberships,
   });
 
   const cookieStore = await cookies();
