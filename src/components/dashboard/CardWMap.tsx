@@ -93,9 +93,9 @@ const MapViewMock = forwardRef<MapViewHandle, MapViewProps>(function MapViewMock
                 className="absolute inset-0 w-full h-full object-cover transition-transform duration-200"
                 style={{ transform: `scale(${scale})` }}
             />
-            <span className="pointer-events-none absolute bottom-2 right-2 text-[10px] text-slate-400/70">
+            {/* <span className="pointer-events-none absolute bottom-2 right-2 text-[10px] text-slate-400/70">
                 MOCK MAP
-            </span>
+            </span> */}
         </div>
     );
 });
@@ -130,7 +130,7 @@ export function CardWMap({
             {...props}
         >
             <div className="px-5 py-4">
-                <h3 className="text-lg font-bold text-slate-900">{title}</h3>
+                <h3 className="text-base font-bold text-slate-900">{title}</h3>
             </div>
 
             <div className="relative flex-1 min-h-[320px] bg-sky-100">
