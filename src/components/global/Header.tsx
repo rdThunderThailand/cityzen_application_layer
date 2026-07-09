@@ -3,7 +3,7 @@ import { usePathname } from "next/navigation";
 import { Bell, Scan, ChevronDown, Settings, Info, LogOut } from "lucide-react";
 import { cn } from "../../utils/cn";
 import { defaultUser } from "./mockUserData";
-import { WeatherCard } from "./WeatherCard";
+import { WeatherCard } from "../basic/WeatherCard";
 import { executiveNavigationItems } from "@/app/(dashboard)/(workspace)/organic/executive/navItem";
 
 
@@ -43,13 +43,13 @@ export const Header = ({
     const timeText = now.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
 
     return (
-        <div className="w-full shadow-md h-[8vh] px-4 flex items-center justify-between">
-            <div className="flex flex-col justify-center">
-                <h3 className="text-lg font-semibold text-slate-800 leading-tight uppercase">{displayText} สรุปภาพรวมจังหวัดภูเก็ต</h3>
+        <div className="w-full shadow-md min-h-[8vh] px-4 py-2 flex items-center justify-between gap-3">
+            <div className="flex flex-col justify-center min-w-0">
+                <h3 className="text-lg font-semibold text-slate-800 leading-tight uppercase truncate">{displayText} สรุปภาพรวมจังหวัดภูเก็ต</h3>
                 <p className="text-xs text-slate-400" suppressHydrationWarning>{dateText} | {timeText}</p>
             </div>
 
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3 md:gap-6 shrink-0">
                 <WeatherCard />
 
                 {/* Profile Dropdown */}

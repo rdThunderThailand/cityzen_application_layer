@@ -34,13 +34,13 @@ export const CardMetric = ({
     return (
         <div
             className={cn(
-                "flex flex-row items-center gap-3 sm:gap-3 md:gap-4 p-3 border border-slate-100 rounded-xl shadow-sm w-full min-w-[170px] max-w-[200px] font-sans max-h-[105px]",
+                "flex flex-row items-center gap-3 sm:gap-3 md:gap-4 p-3 border border-slate-100 rounded-xl shadow-sm w-full min-w-[160px] font-sans max-h-[105px]",
                 className
             )}
             {...props}
         >
-            <div className="flex items-center justify-center w-9 h-9 bg-emerald-50 text-emerald-600 rounded-full shrink-0">
-                <Icon className="w-5 h-5" />
+            <div className="flex items-center justify-center w-8 h-8 bg-emerald-50 text-emerald-600 rounded-full shrink-0">
+                <Icon className="w-4.5 h-4.5" />
             </div>
 
             <div className="flex flex-col gap-1 min-w-0">

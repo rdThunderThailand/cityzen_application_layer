@@ -20,7 +20,7 @@ export const Button = forwardRef<HTMLButtonElement, ButtonProps>(
         ref
     ) => {
 
-        const defaultStyle = "bg-[#3D5271] hover:bg-[#2a374a] text-white rounded-[18px] p-2 w-[328px] mb-4 transition-all duration-200 flex items-center justify-center gap-2 select-none cursor-pointer disabled:bg-gray-300 disabled:pointer-events-none";
+        const defaultStyle = "bg-[#3D5271] hover:bg-[#2a374a] text-white rounded-[18px] p-2 w-[328px] transition-all duration-200 flex items-center justify-center gap-2 select-none cursor-pointer disabled:bg-gray-300 disabled:pointer-events-none";
 
         const handleMockClick = (e: React.MouseEvent<HTMLButtonElement>) => {
             if (onClick) {

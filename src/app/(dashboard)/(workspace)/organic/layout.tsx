@@ -1,17 +1,22 @@
 "use client";
 
+import { Footer } from "@/components/global/Footer";
 import { Header } from "@/components/global/Header";
 import SideBarBlock from "@/components/global/SideBarBlock";
+import { footerContent } from "./footerContent";
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }){
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     return (
-        <div className="flex min-h-screen max-w-screen">
-            <div className="">
-                <SideBarBlock/>
+        <div className="flex h-screen w-screen overflow-hidden">
+            <div className="shrink-0">
+                <SideBarBlock />
             </div>
-            <div className="w-full">
-                <Header/>
-                {children}
+            <div className="flex-1 min-w-0 flex flex-col h-full overflow-hidden">
+                <Header />
+                <div className="flex-1 flex flex-col overflow-y-auto">
+                    {children}
+                </div>
+                <Footer className="w-full h-[6vh] shadow-[0_-4px_12px_rgba(0,0,0,0.05)] px-4 flex items-center shrink-0 bg-white border-t border-gray-100" content={footerContent} />
             </div>
         </div>
     )
