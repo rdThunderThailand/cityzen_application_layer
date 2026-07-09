@@ -1,5 +1,5 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import type { ThunderMe, ThunderMembership } from "./thunder";
+import { getTenantOrganizations, type ThunderMe, type ThunderMembership, type ThunderOrg } from "./thunder";
 
 // Directory Cache: local identity mirror of Thunder (user/tenant/membership) so cityzen
 // doesn't cross-call Thunder every request and can revoke near-real-time (ADR 0001/0004).
@@ -24,83 +24,245 @@ const nowIso = () => new Date().toISOString();
 export async function upsertDirectorySnapshot(
   profile: ThunderMe | undefined,
   memberships: ThunderMembership[] | undefined,
+  accessToken?: string,
 ): Promise<void> {
   const db = directoryDb();
   if (!db || !profile) return;
   const synced_at = nowIso();
 
-  await db.from("cityzen_user_directory_cache").upsert({
-    user_id: profile.id,
-    email: profile.email,
-    display_name: profile.display_name,
-    avatar_url: profile.avatar_url,
+  const displayName = profile.display_name ?? ([profile.first_name, profile.last_name].filter(Boolean).join(" ").trim() || profile.email || profile.id);
+
+  const { error: userError } = await db.from("user_directory_cache").upsert({
+    thundercore_user_id: profile.id,
+    display_name: displayName,
+    ...(profile.email !== null ? { email: profile.email } : {}),
+    ...(profile.avatar_url !== null ? { avatar_url: profile.avatar_url } : {}),
     synced_at,
   });
+  if (userError) throw userError;
 
   for (const m of memberships ?? []) {
     if (m.tenants) {
-      await db.from("cityzen_tenant_directory_cache").upsert({
-        tenant_id: m.tenants.id,
+      const { error: tenantError } = await db.from("tenant_directory_cache").upsert({
+        thundercore_tenant_id: m.tenants.id,
         name: m.tenants.name,
         synced_at,
       });
+      if (tenantError) throw tenantError;
+    } else {
+      const { error: tenantError } = await db.from("tenant_directory_cache").upsert({
+        thundercore_tenant_id: m.tenant_id,
+        name: m.tenant_id,
+        synced_at,
+      });
+      if (tenantError) throw tenantError;
     }
+
     // Store raw Thunder role codes (not resolved cityzen roles) — Phase 2 liveness check
     // resolves the cityzen role fresh from these, so role changes take effect near-real-time.
     const roleCodes = m.membership_roles
       .map((mr) => mr.roles?.code)
       .filter((c): c is string => !!c);
-    await db.from("cityzen_membership_directory_cache").upsert({
-      user_id: profile.id,
-      tenant_id: m.tenant_id,
+    
+    const { error: membershipError } = await db.from("membership_directory_cache").upsert({
+      thundercore_user_id: profile.id,
+      thundercore_tenant_id: m.tenant_id,
       status: m.status,
       role_codes: roleCodes,
       synced_at,
     });
+    if (membershipError) throw membershipError;
   }
-  // ponytail: no cityzen_org_directory_cache write — /me + /me/memberships carry no org
-  // field yet. Table exists (migration); wire a writer when Thunder's snapshot includes org.
+  // Org (department) backfill: /me carries no org, so fetch each tenant's department tree and
+  // seed org_directory_cache. Best-effort — the endpoint is tenant-admin-gated, so non-admin
+  // logins get 403 here and are skipped; those orgs seed when an admin logs in or via org.* webhook.
+  // Runs after the tenant upserts above so the org→tenant FK is always satisfied.
+  if (accessToken) {
+    const tenantIds = Array.from(new Set((memberships ?? []).map((m) => m.tenant_id)));
+    for (const tenantId of tenantIds) {
+      try {
+        const orgs = flattenOrgs(await getTenantOrganizations(tenantId, accessToken));
+        for (const org of orgs) {
+          const abbrev = org.name_en ?? org.code;
+          const { error } = await db.from("org_directory_cache").upsert({
+            thundercore_org_id: org.id,
+            thundercore_tenant_id: tenantId,
+            name: org.name || org.id,
+            ...(org.department_type !== null ? { org_type: org.department_type } : {}),
+            ...(abbrev !== null ? { abbreviation: abbrev } : {}),
+            ...(org.status !== null ? { status: org.status } : {}),
+            synced_at,
+          });
+          if (error) throw error;
+        }
+      } catch {
+        // best-effort backfill — see comment above; never block the rest of the snapshot.
+      }
+    }
+  }
 }
+
+const flattenOrgs = (nodes: ThunderOrg[]): ThunderOrg[] =>
+  nodes.flatMap((n) => [n, ...flattenOrgs(n.children ?? [])]);
 
 // Warm update (webhook receiver): apply a membership event to the cache without pulling
 // from Thunder (ADR 0002 §Clarification — the payload is self-describing).
-//   membership.revoked  → status='suspended' (self-describing, works today)
-//   membership.created/updated → upsert status+role_codes FROM the payload
-//     (needs Thunder-side payload enrichment; until then those claims are absent → skip)
 export async function applyMembershipEvent(claims: Record<string, unknown>): Promise<void> {
   const db = directoryDb();
   if (!db) return;
-  const userId = typeof claims.user_id === "string" ? claims.user_id : null;
-  const tenantId = typeof claims.tenant_id === "string" ? claims.tenant_id : null;
-  if (!userId || !tenantId) return;
 
-  if (claims.event === "membership.revoked") {
-    // Partial upsert: only status is set; role_codes keeps its existing value on conflict.
-    await db.from("cityzen_membership_directory_cache").upsert({
-      user_id: userId,
-      tenant_id: tenantId,
-      status: "suspended",
-      synced_at: nowIso(),
+  const event = claims.event;
+  const synced_at = nowIso();
+
+  const s = (v: unknown): string | undefined => (typeof v === "string" ? v : undefined);
+  const a = (v: unknown): string[] | undefined => (Array.isArray(v) ? v.filter((i): i is string => typeof i === "string") : undefined);
+
+  if (event === "membership.revoked") {
+    const userId = s(claims.user_id);
+    const tenantId = s(claims.tenant_id);
+    if (!userId || !tenantId) return;
+
+    const { error } = await db.from("membership_directory_cache").upsert(
+      {
+        thundercore_user_id: userId,
+        thundercore_tenant_id: tenantId,
+        status: "suspended",
+        synced_at,
+      },
+      { onConflict: "thundercore_user_id,thundercore_tenant_id" }
+    );
+    if (error) throw error;
+    return;
+  }
+
+  if (event === "membership.created" || event === "membership.updated") {
+    const userId = s(claims.user_id);
+    const tenantId = s(claims.tenant_id);
+    if (!userId || !tenantId) return;
+
+    const status = s(claims.status);
+    const roleCodes = a(claims.role_codes);
+    
+    if (status === undefined && roleCodes === undefined) {
+      console.log(`[webhook] ${String(event)} carries no status/role_codes — skipped (awaiting payload enrichment)`);
+      return;
+    }
+
+    const tenantName = s(claims.tenant_name) ?? tenantId;
+    const { error: tErr } = await db.from("tenant_directory_cache").upsert({
+      thundercore_tenant_id: tenantId,
+      name: tenantName,
+      synced_at,
     });
+    if (tErr) throw tErr;
+
+    const displayName = s(claims.display_name) ?? userId;
+    const email = s(claims.email);
+    const avatarUrl = s(claims.avatar_url);
+    const roleLabel = s(claims.role_label);
+
+    const { error: uErr } = await db.from("user_directory_cache").upsert({
+      thundercore_user_id: userId,
+      display_name: displayName,
+      ...(email !== undefined ? { email } : {}),
+      ...(avatarUrl !== undefined ? { avatar_url: avatarUrl } : {}),
+      ...(roleLabel !== undefined ? { role_label: roleLabel } : {}),
+      synced_at,
+    });
+    if (uErr) throw uErr;
+
+    const { error: mErr } = await db.from("membership_directory_cache").upsert({
+      thundercore_user_id: userId,
+      thundercore_tenant_id: tenantId,
+      ...(status !== undefined ? { status } : {}),
+      ...(roleCodes !== undefined ? { role_codes: roleCodes } : {}),
+      synced_at,
+    });
+    if (mErr) throw mErr;
     return;
   }
 
-  // created/updated — activate once payload enrichment lands on the Thunder side.
-  const status = typeof claims.status === "string" ? claims.status : null;
-  const roleCodes = Array.isArray(claims.role_codes)
-    ? claims.role_codes.filter((c): c is string => typeof c === "string")
-    : null;
-  if (!status && !roleCodes) {
-    console.log(`[webhook] ${String(claims.event)} carries no status/role_codes — skipped (awaiting payload enrichment)`);
+  if (event === "user.updated") {
+    const userId = s(claims.user_id);
+    if (!userId) return;
+
+    const displayName = s(claims.display_name) ?? userId;
+    const email = s(claims.email);
+    const avatarUrl = s(claims.avatar_url);
+    const roleLabel = s(claims.role_label);
+
+    const { error } = await db.from("user_directory_cache").upsert({
+      thundercore_user_id: userId,
+      display_name: displayName,
+      ...(email !== undefined ? { email } : {}),
+      ...(avatarUrl !== undefined ? { avatar_url: avatarUrl } : {}),
+      ...(roleLabel !== undefined ? { role_label: roleLabel } : {}),
+      synced_at,
+    });
+    if (error) throw error;
     return;
   }
-  await db.from("cityzen_membership_directory_cache").upsert({
-    user_id: userId,
-    tenant_id: tenantId,
-    ...(status ? { status } : {}),
-    ...(roleCodes ? { role_codes: roleCodes } : {}),
-    synced_at: nowIso(),
-  });
+
+  if (event === "tenant.updated") {
+    const tenantId = s(claims.tenant_id);
+    if (!tenantId) return;
+
+    const name = s(claims.name) ?? tenantId;
+    const tenantType = s(claims.tenant_type);
+    const code = s(claims.code);
+    const status = s(claims.status);
+
+    const { error } = await db.from("tenant_directory_cache").upsert({
+      thundercore_tenant_id: tenantId,
+      name,
+      ...(tenantType !== undefined ? { tenant_type: tenantType } : {}),
+      ...(code !== undefined ? { code } : {}),
+      ...(status !== undefined ? { status } : {}),
+      synced_at,
+    });
+    if (error) throw error;
+    return;
+  }
+
+  if (event === "org.created" || event === "org.updated") {
+    const orgId = s(claims.org_id);
+    const tenantId = s(claims.tenant_id);
+    if (!orgId || !tenantId) return;
+
+    const { error: tErr } = await db.from("tenant_directory_cache").upsert({
+      thundercore_tenant_id: tenantId,
+      name: tenantId,
+      synced_at,
+    }, { onConflict: "thundercore_tenant_id" });
+    if (tErr) throw tErr;
+
+    const name = s(claims.name) ?? orgId;
+    const orgType = s(claims.org_type);
+    const abbreviation = s(claims.abbreviation);
+    const status = s(claims.status);
+
+    const { error: oErr } = await db.from("org_directory_cache").upsert({
+      thundercore_org_id: orgId,
+      thundercore_tenant_id: tenantId,
+      name,
+      ...(orgType !== undefined ? { org_type: orgType } : {}),
+      ...(abbreviation !== undefined ? { abbreviation } : {}),
+      ...(status !== undefined ? { status } : {}),
+      synced_at,
+    });
+    if (oErr) throw oErr;
+    return;
+  }
+
+  if (event === "org.deleted") {
+    const orgId = s(claims.org_id);
+    if (!orgId) return;
+    const { error } = await db.from("org_directory_cache").delete().eq("thundercore_org_id", orgId);
+    if (error) throw error;
+    return;
+  }
+
+  console.log(`[webhook] unhandled event ${String(event)}`);
 }
 
 export type MembershipLiveness = { allow: boolean; roleCodes: string[] | null };
@@ -117,10 +279,10 @@ export async function checkMembershipLiveness(
   const db = directoryDb();
   if (!db) return { allow: true, roleCodes: null };
   const { data, error } = await db
-    .from("cityzen_membership_directory_cache")
+    .from("membership_directory_cache")
     .select("status, role_codes")
-    .eq("user_id", userId)
-    .eq("tenant_id", tenantId)
+    .eq("thundercore_user_id", userId)
+    .eq("thundercore_tenant_id", tenantId)
     .maybeSingle();
   if (error || !data) return { allow: true, roleCodes: null };
   return {
@@ -128,3 +290,4 @@ export async function checkMembershipLiveness(
     roleCodes: Array.isArray(data.role_codes) ? data.role_codes : null,
   };
 }
+

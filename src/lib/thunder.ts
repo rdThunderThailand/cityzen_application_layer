@@ -38,8 +38,16 @@ async function get<T>(path: string, accessToken: string): Promise<T> {
     throw new Error(`Thunder ${path} returned non-JSON — THUNDER_CORE_API_URL=${BASE} is likely wrong (pointing at cityzen, not Thunder Core)`);
   }
 }
+// Departments arrive as a nested tree (roots with `children`) — flatten before caching.
+export type ThunderOrg = {
+  id: string; parent_department_id: string | null; code: string | null; name: string;
+  name_en: string | null; department_type: string | null; status: string | null;
+  children: ThunderOrg[];
+};
 export const getMe = (t: string) => get<ThunderMe>("/me", t);
 export const getMyMemberships = (t: string) => get<ThunderMembership[]>("/me/memberships", t);
+export const getTenantOrganizations = (tenantId: string, t: string) =>
+  get<ThunderOrg[]>(`/tenants/${tenantId}/organizations`, t);
 
 export type ThunderLoginResult = {
   access_token: string; refresh_token: string; expires_at: number | null; user_id: string | null;

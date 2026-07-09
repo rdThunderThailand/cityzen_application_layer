@@ -2,32 +2,44 @@
 -- Typed columns for fields cityzen uses now; consumer widens lazily (no cross-repo coordination).
 -- Lives in cityzen's OWN directory DB (config seam), NOT the shared Thunder auth project.
 
-create table if not exists cityzen_user_directory_cache (
-  user_id      uuid primary key,
-  email        text,
-  display_name text,
-  avatar_url   text,
-  synced_at    timestamptz not null default now()
+create table if not exists tenant_directory_cache (
+    thundercore_tenant_id uuid primary key,
+    tenant_type varchar(30),
+    code varchar(100),
+    name varchar(255) not null,
+    status varchar(30),
+    synced_at timestamptz not null default now()
 );
 
-create table if not exists cityzen_tenant_directory_cache (
-  tenant_id text primary key,
-  name      text,
-  synced_at timestamptz not null default now()
+create table if not exists org_directory_cache (
+    thundercore_org_id uuid primary key,
+    thundercore_tenant_id uuid not null references tenant_directory_cache(thundercore_tenant_id),
+    org_type varchar(50),
+    abbreviation varchar(50),
+    name varchar(255) not null,
+    status varchar(30),
+    synced_at timestamptz not null default now()
+);
+create index idx_org_cache_tenant_id on org_directory_cache(thundercore_tenant_id);
+
+create table if not exists user_directory_cache (
+    thundercore_user_id uuid primary key,
+    display_name varchar(200) not null,
+    email varchar(255),
+    avatar_url text,
+    role_label varchar(150),
+    synced_at timestamptz not null default now()
 );
 
--- Reserved for a future writer — /me + /me/memberships carry no org field yet (see directory-cache.ts).
-create table if not exists cityzen_org_directory_cache (
-  org_id    uuid primary key,
-  name      text,
-  synced_at timestamptz not null default now()
+create table if not exists membership_directory_cache (
+    thundercore_user_id uuid not null references user_directory_cache(thundercore_user_id),
+    thundercore_tenant_id uuid not null references tenant_directory_cache(thundercore_tenant_id),
+    status varchar(30) not null default 'invited',
+    role_codes text[] not null default '{}',
+    synced_at timestamptz not null default now(),
+    primary key (thundercore_user_id, thundercore_tenant_id),
+    constraint chk_membership_cache_status check (status in ('invited', 'active', 'suspended', 'revoked'))
 );
-
-create table if not exists cityzen_membership_directory_cache (
-  user_id    uuid not null,
-  tenant_id  text not null,
-  status     text not null,               -- Thunder membership status: invited | active | suspended | ...
-  role_codes text[] not null default '{}', -- raw Thunder role codes; cityzen role resolved fresh (Phase 2 liveness)
-  synced_at  timestamptz not null default now(),
-  primary key (user_id, tenant_id)
-);
+create index idx_membership_cache_user_id on membership_directory_cache(thundercore_user_id);
+create index idx_membership_cache_tenant_id on membership_directory_cache(thundercore_tenant_id);
+create index idx_membership_cache_status on membership_directory_cache(status);

@@ -46,7 +46,7 @@ export async function GET(request: NextRequest) {
 
   // Cold populate the Directory Cache. Fire-and-forget: a cache write must never block sign-in
   // (no-op until the cache DB is plugged in). No rollback — next login re-populates.
-  void upsertDirectorySnapshot(profile, memberships).catch((e) =>
+  void upsertDirectorySnapshot(profile, memberships, token).catch((e) =>
     console.error("[auth/launch] directory cache populate failed:", e),
   );
 
