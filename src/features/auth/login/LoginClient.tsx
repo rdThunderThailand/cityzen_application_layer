@@ -1,34 +1,28 @@
 "use client";
 
 import { useState } from "react";
-import { supabase } from "@/utils/supabase/client";
 import { useRouter } from "next/navigation";
 import LoginCard, { LoginCardValues } from "@/components/auth/LoginCard";
+import { loginAction } from "@/features/auth/actions";
 
 export default function LoginClient() {
   const router = useRouter();
   const [error, setError] = useState<string | null>(null);
-  
 
   const handleSubmit = async ({ email, password }: LoginCardValues) => {
     setError(null);
-
-    const { error } = await supabase.auth.signInWithPassword({
-      email,
-      password,
-    });
-
-    if (error) {
-      setError(error.message);
-    } else {
-      // Full navigation so the /auth/session route handler runs and sets cityzen_session.
-      window.location.href = "/auth/session";
+    // loginAction redirects on success/no-access; only returns on failure.
+    const result = await loginAction(email, password);
+    if (result?.error) {
+      setError(result.error);
     }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen">
+    <div className="flex flex-col justify-center items-center min-h-screen gap-3">
       <LoginCard onSwitchToRegister={() => router.push("/register")} onSubmit={handleSubmit} />
+      {/* LoginCard has no error slot yet — UX team wires this into the card later */}
+      {error && <p className="text-sm text-red-600">{error}</p>}
     </div>
-  )
+  );
 }

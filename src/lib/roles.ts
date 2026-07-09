@@ -9,7 +9,7 @@ const PRIORITY: readonly CityzenRole[] = CITYZEN_ROLES;
 
 // Each role's home page — "/" dispatches here (super_admin's role claim falls back to owner).
 export const ROLE_HOME: Record<CityzenRole, string> = {
-  owner: "/organic/owner/dashboard",
+  owner: "/organic/owner/storyboard",
   executive_viewer: "/organic/executive/daily-brief",
   operator: "/organic/operator/tasks",
 };

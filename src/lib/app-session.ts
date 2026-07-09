@@ -1,5 +1,4 @@
 import { SignJWT, jwtVerify } from "jose";
-import type { NextResponse } from "next/server";
 import type { CityzenRole } from "./roles";
 
 const COOKIE = "cityzen_session";
@@ -22,8 +21,12 @@ export async function verifyAppSession(token: string): Promise<AppSessionClaims 
   catch { return null; }
 }
 // Single source of truth for the session cookie's security attributes.
-export function setAppSessionCookie(res: NextResponse, value: string): void {
-  res.cookies.set(COOKIE, value, {
+// Accepts either NextResponse.cookies (route handlers) or cookies() from
+// next/headers (Server Actions) — both expose the same .set(name, value, options) shape.
+type CookieStore = { set(name: string, value: string, options?: Record<string, unknown>): void };
+
+export function setAppSessionCookie(store: CookieStore, value: string): void {
+  store.set(COOKIE, value, {
     httpOnly: true,
     sameSite: "lax",
     path: "/",

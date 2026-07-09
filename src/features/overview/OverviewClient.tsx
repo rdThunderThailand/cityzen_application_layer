@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { type CityzenRole } from "@/lib/roles";
 import { subApps } from "./mock";
+import { logoutAction } from "@/features/auth/actions";
 
 type OverviewClientProps = {
   role: CityzenRole;
@@ -11,7 +12,14 @@ type OverviewClientProps = {
 export default function OverviewClient({ role, tenantId, email }: OverviewClientProps) {
   return (
     <main className="p-6">
-      <h1 className="text-xl font-bold">CityZen Overview</h1>
+      <div className="flex justify-between items-center mb-2">
+        <h1 className="text-xl font-bold">CityZen Overview</h1>
+        <form action={logoutAction}>
+          <button type="submit" className="px-4 py-2 text-sm font-medium text-white bg-red-600 rounded hover:bg-red-700 transition-colors">
+            ออกจากระบบ
+          </button>
+        </form>
+      </div>
       <p className="text-sm text-gray-500">Scaffold — UI pending.</p>
       
       <div className="mt-4 text-sm text-gray-700">

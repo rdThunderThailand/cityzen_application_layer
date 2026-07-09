@@ -1,5 +1,4 @@
 import { NextResponse, type NextRequest } from "next/server";
-import { createServerClient } from "@supabase/ssr";
 import {
   verifyAppSession,
   APP_SESSION_COOKIE,
@@ -8,8 +7,8 @@ import {
 } from "./lib/app-session";
 import type { CityzenRole } from "./lib/roles";
 
-// Reachable without a cityzen_session (login + the two exchange routes + the dead end).
-const PUBLIC_PATHS = ["/login", "/auth/launch", "/auth/session", "/no-access"];
+// Reachable without a cityzen_session (login page + the two exchange routes + the dead end).
+const PUBLIC_PATHS = ["/login", "/auth/launch", "/auth/login", "/no-access"];
 
 // Each role may only enter its own /organic subtree.
 const ROLE_PREFIX: Record<CityzenRole, string> = {
@@ -18,43 +17,14 @@ const ROLE_PREFIX: Record<CityzenRole, string> = {
   operator: "/organic/operator",
 };
 
+// Auth is gated solely on cityzen_session (JWT). Identity/credentials live in Thunder;
+// cityzen no longer runs a Supabase auth client — see /auth/login (Thunder gateway).
 export async function proxy(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({
-    request,
-  });
-
-  const supabase = createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return request.cookies.getAll();
-        },
-        setAll(cookiesToSet) {
-          cookiesToSet.forEach(({ name, value }) =>
-            request.cookies.set(name, value)
-          );
-          supabaseResponse = NextResponse.next({
-            request,
-          });
-          cookiesToSet.forEach(({ name, value, options }) =>
-            supabaseResponse.cookies.set(name, value, options)
-          );
-        },
-      },
-    }
-  );
-
-  // Keep the Supabase session cookie fresh (the /auth/session exchange needs a live token).
-  await supabase.auth.getUser();
-
   const { pathname } = request.nextUrl;
   const isPublic = PUBLIC_PATHS.some(
     (p) => pathname === p || pathname.startsWith(p + "/")
   );
 
-  // Authorization is gated on cityzen_session — a bare Supabase session is NOT enough.
   const sessionCookie = request.cookies.get(APP_SESSION_COOKIE)?.value;
   const claims = DEV_BYPASS_ENABLED
     ? devBypassClaims()
@@ -63,7 +33,7 @@ export async function proxy(request: NextRequest) {
       : null;
 
   if (!claims) {
-    if (isPublic) return supabaseResponse;
+    if (isPublic) return NextResponse.next();
     const url = request.nextUrl.clone();
     url.pathname = "/login";
     return NextResponse.redirect(url);
@@ -81,7 +51,7 @@ export async function proxy(request: NextRequest) {
     return NextResponse.redirect(url);
   }
 
-  return supabaseResponse;
+  return NextResponse.next();
 }
 
 export const config = {
