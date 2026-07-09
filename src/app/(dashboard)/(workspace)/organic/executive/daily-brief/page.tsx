@@ -1,14 +1,14 @@
 "use client";
 
 import { CardMetric } from "@/components/dashboard/CardMetric";
-import { wasteData } from "../../../../../../../migration/seed_waste_data";
+import { wasteData } from "../../../../../../../migration/executive/daily-brief/seed_waste_data";
 import Tabs from "@/components/basic/Tabs";
 import { dailyBriefTabs } from "./tabs/tabsData";
 import CardGreeting from "@/components/dashboard/CardGreeting";
 import CardScoreGauge from "@/components/dashboard/CardScoreGauge";
 import CardTrend from "@/components/dashboard/CardTrend";
 import { defaultUser } from "@/components/global/mockUserData";
-import { headerTrendItems } from "../../../../../../../migration/seed_trend_items";
+import { headerTrendItems } from "../../../../../../../migration/executive/daily-brief/seed_trend_items";
 import { WandSparkles, ChevronDown, Send, ChevronsRight, Settings, Plus, Image, Mic } from "lucide-react";
 import { AIDropdown } from "@/components/basic/AIDropdown";
 import { useState } from "react";
