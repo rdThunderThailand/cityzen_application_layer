@@ -20,7 +20,7 @@ export default function OwnerStoryboardClient() {
         ))}
         <WorkspacePanel />
       </section>
-      <Link href="/organic/owner/dashboard" className="absolute bottom-4 right-1 transform -translate-x-1/2 flex items-center gap-2 text-xl font-bold text-blue-800">
+      <Link href="/organic/executive/daily-brief" className="absolute bottom-4 right-1 transform -translate-x-1/2 flex items-center gap-2 text-xl font-bold text-blue-800">
         เข้าสู่ Executive Workspace
         <ArrowRight className="h-6 w-6" />
       </Link>
