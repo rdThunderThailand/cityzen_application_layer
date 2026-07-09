@@ -4,6 +4,7 @@ import { cn } from '../../utils/cn';
 export interface TabItem {
     value: string | number;
     title: string;
+    count?: number;
     content?: () => ReactNode;
 }
 
@@ -58,7 +59,7 @@ export const Tabs = ({
                                     : "text-slate-500 hover:text-slate-800"
                             )}
                         >
-                            {tab.title}
+                            {tab.title} {tab?.count && <span>({tab.count})</span>}
                             {isActive && (
                                 <span className="absolute left-0 right-0 -bottom-px h-0.5 bg-[#3B82F6] rounded-full" />
                             )}

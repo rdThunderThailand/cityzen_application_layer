@@ -4,10 +4,13 @@ import { cardEventData } from "../../../../../../../../migration/seed_event_data
 import { cardTaskData } from "../../../../../../../../migration/seed_task_data";
 import { CardMetricWLineChart } from "@/components/dashboard/CardMetricWLineChart";
 import { dataWithinDay } from "../../../../../../../../migration/seed_data_within_day";
+import { CardMetric } from "@/components/dashboard/CardMetric";
 
 export function Tabs1Panel() {
     return (
         <div className="">
+            <p>CardMetric</p>
+            {/* <CardMetric /> */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <CardWMap className="h-[290px]" />
                 <CardData variant="accent" heading={cardEventData.heading} count={cardEventData.count} items={cardEventData.items} className="h-[290px]" />

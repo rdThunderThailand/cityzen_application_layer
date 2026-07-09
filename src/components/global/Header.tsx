@@ -3,7 +3,7 @@ import { usePathname } from "next/navigation";
 import { Bell, Scan, ChevronDown, Settings, Info, LogOut } from "lucide-react";
 import { cn } from "../../utils/cn";
 import { defaultUser } from "./mockUserData";
-import { WeatherCard } from "./WeatherCard";
+import { WeatherCard } from "../basic/WeatherCard";
 import { executiveNavigationItems } from "@/app/(dashboard)/(workspace)/organic/executive/navItem";
 
 
