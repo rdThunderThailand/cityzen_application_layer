@@ -4,7 +4,7 @@ import { Bell, Scan, ChevronDown, Settings, Info, LogOut } from "lucide-react";
 import { cn } from "../../utils/cn";
 import { defaultUser } from "./mockUserData";
 import { WeatherCard } from "../basic/WeatherCard";
-import { executiveNavigationItems } from "@/app/(dashboard)/(workspace)/organic/executive/navItem";
+import { executiveNavigationItems } from "@/app/(dashboard)/(workspace)/resource-intelligence/executive/navItem";
 
 
 export interface HeaderProps {
