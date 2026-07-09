@@ -6,6 +6,7 @@ import { z } from "zod";
 import { loginWithPassword, getMe, getMyMemberships } from "@/lib/thunder";
 import { resolveCityzenRole, isThunderSuperAdmin } from "@/lib/roles";
 import { signAppSession, setAppSessionCookie, APP_SESSION_COOKIE } from "@/lib/app-session";
+import { upsertDirectorySnapshot } from "@/lib/directory-cache";
 
 const loginSchema = z.object({
   email: z.string().email(),
@@ -40,7 +41,9 @@ export async function loginAction(
   let memberships;
   try {
     profile = await getMe(session.access_token);
+    console.log(profile)
     memberships = await getMyMemberships(session.access_token);
+    console.log(memberships)
   } catch {
     // Fail closed: no memberships → no role → /no-access below.
   }
@@ -55,14 +58,18 @@ export async function loginAction(
     redirect("/no-access");
   }
 
+  // Cold populate the Directory Cache. Fire-and-forget: a cache write must never block sign-in
+  // (no-op until the cache DB is plugged in). No rollback — next login re-populates.
+  void upsertDirectorySnapshot(profile, memberships, session.access_token).catch((e) =>
+    console.error("[loginAction] directory cache populate failed:", e),
+  );
+
   const cookie = await signAppSession({
     sub: session.user_id ?? "",
     email: parsed.data.email,
     tenant_id: tenantId,
     role: role ?? "owner", // super_admin has no tenant role; isSuperAdmin bypasses the prefix guard anyway
     isSuperAdmin,
-    profile,
-    memberships,
   });
 
   const cookieStore = await cookies();
