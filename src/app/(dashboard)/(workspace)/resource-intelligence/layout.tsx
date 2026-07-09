@@ -4,8 +4,17 @@ import { Footer } from "@/components/global/Footer";
 import { Header } from "@/components/global/Header";
 import SideBarBlock from "@/components/global/SideBarBlock";
 import { footerContent } from "./footerContent";
+import { usePathname } from "next/navigation";
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }) {
+const FULL_CANVAS_ROUTES = new Set(["/organic/executive/storyboard"]);
+
+export default function DashboardLayout({ children }: { children: React.ReactNode }){
+    const pathname = usePathname();
+
+    if (FULL_CANVAS_ROUTES.has(pathname)) {
+        return <>{children}</>;
+    }
+
     return (
         <div className="flex h-screen w-screen overflow-hidden">
             <div className="shrink-0">
