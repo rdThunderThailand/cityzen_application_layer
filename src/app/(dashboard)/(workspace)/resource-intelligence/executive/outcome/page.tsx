@@ -4,10 +4,9 @@ import { useState } from "react";
 import {
     ArrowDown,
     ArrowUp,
-    Calendar,
     ChevronDown,
+    ChevronRight,
     ChevronsRight,
-    Download,
     Image,
     Mic,
     Plus,
@@ -15,14 +14,7 @@ import {
 } from "lucide-react";
 import { cn } from "@/utils/cn";
 import { AIDropdown } from "@/components/basic/AIDropdown";
-import Dropdown from "@/components/basic/Dropdown";
 import { CardMetric } from "@/components/dashboard/CardMetric";
-import {
-    periodFilterOptions,
-    compareFilterOptions,
-    dimensionFilterOptions,
-    outcomeFilterDefaults,
-} from "../../../../../../../migration/executive/outcome/seed_filters";
 import { keyOutcomeStats } from "../../../../../../../migration/executive/outcome/seed_key_outcomes";
 import { dimensionRadarData, radarAxisLabels, type RadarSeries } from "../../../../../../../migration/executive/outcome/seed_dimension_radar";
 import {
@@ -33,10 +25,12 @@ import {
     impactChartSeries,
 } from "../../../../../../../migration/executive/outcome/seed_impact";
 import { missionCompletionData } from "../../../../../../../migration/executive/outcome/seed_mission_completion";
+import { outstandingResultData } from "../../../../../../../migration/executive/outcome/seed_outstanding_results";
 import { weeklyComparisonData } from "../../../../../../../migration/executive/outcome/seed_weekly_comparison";
 import { topProjectData } from "../../../../../../../migration/executive/outcome/seed_top_projects";
 import {
     longTermTrendHeading,
+    longTermTrendAllDataHref,
     longTermTrendXLabels,
     longTermTrendYMax,
     longTermTrendYMin,
@@ -152,90 +146,50 @@ function DonutChart({ segments, size = 130, strokeWidth = 14 }: { segments: { pe
     );
 }
 
+function CardHeaderLink({ heading, href = "#" }: { heading: string; href?: string }) {
+    return (
+        <div className="shrink-0 flex items-center justify-between gap-2 border-b border-slate-50 pb-2">
+            <h3 className="text-sm font-semibold text-slate-800">{heading}</h3>
+            <a
+                href={href}
+                className="flex items-center gap-0.5 text-xs font-medium text-[#3B82F6] hover:text-blue-800 transition-colors duration-150 shrink-0"
+            >
+                ดูทั้งหมด
+                <ChevronRight className="w-3.5 h-3.5" />
+            </a>
+        </div>
+    );
+}
+
 export default function Outcome() {
     const [activeAI, setActiveAI] = useState<string | null>(null);
-    const [period, setPeriod] = useState<string | number>(outcomeFilterDefaults.period);
-    const [compare, setCompare] = useState<string | number>(outcomeFilterDefaults.compare);
-    const [dimension, setDimension] = useState<string | number>(outcomeFilterDefaults.dimension);
 
     return (
-        <div className="w-full flex relative flex-1">
-            <div className="flex-1 px-6 transition-all duration-300 pb-4">
+        <div className="w-full flex relative flex-1 min-h-0">
+            <div className="flex-1 min-h-0 flex flex-col overflow-hidden px-6 transition-all duration-300 pb-4">
                 {/* AI dropdown */}
-                <div className="w-full flex justify-end mt-4">
+                <div className="w-full flex justify-end mt-4 shrink-0">
                     <AIDropdown
                         selectedValue={activeAI}
                         onChange={setActiveAI}
                     />
                 </div>
 
-                {/* Filter bar */}
-                <div className="flex flex-wrap items-end gap-4 p-4 border border-slate-100 rounded-xl shadow-sm bg-white mt-3">
-                    <div className="flex flex-col gap-1.5">
-                        <span className="flex items-center gap-1 text-[11px] text-slate-400">
-                            <Calendar className="w-3 h-3" />
-                            ช่วงเวลา
-                        </span>
-                        <Dropdown
-                            options={periodFilterOptions}
-                            selectedValue={period}
-                            onChange={setPeriod}
-                            placeholder="เลือกช่วงเวลา"
-                            className="w-[230px]"
-                        />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                        <span className="text-[11px] text-slate-400">เปรียบเทียบกับ</span>
-                        <Dropdown
-                            options={compareFilterOptions}
-                            selectedValue={compare}
-                            onChange={setCompare}
-                            placeholder="เลือกช่วงเปรียบเทียบ"
-                            className="w-[260px]"
-                        />
-                    </div>
-                    <div className="flex flex-col gap-1.5">
-                        <span className="text-[11px] text-slate-400">มิติการวิเคราะห์</span>
-                        <Dropdown
-                            options={dimensionFilterOptions}
-                            selectedValue={dimension}
-                            onChange={setDimension}
-                            placeholder="เลือกมิติ"
-                            className="w-[200px]"
-                        />
-                    </div>
-                    <button
-                        type="button"
-                        className="ml-auto flex items-center gap-2 text-sm font-medium text-slate-600 bg-white border border-slate-300 rounded-lg px-4 py-2 hover:bg-slate-50 transition-colors shrink-0"
-                    >
-                        <Download className="w-4 h-4" />
-                        ส่งออกรายงาน
-                    </button>
+                {/* Key outcome stats — standalone CardMetric cards in a row, matching the
+                    reference image (no shared wrapping card/heading). */}
+                <div className="shrink-0 flex gap-4 mt-4">
+                    {keyOutcomeStats.map((stat, index) => (
+                        <CardMetric key={index} {...stat} className={cn(stat.className, "flex-1 min-w-0")} />
+                    ))}
                 </div>
 
-                {/* Key outcome summary — CardMetric reused per stat, border/shadow stripped via
-                    className overrides so all 5 sit as columns inside one shared heading card,
-                    matching the reference image (unlike war-room/communication which use separate cards). */}
-                <div className="flex flex-col gap-3 p-4 border border-slate-100 rounded-xl shadow-sm bg-white mt-4">
-                    <h3 className="text-sm font-semibold text-slate-800">สรุปผลลัพธ์สำคัญ</h3>
-                    <div className="flex gap-4">
-                        {keyOutcomeStats.map((stat, index) => (
-                            <CardMetric
-                                key={index}
-                                {...stat}
-                                className={cn(stat.className, "flex-1 border-none shadow-none p-0 min-w-0")}
-                            />
-                        ))}
-                    </div>
-                </div>
-
-                {/* Dimension radar + Impact + Mission completion row */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-4 items-stretch">
+                {/* Dimension radar + Impact + Mission completion + Outstanding results row */}
+                <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-4 gap-3 mt-3 items-stretch">
                     {/* Dimension radar — no radar/spider chart component exists in components/,
                         composed inline as SVG. */}
-                    <div className="flex flex-col gap-3 p-4 border border-slate-100 rounded-xl shadow-sm bg-white">
-                        <h3 className="text-sm font-semibold text-slate-800">{dimensionRadarData.heading}</h3>
-                        <div className="flex items-center gap-3 flex-wrap">
+                    <div className="h-full min-h-0 flex flex-col gap-2 p-3 border border-slate-100 rounded-xl shadow-sm bg-white overflow-hidden">
+                        <CardHeaderLink heading={dimensionRadarData.heading} href={dimensionRadarData.allDataHref} />
+                        <div className="shrink-0 flex items-center gap-3 flex-wrap">
                             {dimensionRadarData.series.map((s) => (
                                 <span key={s.key} className="flex items-center gap-1 text-[10px] text-slate-500">
                                     <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: s.colorHex }} />
@@ -243,19 +197,16 @@ export default function Outcome() {
                                 </span>
                             ))}
                         </div>
-                        <div className="w-full aspect-square max-w-[280px] mx-auto py-2">
+                        <div className="flex-1 min-h-0 w-full flex items-center justify-center">
                             <RadarChart axisLabels={radarAxisLabels} series={dimensionRadarData.series} />
                         </div>
-                        <button type="button" className="mt-1 text-xs font-medium text-slate-600 bg-slate-50 hover:bg-slate-100 transition-colors rounded-lg py-2 text-center">
-                            ดูรายละเอียดรายมิติ
-                        </button>
                     </div>
 
                     {/* Impact on citizens — mini stat tiles (no icon, unlike CardMetric) plus a
                         multi-series line chart; neither has a matching component, composed inline. */}
-                    <div className="flex flex-col gap-3 p-4 border border-slate-100 rounded-xl shadow-sm bg-white">
-                        <h3 className="text-sm font-semibold text-slate-800">ผลกระทบต่อประชาชน (Impact)</h3>
-                        <div className="grid grid-cols-3 gap-2">
+                    <div className="h-full min-h-0 flex flex-col gap-2 p-3 border border-slate-100 rounded-xl shadow-sm bg-white overflow-hidden">
+                        <CardHeaderLink heading="ผลกระทบต่อประชาชน (Impact)" />
+                        <div className="shrink-0 grid grid-cols-3 gap-2">
                             {impactTiles.map((tile, index) => (
                                 <div key={index} className="flex flex-col gap-1 min-w-0">
                                     <span className="text-[10px] text-slate-400 truncate">{tile.label}</span>
@@ -269,9 +220,9 @@ export default function Outcome() {
                             ))}
                         </div>
 
-                        <div className="mt-1">
-                            <span className="text-xs font-semibold text-slate-600">{impactChartHeading}</span>
-                            <div className="flex items-center gap-3 mt-2 mb-2 flex-wrap">
+                        <div className="flex-1 min-h-0 flex flex-col">
+                            <span className="shrink-0 text-xs font-semibold text-slate-600">{impactChartHeading}</span>
+                            <div className="shrink-0 flex items-center gap-3 mt-1 mb-1 flex-wrap">
                                 {impactChartSeries.map((s) => (
                                     <span key={s.key} className="flex items-center gap-1 text-[10px] text-slate-500">
                                         <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: s.colorHex }} />
@@ -279,15 +230,15 @@ export default function Outcome() {
                                     </span>
                                 ))}
                             </div>
-                            <div className="flex gap-2">
-                                <div className="flex flex-col justify-between text-[9px] text-slate-300 h-[160px] py-1 shrink-0">
+                            <div className="flex-1 min-h-0 flex gap-2">
+                                <div className="shrink-0 flex flex-col justify-between text-[9px] text-slate-300 py-1">
                                     <span>1M</span>
                                     <span>750K</span>
                                     <span>500K</span>
                                     <span>250K</span>
                                     <span>0</span>
                                 </div>
-                                <svg viewBox={`0 0 ${LINE_CHART_WIDTH} ${LINE_CHART_HEIGHT}`} preserveAspectRatio="none" className="flex-1 h-[160px] min-w-0">
+                                <svg viewBox={`0 0 ${LINE_CHART_WIDTH} ${LINE_CHART_HEIGHT}`} preserveAspectRatio="none" className="flex-1 min-w-0 h-full">
                                     {GRID_FRACTIONS.map((frac) => (
                                         <line key={frac} x1={0} x2={LINE_CHART_WIDTH} y1={frac * LINE_CHART_HEIGHT} y2={frac * LINE_CHART_HEIGHT} stroke="#f1f5f9" strokeWidth={1} />
                                     ))}
@@ -311,7 +262,7 @@ export default function Outcome() {
                                     })}
                                 </svg>
                             </div>
-                            <div className="flex justify-between text-[9px] text-slate-400 mt-1 pl-8">
+                            <div className="shrink-0 flex justify-between text-[9px] text-slate-400 mt-1 pl-8">
                                 {impactChartXLabels.map((label, index) => (
                                     <span key={index}>{label}</span>
                                 ))}
@@ -321,17 +272,17 @@ export default function Outcome() {
 
                     {/* Mission completion — multi-segment donut, no matching component
                         (CardScoreGauge is a single-band semicircle gauge), composed inline. */}
-                    <div className="flex flex-col gap-3 p-4 border border-slate-100 rounded-xl shadow-sm bg-white">
-                        <h3 className="text-sm font-semibold text-slate-800">{missionCompletionData.heading}</h3>
-                        <div className="flex items-center gap-4">
-                            <div className="relative w-[120px] h-[120px] shrink-0">
+                    <div className="h-full min-h-0 flex flex-col gap-2 p-3 border border-slate-100 rounded-xl shadow-sm bg-white overflow-hidden">
+                        <CardHeaderLink heading={missionCompletionData.heading} href={missionCompletionData.allDataHref} />
+                        <div className="flex-1 min-h-0 flex items-center gap-4">
+                            <div className="relative h-full aspect-square shrink-0">
                                 <DonutChart segments={missionCompletionData.segments.map((s) => ({ percentage: s.percentage, colorHex: s.colorHex }))} />
                                 <div className="absolute inset-0 flex flex-col items-center justify-center">
                                     <span className="text-2xl font-bold text-slate-800">{missionCompletionData.total}</span>
                                     <span className="text-[10px] text-slate-400">{missionCompletionData.totalLabel}</span>
                                 </div>
                             </div>
-                            <div className="flex flex-col gap-2.5 flex-1 min-w-0">
+                            <div className="flex flex-col gap-2 flex-1 min-w-0 overflow-hidden">
                                 {missionCompletionData.segments.map((segment) => (
                                     <div key={segment.key} className="flex items-center justify-between text-xs gap-2">
                                         <span className="flex items-center gap-1.5 text-slate-600 truncate">
@@ -343,18 +294,42 @@ export default function Outcome() {
                                 ))}
                             </div>
                         </div>
-                        <button type="button" className="mt-1 text-xs font-medium text-slate-600 bg-slate-50 hover:bg-slate-100 transition-colors rounded-lg py-2 text-center">
-                            ดูรายละเอียดภารกิจ
-                        </button>
+                    </div>
+
+                    {/* Outstanding results — trophy icon + title + description + status badge row
+                        has no matching CardData variant, composed inline. */}
+                    <div className="h-full min-h-0 flex flex-col gap-3 p-3 border border-slate-100 rounded-xl shadow-sm bg-white overflow-hidden">
+                        <h3 className="shrink-0 text-sm font-semibold text-slate-800">{outstandingResultData.heading}</h3>
+                        <div className="flex-1 min-h-0 flex flex-col justify-around gap-3 overflow-hidden">
+                            {outstandingResultData.items.map((item, index) => {
+                                const ItemIcon = item.icon;
+                                return (
+                                    <div key={index} className="flex items-start gap-3">
+                                        <div className="flex items-center justify-center w-8 h-8 bg-amber-50 text-amber-500 rounded-full shrink-0">
+                                            <ItemIcon className="w-4 h-4" />
+                                        </div>
+                                        <div className="flex-1 min-w-0">
+                                            <div className="flex items-start justify-between gap-2">
+                                                <span className="text-sm font-bold text-slate-800 leading-snug">{item.title}</span>
+                                                <span className="text-[10px] font-semibold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full shrink-0 whitespace-nowrap">
+                                                    {item.badge}
+                                                </span>
+                                            </div>
+                                            <p className="text-xs text-slate-400 mt-1 leading-snug">{item.description}</p>
+                                        </div>
+                                    </div>
+                                );
+                            })}
+                        </div>
                     </div>
                 </div>
 
                 {/* Weekly comparison + Top projects + Long-term trend row */}
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 mt-4 items-stretch">
+                <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-3 gap-3 mt-3 items-stretch">
                     {/* Weekly comparison table — no table component exists in components/. */}
-                    <div className="flex flex-col gap-3 p-4 border border-slate-100 rounded-xl shadow-sm bg-white">
-                        <h3 className="text-sm font-semibold text-slate-800">{weeklyComparisonData.heading}</h3>
-                        <div className="overflow-x-auto">
+                    <div className="h-full min-h-0 flex flex-col gap-2 p-3 border border-slate-100 rounded-xl shadow-sm bg-white overflow-hidden">
+                        <CardHeaderLink heading={weeklyComparisonData.heading} href={weeklyComparisonData.allDataHref} />
+                        <div className="flex-1 min-h-0 overflow-hidden">
                             <table className="w-full text-xs">
                                 <thead>
                                     <tr className="text-left text-slate-400">
@@ -367,10 +342,10 @@ export default function Outcome() {
                                 <tbody className="divide-y divide-slate-50">
                                     {weeklyComparisonData.items.map((row, index) => (
                                         <tr key={index}>
-                                            <td className="py-2.5 pr-2 text-slate-600 whitespace-nowrap">{row.metric}</td>
-                                            <td className="py-2.5 pr-2 text-right font-semibold text-slate-800 whitespace-nowrap">{row.currentWeek}</td>
-                                            <td className="py-2.5 pr-2 text-right text-slate-500 whitespace-nowrap">{row.previousWeek}</td>
-                                            <td className={cn("py-2.5 text-right font-semibold whitespace-nowrap", row.isPositive ? "text-emerald-500" : "text-rose-500")}>
+                                            <td className="py-1.5 pr-2 text-slate-600 whitespace-nowrap">{row.metric}</td>
+                                            <td className="py-1.5 pr-2 text-right font-semibold text-slate-800 whitespace-nowrap">{row.currentWeek}</td>
+                                            <td className="py-1.5 pr-2 text-right text-slate-500 whitespace-nowrap">{row.previousWeek}</td>
+                                            <td className={cn("py-1.5 text-right font-semibold whitespace-nowrap", row.isPositive ? "text-emerald-500" : "text-rose-500")}>
                                                 <span className="inline-flex items-center gap-0.5">
                                                     {row.isPositive ? <ArrowUp className="w-3 h-3" /> : <ArrowDown className="w-3 h-3" />}
                                                     {row.changeLabel}
@@ -385,21 +360,25 @@ export default function Outcome() {
 
                     {/* Top projects — thumbnail + title + progress bar + secondary value row has
                         no matching CardData variant, composed inline. */}
-                    <div className="flex flex-col gap-3 p-4 border border-slate-100 rounded-xl shadow-sm bg-white">
-                        <h3 className="text-sm font-semibold text-slate-800">{topProjectData.heading}</h3>
-                        <div className="flex flex-col divide-y divide-slate-50">
+                    <div className="h-full min-h-0 flex flex-col gap-2 p-3 border border-slate-100 rounded-xl shadow-sm bg-white overflow-hidden">
+                        <CardHeaderLink heading={topProjectData.heading} href={topProjectData.allDataHref} />
+                        <div className="shrink-0 flex items-center justify-between gap-2 text-[10px] text-slate-400">
+                            <span>โครงการ / มาตรการ</span>
+                            <span className="shrink-0">ผลกระทบ (คน) · ลดความเสียหาย (ลบ.)</span>
+                        </div>
+                        <div className="flex-1 min-h-0 overflow-hidden flex flex-col divide-y divide-slate-50">
                             {topProjectData.items.map((project, index) => {
                                 const maxImpact = topProjectData.items[0].impactPeopleValue;
                                 const widthPct = (project.impactPeopleValue / maxImpact) * 100;
                                 return (
-                                    <div key={index} className="flex items-center gap-2.5 py-2.5 first:pt-0 last:pb-0">
-                                        <img src={project.imageUrl} alt="" className="w-9 h-9 rounded-lg object-cover shrink-0 bg-slate-100" />
+                                    <div key={index} className="flex items-center gap-2.5 py-1.5 first:pt-0 last:pb-0">
+                                        <img src={project.imageUrl} alt="" className="w-8 h-8 rounded-lg object-cover shrink-0 bg-slate-100" />
                                         <div className="flex-1 min-w-0">
                                             <p className="text-xs font-semibold text-slate-800 truncate">{project.title}</p>
                                             <div className="flex items-center gap-2 mt-1">
                                                 <span className="text-[10px] text-slate-400 shrink-0 w-16 truncate">{project.impactPeople}</span>
                                                 <div className="h-1.5 flex-1 bg-slate-100 rounded-full overflow-hidden min-w-0">
-                                                    <div className="h-full bg-blue-500 rounded-full" style={{ width: `${widthPct}%` }} />
+                                                    <div className="h-full bg-emerald-500 rounded-full" style={{ width: `${widthPct}%` }} />
                                                 </div>
                                             </div>
                                         </div>
@@ -408,77 +387,62 @@ export default function Outcome() {
                                 );
                             })}
                         </div>
-                        <button type="button" className="mt-1 text-xs font-medium text-slate-600 bg-slate-50 hover:bg-slate-100 transition-colors rounded-lg py-2 text-center">
-                            ดูโครงการทั้งหมด
-                        </button>
                     </div>
 
-                    {/* Long-term trend — multi-series line chart, no matching chart component. */}
-                    <div className="flex flex-col gap-3 p-4 border border-slate-100 rounded-xl shadow-sm bg-white">
-                        <h3 className="text-sm font-semibold text-slate-800">{longTermTrendHeading}</h3>
-                        <div className="relative">
-                            <svg viewBox={`0 0 ${LINE_CHART_WIDTH} ${LINE_CHART_HEIGHT}`} preserveAspectRatio="none" className="w-full h-[160px]">
-                                {GRID_FRACTIONS.map((frac) => (
-                                    <line key={frac} x1={0} x2={LINE_CHART_WIDTH} y1={frac * LINE_CHART_HEIGHT} y2={frac * LINE_CHART_HEIGHT} stroke="#f1f5f9" strokeWidth={1} />
+                    {/* Long-term trend — multi-series line chart with a vertical legend list to
+                        the right, no matching chart component. */}
+                    <div className="h-full min-h-0 flex flex-col gap-2 p-3 border border-slate-100 rounded-xl shadow-sm bg-white overflow-hidden">
+                        <CardHeaderLink heading={longTermTrendHeading} href={longTermTrendAllDataHref} />
+                        <div className="flex-1 min-h-0 flex gap-3">
+                            <div className="flex-1 min-w-0 flex flex-col">
+                                <svg viewBox={`0 0 ${LINE_CHART_WIDTH} ${LINE_CHART_HEIGHT}`} preserveAspectRatio="none" className="flex-1 min-h-0 w-full">
+                                    {GRID_FRACTIONS.map((frac) => (
+                                        <line key={frac} x1={0} x2={LINE_CHART_WIDTH} y1={frac * LINE_CHART_HEIGHT} y2={frac * LINE_CHART_HEIGHT} stroke="#f1f5f9" strokeWidth={1} />
+                                    ))}
+                                    {longTermTrendSeries.map((s) => {
+                                        const points = getLinePoints(s.data.map((v) => v - longTermTrendYMin), longTermTrendYMax - longTermTrendYMin);
+                                        return (
+                                            <polyline
+                                                key={s.key}
+                                                points={points.map((p) => `${p.x},${p.y}`).join(' ')}
+                                                fill="none"
+                                                stroke={s.colorHex}
+                                                strokeWidth={2}
+                                                strokeLinecap="round"
+                                                strokeLinejoin="round"
+                                            />
+                                        );
+                                    })}
+                                </svg>
+                                <div className="shrink-0 flex justify-between text-[9px] text-slate-400 mt-1">
+                                    {longTermTrendXLabels.map((label, index) => (
+                                        <span key={index}>{label}</span>
+                                    ))}
+                                </div>
+                            </div>
+                            <div className="w-[92px] shrink-0 flex flex-col justify-center gap-3">
+                                {longTermTrendSeries.map((s) => (
+                                    <div key={s.key} className="flex flex-col gap-0.5 min-w-0">
+                                        <span className="flex items-center gap-1 text-[10px] text-slate-500 truncate">
+                                            <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: s.colorHex }} />
+                                            {s.label}
+                                        </span>
+                                        <span className="flex items-center gap-0.5 text-xs font-bold" style={{ color: s.colorHex }}>
+                                            {s.endValue}
+                                            <ArrowUp className="w-3 h-3" />
+                                            {s.trendLabel}
+                                        </span>
+                                    </div>
                                 ))}
-                                {longTermTrendSeries.map((s) => {
-                                    const points = getLinePoints(s.data.map((v) => v - longTermTrendYMin), longTermTrendYMax - longTermTrendYMin);
-                                    return (
-                                        <polyline
-                                            key={s.key}
-                                            points={points.map((p) => `${p.x},${p.y}`).join(' ')}
-                                            fill="none"
-                                            stroke={s.colorHex}
-                                            strokeWidth={2}
-                                            strokeLinecap="round"
-                                            strokeLinejoin="round"
-                                        />
-                                    );
-                                })}
-                            </svg>
-                            {longTermTrendSeries.map((s) => {
-                                const points = getLinePoints(s.data.map((v) => v - longTermTrendYMin), longTermTrendYMax - longTermTrendYMin);
-                                const last = points[points.length - 1];
-                                return (
-                                    <span
-                                        key={s.key}
-                                        className="absolute text-[9px] font-semibold whitespace-nowrap -translate-y-1/2 flex items-center gap-0.5"
-                                        style={{
-                                            color: s.colorHex,
-                                            left: `calc(${(last.x / LINE_CHART_WIDTH) * 100}% + 6px)`,
-                                            top: `${(last.y / LINE_CHART_HEIGHT) * 100}%`,
-                                        }}
-                                    >
-                                        {s.endValue}
-                                        <ArrowUp className="w-2.5 h-2.5" />
-                                        {s.trendLabel}
-                                    </span>
-                                );
-                            })}
+                            </div>
                         </div>
-                        <div className="flex justify-between text-[9px] text-slate-400">
-                            {longTermTrendXLabels.map((label, index) => (
-                                <span key={index}>{label}</span>
-                            ))}
-                        </div>
-                        <div className="flex items-center gap-3 flex-wrap">
-                            {longTermTrendSeries.map((s) => (
-                                <span key={s.key} className="flex items-center gap-1 text-[10px] text-slate-500">
-                                    <span className="w-2 h-2 rounded-full shrink-0" style={{ backgroundColor: s.colorHex }} />
-                                    {s.label}
-                                </span>
-                            ))}
-                        </div>
-                        <button type="button" className="mt-1 text-xs font-medium text-slate-600 bg-slate-50 hover:bg-slate-100 transition-colors rounded-lg py-2 text-center">
-                            ดูแนวโน้มทั้งหมด
-                        </button>
                     </div>
                 </div>
             </div>
 
             {/* AI panel */}
             {activeAI && (
-                <div className="-z-1 mt-3 w-[380px] shrink-0 border-l-2 border-gray-200 bg-white backdrop-blur-md p-4 flex flex-col h-full overflow-y-auto animate-in slide-in-from-right duration-300">
+                <div className="-z-1 w-[380px] h-full shrink-0 border-l-2 border-gray-200 bg-white backdrop-blur-md p-4 flex flex-col h-full overflow-y-auto animate-in slide-in-from-right duration-300">
                     {/* Header Navigation Utilities */}
                     <div className="flex justify-between items-center mb-6">
                         <button className="flex items-center gap-1 rounded-lg bg-slate-600 px-3 py-1.5 text-xs text-white hover:bg-slate-700 transition-colors font-medium">
@@ -536,6 +500,7 @@ export default function Outcome() {
                             </div>
                         </div>
                     </div>
+
                 </div>
             )}
         </div>

@@ -9,6 +9,7 @@ export const wasteData = [
         subValue: 10,
         subUnit: "%",
         positiveData: false, //ถ้าเพิ่มจะเป็นสีแดง ลูกศรขึ้น
+        classNameForIcon: 'bg-rose-50 text-rose-500',
         date: new Date()
     },
     {
@@ -19,6 +20,7 @@ export const wasteData = [
         subValue: -7.47,
         subUnit: "%",
         positiveData: false,
+        classNameForIcon: 'bg-orange-50 text-orange-500',
         date: new Date()
     },
     {
@@ -29,6 +31,7 @@ export const wasteData = [
         subValue: 17,
         subUnit: "%",
         positiveData: true, //ถ้าเพิ่มจะเป็นสีเขียว ลูกศรขึ้น
+        classNameForIcon: 'bg-yellow-50 text-yellow-500',
         date: new Date()
     },
     {
@@ -39,6 +42,7 @@ export const wasteData = [
         subValue: 10.2,
         subUnit: "%",
         positiveData: true,
+        classNameForIcon: 'bg-emerald-50 text-emerald-500',
         date: new Date()
     },
     {
@@ -49,6 +53,7 @@ export const wasteData = [
         subValue: 12.5,
         subUnit: "%",
         positiveData: false,
+        classNameForIcon: 'bg-blue-50 text-blue-500',
         date: new Date()
     },
     {
@@ -57,6 +62,7 @@ export const wasteData = [
         unit: "ภารกิจ",
         icon: FileCheckCorner,
         subtitle: "ครบกำหนด 3 ภารกิจ",
+        classNameForIcon: 'bg-purple-50 text-purple-500',
         date: new Date()
     },
 ]
