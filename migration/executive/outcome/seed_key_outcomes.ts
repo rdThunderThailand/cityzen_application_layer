@@ -1,0 +1,55 @@
+import { CheckCircle2, UsersRound, Clock, Coins, Heart } from 'lucide-react';
+import type { CardMetricProps } from '@/components/dashboard/CardMetric';
+
+export const keyOutcomeStats: CardMetricProps[] = [
+  {
+    icon: CheckCircle2,
+    value: 85,
+    unit: '%',
+    title: 'การกิจสำเร็จตามเป้าหมาย',
+    subValue: 18,
+    subUnit: '% จากสัปดาห์ก่อน',
+    positiveData: true,
+    className: '[&_div:first-child]:bg-emerald-50 [&_div:first-child]:text-emerald-500 border-slate-100',
+  },
+  {
+    icon: UsersRound,
+    value: 32,
+    unit: '%',
+    title: 'ประชาชนได้รับผลกระทบลดลง',
+    subValue: -32,
+    subUnit: '% จากสัปดาห์ก่อน',
+    positiveData: false,
+    className: '[&_div:first-child]:bg-purple-50 [&_div:first-child]:text-purple-500 border-slate-100',
+  },
+  {
+    icon: Clock,
+    value: 28,
+    unit: '%',
+    title: 'เวลาตอบสนองเฉลี่ยลดลง',
+    subValue: -28,
+    subUnit: '% จากสัปดาห์ก่อน',
+    positiveData: false,
+    className: '[&_div:first-child]:bg-blue-50 [&_div:first-child]:text-blue-500 border-slate-100',
+  },
+  {
+    icon: Coins,
+    value: 92,
+    unit: '%',
+    title: 'งบประมาณใช้จ่ายคุ้มค่า',
+    subValue: 12,
+    subUnit: '% จากสัปดาห์ก่อน',
+    positiveData: true,
+    className: '[&_div:first-child]:bg-orange-50 [&_div:first-child]:text-orange-500 border-slate-100',
+  },
+  {
+    icon: Heart,
+    value: 4.6,
+    unit: '/5',
+    title: 'ความพึงพอใจประชาชน',
+    subValue: 0.6,
+    subUnit: ' จากสัปดาห์ก่อน',
+    positiveData: true,
+    className: '[&_div:first-child]:bg-rose-50 [&_div:first-child]:text-rose-500 border-slate-100',
+  },
+];

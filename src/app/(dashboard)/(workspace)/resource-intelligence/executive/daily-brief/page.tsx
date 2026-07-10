@@ -35,13 +35,13 @@ export default function DailyBrief() {
                         avatarAlt={defaultUser.name}
                     />
                     <CardScoreGauge
-                        className="h-[139px] w-[160px]"
+                        className="h-[139px] w-[200px]"
                         title="สถานะภาพรวมวันนี้"
                         score={82}
                         statusLabel="ปกติ (ดี)"
                     />
                     <CardTrend
-                        className="lg:w-[240px] h-[139px]"
+                        className="lg:w-[280px] h-[139px]"
                         title="แนวโน้มเทียบกับเมื่อวาน"
                         items={headerTrendItems}
                     />

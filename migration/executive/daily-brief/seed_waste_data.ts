@@ -56,8 +56,7 @@ export const wasteData = [
         value: 11,
         unit: "ภารกิจ",
         icon: FileCheckCorner,
-        subValue: 0,
-        positiveData: false,
+        subtitle: "ครบกำหนด 3 ภารกิจ",
         date: new Date()
     },
 ]

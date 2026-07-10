@@ -1,0 +1,55 @@
+import { Send, Users, Eye, ThumbsUp, AlertCircle } from 'lucide-react';
+import type { CardMetricProps } from '@/components/dashboard/CardMetric';
+
+export const communicationOverviewStats: CardMetricProps[] = [
+  {
+    icon: Send,
+    value: 28,
+    unit: 'ข้อความ',
+    title: 'ข้อความที่ส่งทั้งหมด',
+    subValue: 27,
+    subUnit: '% เทียบกับเมื่อวาน',
+    positiveData: true,
+    className: '[&_div:first-child]:bg-blue-50 [&_div:first-child]:text-blue-500 border-slate-100',
+  },
+  {
+    icon: Users,
+    value: 856250,
+    unit: 'คน',
+    title: 'ประชาชนเข้าถึง',
+    subValue: 18,
+    subUnit: '% เทียบกับเมื่อวาน',
+    positiveData: true,
+    className: '[&_div:first-child]:bg-emerald-50 [&_div:first-child]:text-emerald-500 border-slate-100',
+  },
+  {
+    icon: Eye,
+    value: 72.4,
+    unit: '% (Reach)',
+    title: 'อัตราการเปิดรับ',
+    subValue: 9.6,
+    subUnit: '% เทียบกับเมื่อวาน',
+    positiveData: true,
+    className: '[&_div:first-child]:bg-blue-50 [&_div:first-child]:text-blue-500 border-slate-100',
+  },
+  {
+    icon: ThumbsUp,
+    value: 12.8,
+    unit: '% (Engagement)',
+    title: 'อัตราการมีส่วนร่วม',
+    subValue: 2.3,
+    subUnit: '% เทียบกับเมื่อวาน',
+    positiveData: true,
+    className: '[&_div:first-child]:bg-orange-50 [&_div:first-child]:text-orange-500 border-slate-100',
+  },
+  {
+    icon: AlertCircle,
+    value: 5,
+    unit: 'ข้อความ',
+    title: 'ข้อความแจ้งเตือนสำคัญ',
+    subValue: 2,
+    subUnit: ' ข้อความ เทียบกับเมื่อวาน',
+    positiveData: true,
+    className: '[&_div:first-child]:bg-rose-50 [&_div:first-child]:text-rose-500 border-slate-100',
+  },
+];

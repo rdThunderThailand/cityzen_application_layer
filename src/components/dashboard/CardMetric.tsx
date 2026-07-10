@@ -55,7 +55,7 @@ export const CardMetric = ({
 
             <div className="flex flex-col gap-1 min-w-0">
                 <span className="text-xs font-medium text-slate-500 truncate">{title}</span>
-                <div className="flex flex-col items-baseline">
+                <div className="flex gap-1.5 items-baseline">
                     <span className="text-xl font-bold text-slate-800 tracking-tight">
                         {(value !== undefined && value !== null)
                             ? (typeof value === 'number' ? Number(value).toLocaleString(undefined, { minimumFractionDigits: 1 }) : value)
