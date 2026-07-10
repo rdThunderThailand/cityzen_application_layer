@@ -73,17 +73,17 @@ const categoryMetrics = [
 export function Tabs1Panel() {
     return (
         <div className="w-full flex flex-col h-[calc(100vh-210px)] min-h-0 pb-2">
-            {/* Top metrics row */}
-            <div className="flex gap-4 mb-4 shrink-0">
-                {situationMetricsData.map((item, index) => (
-                    <CardMetric key={index} {...item} showChevron className="bg-white hover:shadow-md transition-shadow duration-200" />
-                ))}
-            </div>
 
             {/* Main content area */}
             <div className="flex flex-col lg:flex-row gap-4 items-stretch flex-1 min-h-0">
                 {/* Left Area (Map + Accent Card + Category Summary Card) */}
                 <div className="flex-1 min-w-0 flex flex-col min-h-0 overflow-hidden">
+                    {/* metrics row */}
+                    <div className="flex gap-4 mb-4 shrink-0">
+                        {situationMetricsData.map((item, index) => (
+                            <CardMetric key={index} {...item} showChevron className="bg-white hover:shadow-md transition-shadow duration-200" />
+                        ))}
+                    </div>
                     {/* Top part: Map + Accent CardData */}
                     <div className="flex gap-4 flex-1 min-h-0">
                         <CardWMap className="flex-1 min-w-0 max-w-none h-full" />
