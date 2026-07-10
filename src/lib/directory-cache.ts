@@ -86,6 +86,7 @@ export async function upsertDirectorySnapshot(
     for (const tenantId of tenantIds) {
       try {
         const orgs = flattenOrgs(await getTenantOrganizations(tenantId, accessToken));
+        const fetchedIds = new Set(orgs.map((org) => org.id));
         for (const org of orgs) {
           const abbrev = org.name_en ?? org.code;
           const { error } = await db.from("department_directory_cache").upsert({
@@ -98,6 +99,25 @@ export async function upsertDirectorySnapshot(
             synced_at,
           });
           if (error) throw error;
+        }
+
+        // Reconcile: Thunder hard-excludes soft-deleted depts from this list (deleted_at IS NULL
+        // filter), so anything cached for this tenant but absent here was deleted upstream and
+        // never got an org.deleted webhook (Thunder doesn't emit one). Drop it here to match.
+        const { data: existing, error: listErr } = await db
+          .from("department_directory_cache")
+          .select("thundercore_department_id")
+          .eq("thundercore_tenant_id", tenantId);
+        if (listErr) throw listErr;
+        const staleIds = (existing ?? [])
+          .map((row) => row.thundercore_department_id)
+          .filter((id): id is string => !!id && !fetchedIds.has(id));
+        if (staleIds.length > 0) {
+          const { error: delErr } = await db
+            .from("department_directory_cache")
+            .delete()
+            .in("thundercore_department_id", staleIds);
+          if (delErr) throw delErr;
         }
       } catch {
         // best-effort backfill — see comment above; never block the rest of the snapshot.
@@ -292,6 +312,38 @@ export async function checkMembershipLiveness(
   return {
     allow: data.status === "active",
     roleCodes: Array.isArray(data.role_codes) ? data.role_codes : null,
+  };
+}
+
+export type DirectoryDisplayProfile = {
+  displayName: string | null;
+  avatarUrl: string | null;
+  tenantName: string | null;
+};
+
+// Phase 2 Part B: display data (name/avatar/tenant) now reads from the cache instead of
+// the (trimmed) session cookie. Cache miss must degrade gracefully — never block render.
+export async function getDirectoryDisplayProfile(
+  userId: string,
+  tenantId: string,
+): Promise<DirectoryDisplayProfile> {
+  const db = directoryDb();
+  if (!db) return { displayName: null, avatarUrl: null, tenantName: null };
+
+
+  console.log(userId)
+
+  const [{ data: user }, { data: tenant }] = await Promise.all([
+    db.from("user_directory_cache").select("display_name, avatar_url").eq("thundercore_user_id", userId).maybeSingle(),
+    db.from("tenant_directory_cache").select("name").eq("thundercore_tenant_id", tenantId).maybeSingle(),
+  ]);
+
+console.log("[getDirectoryDisplayProfile]", { user })
+
+  return {
+    displayName: user?.display_name ?? null,
+    avatarUrl: user?.avatar_url ?? null,
+    tenantName: tenant?.name ?? null,
   };
 }
 
