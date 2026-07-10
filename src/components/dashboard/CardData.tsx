@@ -38,7 +38,7 @@ export interface CardDataProps {
 }
 
 const statusConfig: Record<CardDataStatusKey, { label: string; badgeClass: string; dotClass: string; textClass: string }> = {
-    increasing: { label: 'เพิ่มขึ้น', badgeClass: 'bg-rose-50 text-rose-600', dotClass: 'bg-rose-500', textClass: 'text-rose-500' },
+    increasing: { label: 'เพิ่มขึ้น', badgeClass: 'bg-emerald-50 text-emerald-600', dotClass: 'bg-emerald-500', textClass: 'text-emerald-500' },
     decreasing: { label: 'ลดลง', badgeClass: 'bg-emerald-50 text-emerald-600', dotClass: 'bg-emerald-500', textClass: 'text-emerald-500' },
     stable: { label: 'คงที่', badgeClass: 'bg-sky-50 text-sky-600', dotClass: 'bg-sky-500', textClass: 'text-sky-500' },
     critical: { label: 'วิกฤต', badgeClass: 'bg-rose-50 text-rose-600', dotClass: 'bg-rose-500', textClass: 'text-rose-500' },
@@ -91,30 +91,32 @@ const AccentItem = ({ item }: { item: CardDataItemProps }) => {
     const tone = toneConfig[item.tone ?? 'rose'];
     const metaLine = [item.subtitle, item.description].filter(Boolean).join(' | ');
     return (
-        <div className={cn("border-l-4 rounded pl-3", tone.borderClass)}>
+        <div className={cn("border-l-4 rounded pl-3 min-w-0", tone.borderClass)}>
             <div className="flex items-start justify-between gap-2">
-                <span className="text-sm font-semibold text-slate-800">{item.title}</span>
+                <p className="text-sm font-semibold text-slate-800 line-clamp-2 min-h-[2.5rem] truncate">{item.title}</p>
                 {item.status && statusConfig[item.status] && (
                     <span className={cn("text-xs font-semibold shrink-0", statusConfig[item.status].textClass)}>
                         {statusConfig[item.status].label}
                     </span>
                 )}
             </div>
-            {metaLine && (
-                <span className="text-xs text-slate-400">{metaLine}</span>
-            )}
-            {item.locations && item.locations.length > 0 && (
-                <div className="flex items-center gap-1 text-xs text-slate-400">
-                    <MapPin className="w-3 h-3 shrink-0" />
-                    {item.locations.join(', ')}
-                </div>
-            )}
-            {item.effectedPeople && (
-                <div className="flex items-center gap-1 text-xs text-slate-400">
-                    <UsersRound className="w-3 h-3 shrink-0" />
-                    {item.effectedPeople}
-                </div>
-            )}
+            <div className="flex flex-col gap-1 -mt-2">
+                {metaLine && (
+                    <p className="text-xs text-slate-400 truncate">{metaLine}</p>
+                )}
+                {item.locations && item.locations.length > 0 && (
+                    <div className="flex items-center gap-1 text-xs text-slate-400 min-w-0">
+                        <MapPin className="w-3 h-3 shrink-0" />
+                        <span className="truncate">{item.locations.join(', ')}</span>
+                    </div>
+                )}
+                {item.effectedPeople && (
+                    <div className="flex items-center gap-1 text-xs text-slate-400 min-w-0">
+                        <UsersRound className="w-3 h-3 shrink-0" />
+                        <span className="truncate">{item.effectedPeople}</span>
+                    </div>
+                )}
+            </div>
         </div>
     );
 };
@@ -174,13 +176,13 @@ export const CardData = ({
     return (
         <div
             className={cn(
-                "flex flex-col gap-4 p-4 border border-slate-100 rounded-xl shadow-sm w-full font-sans bg-white",
+                "flex flex-col gap-4 p-4 border border-slate-100 rounded-xl shadow-sm w-full min-h-0 font-sans bg-white",
                 className
             )}
             {...props}
         >
             {/* Header section */}
-            <div className="flex items-center justify-between gap-2 border-b border-slate-50 pb-2">
+            <div className="flex items-center justify-between gap-2 border-b border-slate-200 pb-2">
                 <h3 className="text-sm font-semibold text-slate-800 truncate">
                     {items.length > 0 ? `${heading} (${items.length})` : heading}
                 </h3>

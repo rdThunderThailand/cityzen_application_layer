@@ -9,17 +9,17 @@ import { useState } from "react";
 export default function Situation() {
     const [activeAI, setActiveAI] = useState<string | null>(null);
     return (
-        <div className="w-full flex relative flex-1">
-            <div className={`flex-1 px-6 transition-all duration-300`}>
+        <div className="w-full flex relative flex-1 min-h-0">
+            <div className="flex-1 min-h-0 flex flex-col overflow-hidden px-6 transition-all duration-300">
                 {/* AI dropdown */}
-                <div className="w-full flex justify-end mt-4">
+                <div className="w-full flex justify-end mt-4 shrink-0">
                     <AIDropdown
                         selectedValue={activeAI}
                         onChange={setActiveAI}
                     />
                 </div>
 
-                <Tabs tabs={situationTabs} />
+                <Tabs tabs={situationTabs} fill className="flex-1 min-h-0" />
             </div>
 
             {/* AI panel */}

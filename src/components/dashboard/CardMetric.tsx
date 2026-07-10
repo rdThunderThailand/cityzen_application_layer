@@ -5,8 +5,9 @@ import { ArrowDown, ArrowUp, ChevronRight, Leaf } from 'lucide-react';
 export interface CardMetricProps {
     title?: string;
     subtitle?: string;
+    status?: string;
     value: number | string;
-    unit: string;
+    unit?: string;
     icon?: ComponentType<{ className?: string }>;
     subValue?: number | null;
     subUnit?: string | null;
@@ -22,6 +23,7 @@ export const CardMetric = ({
     value,
     unit,
     icon: Icon = Leaf,
+    status,
     subValue,
     subUnit,
     positiveData,
@@ -75,11 +77,12 @@ export const CardMetric = ({
                         </p>
                     </div>
                 )}
+                {status && <span className="text-xs font-medium text-black">{status}</span>}
                 {subtitle && <span className="text-xs text-slate-500">{subtitle}</span>}
             </div>
 
             {showChevron && (
-                <ChevronRight className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 shrink-0" />
+                <ChevronRight className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 text-slate-400 shrink-0 bg-gray-100 rounded-full" />
             )}
         </div>
     );

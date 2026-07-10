@@ -21,12 +21,12 @@ export const CardDataHorizontalItem = ({
     return (
         <div className="flex flex-col items-center text-center flex-1 min-w-0 font-sans">
             {/* Circular Icon Wrapper matching the dashboard design */}
-            <div className="flex items-center justify-center w-11 h-11 bg-slate-50 text-slate-700 rounded-full border border-slate-100/70 shrink-0 transition-transform duration-200 hover:scale-105">
+            <div className="flex items-center justify-center w-11 h-11 bg-slate-100 text-slate-700 rounded-full border border-slate-100/70 shrink-0 transition-transform duration-200 hover:scale-105">
                 <Icon className="w-5 h-5" />
             </div>
 
             {/* Text details stacked underneath */}
-            <div className="flex flex-col items-center mt-2 w-full px-1">
+            <div className="flex flex-col items-center mt-1 w-full px-1">
                 <span className="text-xs font-bold text-slate-800 truncate w-full">
                     {title}
                 </span>
@@ -83,7 +83,7 @@ export const CardDataHorizontal = ({
             {...props}
         >
             {/* Header section layout */}
-            <div className="flex items-center justify-between gap-2 border-b border-slate-50 pb-2">
+            <div className="flex items-center justify-between gap-2 border-b border-slate-50">
                 <h3 className="text-sm font-semibold text-slate-800 truncate">
                     {count !== undefined ? `${heading} (${count})` : heading}
                 </h3>
@@ -97,7 +97,7 @@ export const CardDataHorizontal = ({
             </div>
 
             {/* Horizontal Flex Grid matching the image's row arrangement */}
-            <div className="flex items-start justify-between w-full gap-2 pt-1">
+            <div className="flex items-start justify-between w-full gap-2">
                 {items.slice(0, maxItems).map((item, index) => (
                     <CardDataHorizontalItem key={index} {...item} />
                 ))}

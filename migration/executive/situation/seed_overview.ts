@@ -3,7 +3,7 @@ import { AlertCircle, Clock, CheckCircle2 } from 'lucide-react';
 export const situationMetricsData = [
     {
         value: 3,
-        unit: "วิกฤต",
+        status: "วิกฤต",
         icon: AlertCircle,
         subtitle: "ใกล้ถึงขีดจำกัด",
         positiveData: false,
@@ -11,7 +11,7 @@ export const situationMetricsData = [
     },
     {
         value: 8,
-        unit: "เฝ้าระวัง",
+        status: "เฝ้าระวัง",
         icon: AlertCircle,
         subtitle: "ใกล้ถึงขีดจำกัด",
         positiveData: false,
@@ -19,7 +19,7 @@ export const situationMetricsData = [
     },
     {
         value: 15,
-        unit: "ติดตาม",
+        status: "ติดตาม",
         icon: Clock,
         subtitle: "เฝ้าติดตามสถานการณ์อย่างต่อเนื่อง",
         positiveData: false,
@@ -27,7 +27,7 @@ export const situationMetricsData = [
     },
     {
         value: 42,
-        unit: "ปกติ",
+        status: "ปกติ",
         icon: CheckCircle2,
         subtitle: "สถานการณ์ปกติ",
         positiveData: true,

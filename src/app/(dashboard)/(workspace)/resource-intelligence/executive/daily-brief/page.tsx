@@ -16,20 +16,20 @@ import { useState } from "react";
 export default function DailyBrief() {
     const [activeAI, setActiveAI] = useState<string | null>(null);
     return (
-        <div className="w-full flex relative flex-1">
-            <div className={`flex-1 px-6 transition-all duration-300`}>
+        <div className="w-full flex relative flex-1 min-h-0">
+            <div className="flex-1 min-h-0 flex flex-col overflow-hidden px-6 transition-all duration-300">
                 {/* AI dropdown */}
-                <div className="w-full flex justify-end mt-4">
+                <div className="w-full flex justify-end mt-4 shrink-0">
                     <AIDropdown
                         selectedValue={activeAI}
                         onChange={setActiveAI}
                     />
                 </div>
 
-                <div className="flex flex-col lg:flex-row gap-4 w-full mt-3">
+                <div className="flex flex-col lg:flex-row gap-4 w-full mt-3 shrink-0">
                     <CardGreeting
                         className="flex-1 h-[139px]"
-                        recipient="ผู้ว่าราชการจังหวัดภูเก็ต"
+                        recipient={defaultUser.name}
                         summary="วันนี้จังหวัดภูเก็ตมี 2 เหตุการณ์ที่ต้องเฝ้าระวังเป็นพิเศษ คาดว่าจะมีนักท่องเที่ยวเพิ่มขึ้น 18% จากเมื่อวาน โดยพื้นที่กะทู้และป่าตองมีความเสี่ยงสูงสุด แนะนำติดตามสถานการณ์อย่างใกล้ชิด"
                         avatarSrc={defaultUser.profileImg}
                         avatarAlt={defaultUser.name}
@@ -46,17 +46,17 @@ export default function DailyBrief() {
                         items={headerTrendItems}
                     />
                 </div>
-                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 w-full my-5">
+                <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 w-full my-5 shrink-0">
                     {wasteData.map((item, index) => (
                         <CardMetric key={index} {...item} className="bg-white hover:shadow-md transition-shadow duration-200" />
                     ))}
                 </div>
-                <Tabs tabs={dailyBriefTabs} />
+                <Tabs tabs={dailyBriefTabs} fill className="flex-1 min-h-0" />
             </div>
 
             {/* AI panel */}
             {activeAI && (
-                <div className="-z-1 w-[380px] shrink-0 border-l-2 border-gray-200 bg-white backdrop-blur-md p-4 flex flex-col h-full overflow-y-auto animate-in slide-in-from-right duration-300">
+                <div className="-z-1 w-[380px] h-full shrink-0 border-l-2 border-gray-200 bg-white backdrop-blur-md p-4 flex flex-col h-full overflow-y-auto animate-in slide-in-from-right duration-300">
                     {/* Header Navigation Utilities */}
                     <div className="flex justify-between items-center mb-6">
                         <button className="flex items-center gap-1 rounded-lg bg-slate-600 px-3 py-1.5 text-xs text-white hover:bg-slate-700 transition-colors font-medium">

@@ -13,15 +13,6 @@ export const cardEventData = {
       tone: 'rose',
     },
     {
-      title: 'นักท่องเที่ยวเพิ่มขึ้นช่วงไฮซีซั่น',
-      subtitle: 'คาดการณ์',
-      description: 'สถิตินักท่องเที่ยวปีนี้เพิ่มขึ้น 18% จากสถิติทั้งจังหวัด',
-      locations: ['ทั้งจังหวัด'],
-      effectedPeople: "ผลกระทบ: 3,890 คน",
-      status: 'warning', // เฝ้าระวัง
-      tone: 'amber',
-    },
-    {
       title: 'ระบบท่อส่งน้ำประปาแตกชำรุดชั่วคราว',
       subtitle: '13:00 น.',
       description: 'แรงดันน้ำลดลงและน้ำไม่ไหลในบางพื้นที่ ทีมช่างการประปาเข้าดำเนินการซ่อมแซมเร่งด่วน',
@@ -29,6 +20,24 @@ export const cardEventData = {
       effectedPeople: "ผลกระทบ: 6,120 คน",
       status: 'warning', // เฝ้าระวัง
       tone: 'amber',
+    },
+    {
+      title: 'ตรวจพบดัชนีคุณภาพอากาศเกินมาตรฐาน',
+      subtitle: '15:45 น.',
+      description: 'หมอกควันข้ามพรมแดนส่งผลกระทบต่อทัศนวิสัย แจ้งเตือนประชาชนกลุ่มเสี่ยงงดกิจกรรมกลางแจ้ง',
+      locations: ['ทั้งจังหวัด'],
+      effectedPeople: "ผลกระทบ: 12,400 คน",
+      status: 'warning', // เฝ้าระวัง
+      tone: 'amber',
+    },
+    {
+      title: 'นักท่องเที่ยวเพิ่มขึ้นช่วงไฮซีซั่น',
+      subtitle: 'คาดการณ์',
+      description: 'สถิตินักท่องเที่ยวปีนี้เพิ่มขึ้น 18% จากสถิติทั้งจังหวัด',
+      locations: ['ทั้งจังหวัด'],
+      effectedPeople: "ผลกระทบ: 3,890 คน",
+      status: 'increasing',
+      tone: 'emerald',
     },
     {
       title: 'รายงานพบผู้ป่วยไข้เลือดออกสะสมสูงกว่าค่าเฉลี่ย',
@@ -48,14 +57,5 @@ export const cardEventData = {
       status: 'high_risk', // เสี่ยงสูง
       tone: 'rose',
     },
-    {
-      title: 'ตรวจพบดัชนีคุณภาพอากาศ (PM2.5) เริ่มเกินมาตรฐาน',
-      subtitle: '15:45 น.',
-      description: 'หมอกควันข้ามพรมแดนส่งผลกระทบต่อทัศนวิสัย แจ้งเตือนประชาชนกลุ่มเสี่ยงงดกิจกรรมกลางแจ้ง',
-      locations: ['ทั้งจังหวัด'],
-      effectedPeople: "ผลกระทบ: 12,400 คน",
-      status: 'warning', // เฝ้าระวัง
-      tone: 'amber',
-    }
   ] satisfies CardDataItemProps[],
 };
