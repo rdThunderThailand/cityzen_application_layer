@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronsRight, Image as ImageIcon, Mic, Plus, Settings, Download } from 'lucide-react';
 import { AIDropdown } from '@/components/basic/AIDropdown';
+import { ManagerFilterBar } from '@/features/resource-intelligence/manager/components/ManagerFilterBar';
 
 import { OutcomeKPICards } from '@/features/resource-intelligence/manager/outcome/components/OutcomeKPICards';
 import { OutcomeTabs } from '@/features/resource-intelligence/manager/outcome/components/OutcomeTabs';
@@ -21,24 +22,7 @@ export default function OutcomePage() {
         <div className="w-full flex relative flex-1 min-h-screen ">
             <div className="flex-1 px-6 transition-all duration-300 pb-8 pt-6 overflow-x-hidden">
                 
-                {/* Header Section */}
-                <div className="w-full flex justify-between items-center mb-6">
-                    <div>
-                        <div className="flex items-center gap-3">
-                            <h2 className="text-md font-bold text-slate-800 uppercase tracking-tight">สรุปผลลัพธ์ (1 - 18 ก.ค. 67)</h2>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-4 justify-end">
-                        <button className="flex items-center gap-1.5 border border-slate-200 text-slate-600 bg-white hover:bg-slate-50 px-4 py-2 rounded-lg text-[11px] font-bold transition-colors">
-                            <Download className="w-3.5 h-3.5" />
-                            ส่งออกรายงาน
-                        </button>
-                        <AIDropdown
-                            selectedValue={activeAI}
-                            onChange={setActiveAI}
-                        />
-                    </div>
-                </div>
+                <ManagerFilterBar activeAI={activeAI} onAIChange={setActiveAI} />
 
                 {/* Main Content Area */}
                 <div className="bg-white ">

@@ -7,39 +7,24 @@ import { DecisionBottomSection } from '@/features/resource-intelligence/manager/
 import { DecisionRightSidebar } from '@/features/resource-intelligence/manager/decision/components/DecisionRightSidebar';
 import { ChevronDown, ChevronDownIcon, ChevronsRight, Image, Mic, Plus, Settings } from 'lucide-react';
 import { AIDropdown } from '@/components/basic/AIDropdown';
+import { ManagerFilterBar } from '@/features/resource-intelligence/manager/components/ManagerFilterBar';
 
 export default function DecisionPage() {
     const [activeAI, setActiveAI] = useState<string | null>(null);
     return (
         <div className="w-full h-screen flex relative overflow-hidden bg-slate-50/50">
-            <div className="flex-1 px-6 transition-all duration-300 pt-4 h-full flex flex-col min-h-0">
+            <div className="flex-1 px-6 transition-all duration-300  h-full flex flex-col min-h-0">
                 
-                {/* Top Bar */}
-                <div className="w-full flex justify-between mb-3 shrink-0">
-                    <div className="flex items-center gap-3">
-                        <h2 className="text-[15px] font-bold text-slate-800">เรื่องที่ต้องตัดสินใจวันนี้</h2>
-                        <span className="bg-rose-50 text-rose-600 text-[10px] font-bold px-2 py-0.5 rounded-full">4 เรื่อง</span>
-                        <p className="text-[11px] text-slate-500 font-medium">กรุณาพิจารณาและอนุมัติ</p>
-                    </div>
-                    <div className="flex justify-end gap-3">
-                        <button className="flex items-center gap-2 text-[11px] font-medium text-slate-500 hover:text-slate-700 transition-colors bg-white border border-slate-200 px-3 py-1.5 rounded-lg shadow-sm">
-                            เรียงตามความสำคัญ
-                            <ChevronDownIcon className="w-3.5 h-3.5" />
-                        </button>
-                        <AIDropdown
-                            selectedValue={activeAI}
-                            onChange={setActiveAI}
-                        />
-                    </div>
-                </div>
+                {/* Top Filter Bar */}
+                <ManagerFilterBar activeAI={activeAI} onAIChange={setActiveAI} />
 
                 {/* Summary Metrics */}
-                <div className="shrink-0 mb-3">
+                <div className="shrink-0 mb-2">
                     <DecisionSummaryMetrics />
                 </div>
 
                 {/* Main Content Area — fills remaining height */}
-                <div className="flex gap-4 flex-1 min-h-0 mb-3">
+                <div className="flex gap-4 flex-1 min-h-0">
                     <DecisionList />
                     <DecisionRightSidebar />
                 </div>

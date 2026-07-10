@@ -4,7 +4,7 @@ import { Plus, Minus, Crosshair, ChevronDown } from 'lucide-react';
 
 export const OperationMapCard = () => {
     return (
-        <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-5 h-full">
+        <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-4 h-full flex flex-col min-h-0">
             <h3 className="text-[13px] font-bold text-slate-800 mb-4">แผนที่การปฏิบัติการ (Real-time)</h3>
             
             <div className="flex items-center gap-4 mb-4">
@@ -26,7 +26,7 @@ export const OperationMapCard = () => {
                 </div>
             </div>
 
-            <div className="relative w-full aspect-[2/1] bg-slate-50 rounded-lg overflow-hidden border border-slate-100">
+            <div className="relative flex-1 min-h-0 bg-slate-50 rounded-lg overflow-hidden border border-slate-100">
                 {/* Map Image (mockPlan.png) */}
                 <Image 
                     src="/mockPlan.png" 

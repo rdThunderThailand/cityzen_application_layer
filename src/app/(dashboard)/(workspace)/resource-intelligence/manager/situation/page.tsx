@@ -8,13 +8,16 @@ import { SituationIssuesCard } from '@/features/resource-intelligence/manager/si
 import { SituationCauseCard } from '@/features/resource-intelligence/manager/situation/components/SituationCauseCard';
 import { SituationTrendCard } from '@/features/resource-intelligence/manager/situation/components/SituationTrendCard';
 import { SituationForecastCard } from '@/features/resource-intelligence/manager/situation/components/SituationForecastCard';
+import { ManagerFilterBar } from '@/features/resource-intelligence/manager/components/ManagerFilterBar';
 
 export default function Situation() {
     const [activeTab, setActiveTab] = useState('ภาพรวมสถานการณ์');
+    const [activeAI, setActiveAI] = useState<string | null>(null);
     const tabs = ['ภาพรวมสถานการณ์', 'แหล่งกำเนิดขยะ', 'แนวโน้มและการคาดการณ์', 'พื้นที่และจุดเสี่ยง', 'สาเหตุหลัก', 'เปรียบเทียบช่วงเวลา'];
 
     return (
         <div className="w-full h-screen flex flex-col px-6 overflow-hidden bg-slate-50/50">
+            <ManagerFilterBar activeAI={activeAI} onAIChange={setActiveAI} />
             {/* Top Metrics Row */}
             <div className="grid grid-cols-1 md:grid-cols-5 gap-3 mt-4 mb-3 shrink-0">
                 <div className="bg-white border border-slate-100 rounded-xl p-3 shadow-sm">

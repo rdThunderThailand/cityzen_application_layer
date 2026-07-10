@@ -118,12 +118,12 @@ export const CommunicationMessageList = () => {
                 </div>
             ))}
 
-            <div className="flex justify-end mt-2">
+            {/* <div className="flex justify-end mt-2">
                 <button className="flex items-center gap-1.5 text-blue-600 hover:text-blue-700 text-[11px] font-bold transition-colors">
                     ดูทั้งหมด
                     <ArrowRight className="w-3.5 h-3.5" />
                 </button>
-            </div>
+            </div> */}
         </div>
     );
 };

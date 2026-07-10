@@ -11,8 +11,8 @@ const generatorData = [
 
 export const OperationGeneratorStatus = () => {
     return (
-        <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-5 h-full">
-            <div className="flex items-center justify-between mb-4">
+        <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-3 h-full">
+            <div className="flex items-center justify-between mb-2">
                 <h3 className="text-[13px] font-bold text-slate-800">สถานะจุดกำเนิดขยะ (Generator)</h3>
                 <button className="flex items-center gap-1 text-[10px] font-semibold text-slate-500 hover:text-slate-700 transition-colors">
                     ดูทั้งหมด
@@ -20,7 +20,7 @@ export const OperationGeneratorStatus = () => {
                 </button>
             </div>
 
-            <div className="flex flex-col gap-4">
+            <div className="flex flex-col gap-2">
                 {generatorData.map((item) => (
                     <div key={item.id} className="flex items-center justify-between">
                         <div className="flex items-center gap-2 w-1/2 pr-2">
@@ -45,7 +45,7 @@ export const OperationGeneratorStatus = () => {
                 ))}
             </div>
 
-            <div className="flex justify-center mt-5">
+            <div className="flex justify-center mt-2">
                 <button className="flex items-center gap-1.5 text-blue-600 hover:text-blue-700 text-[11px] font-bold transition-colors">
                     ดูรายละเอียดทั้งหมด
                     <ArrowRight className="w-3.5 h-3.5" />

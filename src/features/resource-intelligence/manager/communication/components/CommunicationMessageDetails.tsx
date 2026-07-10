@@ -11,7 +11,7 @@ export const CommunicationMessageDetails = ({ isOpenAIDropdown }: CommunicationM
             <div className="flex justify-between items-start mb-6">
                 <div className="flex items-center gap-3">
                     <h2 className="text-[15px] font-bold text-slate-800">แจ้งเพิ่มรอบเก็บ Organic Waste</h2>
-                   {!isOpenAIDropdown && (<span className="bg-rose-50 text-rose-600 text-[10px] font-bold px-2 py-0.5 rounded-sm">สำคัญ</span>)}
+                   {!isOpenAIDropdown && (<span className="bg-rose-50 text-rose-600 text-[10px] font-bold px-2 rounded-sm">สำคัญ</span>)}
                 </div>
                 <div className="flex items-center gap-4 text-slate-400">
                     <button className="flex items-center gap-1.5 hover:text-slate-600 transition-colors">

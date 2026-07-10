@@ -4,10 +4,10 @@ import { CommunicationMessageDetailsProps } from './CommunicationMessageDetails'
 
 export const CommunicationChannels = ({isOpenAIDropdown}: CommunicationMessageDetailsProps) => {
     return (
-        <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-5 h-full flex flex-col justify-between">
-            <h3 className="text-[13px] font-bold text-slate-800 mb-4">ช่องทางการสื่อสาร</h3>
+        <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-4 h-full flex flex-col justify-between">
+            <h3 className="text-[13px] font-bold text-slate-800 mb-3">ช่องทางการสื่อสาร</h3>
 
-            <div className="flex flex-col gap-5 mb-4">
+            <div className="flex flex-col gap-3 mb-3">
                 <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2 w-1/2">
                         <div className="w-5 h-5 rounded bg-emerald-100 flex items-center justify-center shrink-0">
@@ -73,7 +73,7 @@ export const CommunicationChannels = ({isOpenAIDropdown}: CommunicationMessageDe
                 </div>
             </div>
 
-            <div className="flex justify-center mt-2 border-t border-slate-50 pt-4">
+            <div className="flex justify-center border-t border-slate-50 pt-2">
                 <button className="flex items-center gap-1.5 text-blue-600 hover:text-blue-700 text-[11px] font-bold transition-colors">
                     ดูประสิทธิภาพช่องทาง
                     <ArrowRight className="w-3.5 h-3.5" />

@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronsRight, Image as ImageIcon, Mic, Plus, Settings, PlusCircle } from 'lucide-react';
 import { AIDropdown } from '@/components/basic/AIDropdown';
+import { ManagerFilterBar } from '@/features/resource-intelligence/manager/components/ManagerFilterBar';
 
 import { CommunicationKPICards } from '@/features/resource-intelligence/manager/communication/components/CommunicationKPICards';
 import { CommunicationTabs } from '@/features/resource-intelligence/manager/communication/components/CommunicationTabs';
@@ -17,61 +18,49 @@ export default function CommunicationPage() {
     const [activeAI, setActiveAI] = useState<string | null>(null);
 
     return (
-        <div className="w-full flex relative flex-1 min-h-screen bg-slate-50/50">
-            <div className="flex-1 px-6 transition-all duration-300 pb-8 pt-6 overflow-x-hidden">
-                
-                {/* Header Section */}
-                <div className="w-full flex justify-between items-center mb-6">
-                    <div>
-                        <div className="flex items-center gap-3">
-                            <h2 className="text-2xl font-bold text-slate-800 uppercase tracking-tight">COMMUNICATION</h2>
-                            <span className="text-xl font-bold text-slate-600">การสื่อสาร</span>
-                        </div>
-                    </div>
-                    <div className="flex items-center gap-4 justify-end">
-                        <button className="flex items-center gap-1.5 border border-emerald-600 text-emerald-600 bg-emerald-50 hover:bg-emerald-100 px-4 py-2 rounded-lg text-[11px] font-bold transition-colors">
-                            <PlusCircle className="w-3.5 h-3.5" />
-                            สร้างการสื่อสารใหม่
-                        </button>
-                        <AIDropdown
-                            selectedValue={activeAI}
-                            onChange={setActiveAI}
-                        />
-                    </div>
-                </div>
+        <div className="w-full h-screen flex relative overflow-hidden bg-slate-50/50">
+            <div className="flex-1 px-6 transition-all duration-300 h-full flex flex-col min-h-0 overflow-hidden">
+
+                <ManagerFilterBar activeAI={activeAI} onAIChange={setActiveAI} />
 
                 {/* KPI Cards */}
-                <CommunicationKPICards />
+                <div className="shrink-0 ">
+                    <CommunicationKPICards />
+                </div>
 
                 {/* Tabs */}
-                <CommunicationTabs />
+                <div className="shrink-0">
+                    <CommunicationTabs />
+                </div>
 
-                {/* Main Content Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-                    
+                {/* Main Content Grid — fills remaining height */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-1 min-h-0 pb-4">
+
                     {/* Left Column (Message List & Comments) */}
-                    <div className="lg:col-span-4 flex flex-col gap-4">
+                    <div className="lg:col-span-4 flex flex-col gap-3 min-h-0">
                         <CommunicationMessageList />
                         <CommunicationComments />
                     </div>
 
                     {/* Right Column (Message Details, Audience/Channels, AI Summary) */}
-                    <div className="lg:col-span-8 flex flex-col gap-4">
-                        
+                    <div className="lg:col-span-8 flex flex-col gap-3 min-h-0">
+
                         {/* Top Section of Right Column */}
-                        <div className="grid grid-cols-1 lg:grid-cols-8 gap-4">
-                            <div className="lg:col-span-5">
-                                <CommunicationMessageDetails  isOpenAIDropdown={activeAI} />
+                        <div className="grid grid-cols-1 lg:grid-cols-8 gap-3 flex-1 min-h-0">
+                            <div className="lg:col-span-5 min-h-0">
+                                <CommunicationMessageDetails isOpenAIDropdown={activeAI} />
                             </div>
-                            <div className="lg:col-span-3 flex flex-col gap-4">
+                            <div className="lg:col-span-3 flex flex-col gap-3 min-h-0">
                                 <CommunicationAudience />
                                 <CommunicationChannels isOpenAIDropdown={activeAI} />
                             </div>
                         </div>
 
                         {/* Bottom Section of Right Column */}
-                        <CommunicationAISummary />
-                        
+                        <div className="shrink-0 h-[110px]">
+                            <CommunicationAISummary />
+                        </div>
+
                     </div>
 
                 </div>
@@ -79,7 +68,7 @@ export default function CommunicationPage() {
 
             {/* AI panel slide-out */}
             {activeAI && (
-                <div className="-z-1 mt-3 w-[380px] shrink-0 border-l-2 border-gray-200 bg-white backdrop-blur-md p-4 flex flex-col h-full overflow-y-auto animate-in slide-in-from-right duration-300">
+                <div className="w-[380px] shrink-0 border-l-2 border-gray-200 bg-white backdrop-blur-md p-4 flex flex-col h-full overflow-y-auto animate-in slide-in-from-right duration-300">
                     <div className="flex justify-between items-center mb-6">
                         <button className="flex items-center gap-1 rounded-lg bg-slate-600 px-3 py-1.5 text-xs text-white hover:bg-slate-700 transition-colors font-medium">
                             <span>แชทใหม่</span>
@@ -94,7 +83,7 @@ export default function CommunicationPage() {
                         <div className="bg-gradient-to-br from-blue-500 to-blue-700 w-12 h-12 rounded-xl flex items-center justify-center shadow-sm mb-4">
                             <Settings className="w-6 h-6 text-white" />
                         </div>
-                        <span className="text-xl font-bold text-slate-800 mb-2">AI</span>
+                        <span className="text-xl font-bold text-slate-800 ">AI</span>
                         <h4 className="text-xl font-bold text-slate-900 tracking-tight leading-snug">
                             เวอร์ชันทดสอบ <br />
                             กำลังอยู่ระหว่างการพัฒนา

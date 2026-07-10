@@ -3,7 +3,7 @@ import { Leaf, Truck, Recycle, Users, Building2, AlertTriangle, ArrowUp } from '
 
 export const OperationKPICards = () => {
     return (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-3">
             {/* Card 1 */}
             <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-4 flex flex-col justify-between">
                 <div className="flex items-center gap-2 mb-2">

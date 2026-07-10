@@ -3,6 +3,7 @@
 import React, { useState } from 'react';
 import { ChevronDown, ChevronsRight, Image, Mic, Plus, Settings, ArrowRight } from 'lucide-react';
 import { AIDropdown } from '@/components/basic/AIDropdown';
+import { ManagerFilterBar } from '@/features/resource-intelligence/manager/components/ManagerFilterBar';
 import { OperationKPICards } from '@/features/resource-intelligence/manager/operation/components/OperationKPICards';
 import { OperationTabs } from '@/features/resource-intelligence/manager/operation/components/OperationTabs';
 import { OperationMapCard } from '@/features/resource-intelligence/manager/operation/components/OperationMapCard';
@@ -16,58 +17,48 @@ export default function OperationPage() {
     const [activeAI, setActiveAI] = useState<string | null>(null);
 
     return (
-        <div className="w-full flex relative flex-1 min-h-screen bg-slate-50/50">
-            <div className="flex-1 px-6 transition-all duration-300 pb-8 pt-6 overflow-x-hidden">
-                
-                {/* Header Section */}
-                <div className="w-full flex justify-between items-center mb-6">
-                    <div>
-                        <div className="flex items-center gap-3">
-                            <h2 className="text-2xl font-bold text-slate-800 uppercase tracking-tight">OPERATIONS</h2>
-                            <span className="text-xl font-bold text-slate-600">ปฏิบัติการ</span>
-                        </div>
-                    </div>
-                    <div className="flex justify-end">
-                        <AIDropdown
-                            selectedValue={activeAI}
-                            onChange={setActiveAI}
-                        />
-                    </div>
-                </div>
+        <div className="w-full h-screen flex relative overflow-hidden bg-slate-50/50">
+            <div className="flex-1 px-6 transition-all duration-300 h-full flex flex-col min-h-0 overflow-hidden">
+
+                {/* Top Filter Bar */}
+                <ManagerFilterBar activeAI={activeAI} onAIChange={setActiveAI} />
 
                 {/* KPI Cards */}
-                <OperationKPICards />
+                <div className="shrink-0 mb-2">
+                    <OperationKPICards />
+                </div>
 
                 {/* Tabs */}
-                <OperationTabs />
+                <div className="shrink-0 mb-2">
+                    <OperationTabs />
+                </div>
 
-                {/* Main Content Grid */}
-                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
-                    
+                {/* Main Content Grid — fills remaining height */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-3 flex-1 min-h-0 pb-4">
+
                     {/* Left Column (Map & Trucks) */}
-                    <div className="lg:col-span-5 flex flex-col gap-4">
+                    <div className="lg:col-span-5 flex flex-col gap-3 min-h-0">
                         <OperationMapCard />
                         <OperationTrucksTable />
                     </div>
 
                     {/* Right Column (Statuses) */}
-                    <div className="lg:col-span-7 flex flex-col gap-4">
-                        <div className="grid grid-cols-2 gap-4">
+                    <div className="lg:col-span-7 flex flex-col gap-3 min-h-0">
+                        <div className="grid grid-cols-2 gap-3 shrink-0">
                             <OperationCollectionProgress />
                             <OperationGeneratorStatus />
                         </div>
-                        
-                        <OperationProcessingStorage />
-                        
-                        <OperationBottomStatuses />
 
+                        <OperationProcessingStorage />
+
+                        <OperationBottomStatuses />
                     </div>
                 </div>
             </div>
 
             {/* AI panel slide-out */}
             {activeAI && (
-                <div className="-z-1 mt-3 w-[380px] shrink-0 border-l-2 border-gray-200 bg-white backdrop-blur-md p-4 flex flex-col h-full overflow-y-auto animate-in slide-in-from-right duration-300">
+                <div className="w-[380px] shrink-0 border-l-2 border-gray-200 bg-white backdrop-blur-md p-4 flex flex-col h-full overflow-y-auto animate-in slide-in-from-right duration-300">
                     <div className="flex justify-between items-center mb-6">
                         <button className="flex items-center gap-1 rounded-lg bg-slate-600 px-3 py-1.5 text-xs text-white hover:bg-slate-700 transition-colors font-medium">
                             <span>แชทใหม่</span>

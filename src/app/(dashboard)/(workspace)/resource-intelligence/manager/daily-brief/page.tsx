@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { ChevronDown, ChevronsRight, Settings, Plus, Image, Mic, Building2, Truck, Sparkles, Calendar, Clock } from "lucide-react";
 import { AIDropdown } from "@/components/basic/AIDropdown";
+import { ManagerFilterBar } from "@/features/resource-intelligence/manager/components/ManagerFilterBar";
 import { CardMetric } from "@/components/dashboard/CardMetric";
 import { HotelMapCard } from "@/features/resource-intelligence/manager/components/HotelMapCard";
 import { OrganicWasteTrendCard } from "@/features/resource-intelligence/manager/components/OrganicWasteTrendCard";
@@ -23,44 +24,11 @@ const getToneClasses = (tone: string) => {
 
 export default function DailyBrief() {
     const [activeAI, setActiveAI] = useState<string | null>(null);
-    const [now] = useState(new Date());
-    const dateText = now.toLocaleDateString("th-TH", { weekday: 'long', day: "numeric", month: "long", year: "numeric" });
-    const timeText = now.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" }) + " น.";
 
     return (
         <div className="w-full h-screen flex relative overflow-hidden bg-slate-50/50">
             <div className={`flex-1 px-6 transition-all duration-300 h-full flex flex-col`}>
-                {/* Top Filter Bar */}
-                <div className="w-full flex items-center justify-start gap-5 py-3 mt-4 mb-2 border-b border-slate-200/60 shrink-0">
-                    <div className="flex items-center gap-2 cursor-pointer group">
-                        <div className="text-indigo-900 rounded-lg flex items-center justify-center">
-                            <Building2 className="w-4 h-4" />
-                        </div>
-                        <span className="text-sm font-bold text-indigo-900">Hotel Bangkok</span>
-                        <ChevronDown className="w-3.5 h-3.5 text-indigo-900 group-hover:translate-y-0.5 transition-transform" />
-                    </div>
-                    <div className="h-5 w-px bg-slate-200"></div>
-                    <div className="flex items-center gap-2">
-                        <div className="text-indigo-900 rounded-lg flex items-center justify-center">
-                            <Calendar className="w-4 h-4" />
-                        </div>
-                        <span className="text-[13px] font-bold text-indigo-900" suppressHydrationWarning>{dateText}</span>
-                    </div>
-                    <div className="h-5 w-px bg-slate-200"></div>
-                    <div className="flex items-center gap-2">
-                        <div className="text-indigo-900 rounded-lg flex items-center justify-center">
-                            <Clock className="w-4 h-4" />
-                        </div>
-                        <span className="text-[13px] font-bold text-indigo-900" suppressHydrationWarning>{timeText}</span>
-                    </div>
-                    
-                    <div className="ml-auto flex items-center gap-3">
-                        <AIDropdown
-                            selectedValue={activeAI}
-                            onChange={setActiveAI}
-                        />
-                    </div>
-                </div>
+                <ManagerFilterBar activeAI={activeAI} onAIChange={setActiveAI} />
 
                 <div className="flex flex-col gap-3 w-full mt-2 flex-1 min-h-0 pb-4">
                     {/* Left Column */}

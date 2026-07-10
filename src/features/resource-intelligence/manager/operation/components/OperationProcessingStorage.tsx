@@ -2,14 +2,14 @@ import React from 'react';
 
 export const OperationProcessingStorage = () => {
     return (
-        <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-5 h-full">
-            <h3 className="text-[13px] font-bold text-slate-800 mb-4">การประมวลผล & การจัดเก็บ</h3>
+        <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-3 h-full">
+            <h3 className="text-[13px] font-bold text-slate-800 mb-2">การประมวลผล & การจัดเก็บ</h3>
             
-            <div className="grid grid-cols-4 gap-4">
+            <div className="grid grid-cols-4 gap-3">
                 {/* Col 1 */}
                 <div className="flex flex-col">
                     <span className="text-[11px] font-bold text-slate-700 mb-1">เครื่องย่อยเศษอาหาร</span>
-                    <span className="text-[9px] text-slate-400 mb-3">ทำงานปกติ</span>
+                    <span className="text-[9px] text-slate-400 mb-2">ทำงานปกติ</span>
                     
                     <div className="flex justify-between items-end mb-1">
                         <span className="text-[9px] text-slate-500">วันนี้</span>

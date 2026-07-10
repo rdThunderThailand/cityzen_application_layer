@@ -12,7 +12,7 @@ const tabs = [
 
 export const OperationTabs = () => {
     return (
-        <div className="flex items-center gap-6 border-b border-slate-200 mb-6 overflow-x-auto no-scrollbar">
+        <div className="flex items-center gap-6 border-b border-slate-200 overflow-x-auto no-scrollbar">
             {tabs.map((tab) => (
                 <button
                     key={tab.id}
