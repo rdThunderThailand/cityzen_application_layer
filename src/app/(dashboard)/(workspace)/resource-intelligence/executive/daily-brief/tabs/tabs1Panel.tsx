@@ -7,13 +7,13 @@ import { dataWithinDay } from "../../../../../../../../migration/executive/daily
 
 export function Tabs1Panel() {
     return (
-        <div className="">
-            <div className="flex gap-4">
-                <CardWMap className="w-1/2 h-[290px] shrink-0" />
-                <CardData variant="accent" heading={cardEventData.heading} items={cardEventData.items} maxItems={2} className="h-[290px]" />
-                <CardData variant="number" heading={cardTaskData.heading} items={cardTaskData.items} maxItems={4} className="h-[290px]" />
+        <div className="h-full flex flex-col min-h-0 gap-5">
+            <div className="flex-1 min-h-0 flex gap-4">
+                <CardWMap className="w-1/2 h-full shrink-0" />
+                <CardData variant="accent" heading={cardEventData.heading} items={cardEventData.items} maxItems={2} className="h-full min-w-0" />
+                <CardData variant="number" heading={cardTaskData.heading} items={cardTaskData.items} maxItems={4} className="h-full" />
             </div>
-            <div className="flex gap-4 my-5">
+            <div className="shrink-0 flex gap-4">
                 <CardDataLong
                     heading="แนวโน้มสำคัญ 24 ชั่วโมงข้างหน้า"
                     items={dataWithinDay}

@@ -34,7 +34,7 @@ const CardDataLongItem = ({ item }: { item: CardDataLongItemProps }) => {
     const polylinePoints = points?.map((point) => `${point.x},${point.y}`).join(' ');
 
     return (
-        <div className="flex flex-col min-w-0 gap-1 lg:border-l lg:border-slate-100 lg:pl-4 lg:first:border-l-0 lg:first:pl-0">
+        <div className="flex flex-col min-w-0 gap-1 lg:border-l lg:border-slate-200 lg:pl-4 lg:first:border-l-0 lg:first:pl-0">
             <div className="flex items-center gap-2 min-w-0">
                 <Icon className={cn("w-5 h-5 shrink-0", accentColorClass)} />
                 <span className="text-sm font-medium text-slate-500 truncate">{item.title}</span>
@@ -98,7 +98,7 @@ export const CardDataLong = ({
             {...props}
         >
             {/* Header section */}
-            <div className="flex items-center justify-between gap-2 border-b border-slate-50 pb-2">
+            <div className="flex items-center justify-between gap-2 border-b border-slate-200 pb-2">
                 <h3 className="text-sm font-semibold text-slate-800 truncate">{heading}</h3>
                 <a
                     href={allDataHref}

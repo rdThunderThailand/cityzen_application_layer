@@ -133,7 +133,7 @@ export function CardWMap({
                 <h3 className="text-base font-bold text-slate-900">{title}</h3>
             </div>
 
-            <div className="relative flex-1 min-h-[320px] bg-sky-100">
+            <div className="relative flex-1 min-h-[160px] bg-sky-100">
                 <MapViewMock
                     ref={mapRef}
                     regions={regions}

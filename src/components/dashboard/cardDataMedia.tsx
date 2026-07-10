@@ -88,7 +88,7 @@ export const CardDataMedia = ({
             {...props}
         >
             {/* Header section layout */}
-            <div className="flex items-center justify-between gap-2 border-b border-slate-50 pb-2">
+            <div className="flex items-center justify-between gap-2 border-b border-slate-50">
                 <h3 className="text-sm font-semibold text-slate-800 truncate">
                     {count !== undefined ? `${heading} (${count})` : heading}
                 </h3>
@@ -102,7 +102,7 @@ export const CardDataMedia = ({
             </div>
 
             {/* Horizontal Grid System matching the reference image */}
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full pt-1">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full">
                 {items.slice(0, maxItems).map((item, index) => (
                     <CardMediaItem key={index} {...item} />
                 ))}

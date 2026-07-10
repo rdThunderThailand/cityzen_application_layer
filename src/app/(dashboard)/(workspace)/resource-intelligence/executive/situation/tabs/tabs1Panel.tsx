@@ -72,7 +72,7 @@ const categoryMetrics = [
 
 export function Tabs1Panel() {
     return (
-        <div className="w-full flex flex-col h-[calc(100vh-210px)] min-h-0 pb-2">
+        <div className="w-full h-full flex flex-col min-h-0 pb-2">
 
             {/* Main content area */}
             <div className="flex flex-col lg:flex-row gap-4 items-stretch flex-1 min-h-0">
@@ -87,7 +87,7 @@ export function Tabs1Panel() {
                     {/* Top part: Map + Accent CardData */}
                     <div className="flex gap-4 flex-1 min-h-0">
                         <CardWMap className="flex-1 min-w-0 max-w-none h-full" />
-                        <CardData variant="accent" heading={cardEventData.heading} items={cardEventData.items} className="w-[400px] shrink-0 h-full" maxItems={3} />
+                        <CardData variant="accent" heading={cardEventData.heading} items={cardEventData.items} className="w-[400px] shrink-0 h-full" maxItems={4} />
                     </div>
 
                     {/* Bottom part: Horizontal Category Summary Card */}

@@ -13,6 +13,8 @@ export interface TabsProps {
     activeValue?: string | number;
     onChange?: (value: string | number) => void;
     className?: string;
+    /** Fill the parent's height and let the active tab's content panel absorb the remaining space. */
+    fill?: boolean;
 }
 
 export const Tabs = ({
@@ -20,6 +22,7 @@ export const Tabs = ({
     activeValue,
     onChange,
     className,
+    fill = false,
 }: TabsProps) => {
     const [active, setActive] = useState<string | number>(
         activeValue ?? tabs[0]?.value
@@ -43,8 +46,8 @@ export const Tabs = ({
     const activeTab = tabs.find((tab) => tab.value === active);
 
     return (
-        <div className={cn("w-full", className)}>
-            <div className="flex items-center gap-1 border-b border-gray-200">
+        <div className={cn("w-full", fill && "h-full flex flex-col", className)}>
+            <div className="flex items-center gap-1 border-b border-gray-200 shrink-0">
                 {tabs.map((tab) => {
                     const isActive = active === tab.value;
                     return (
@@ -69,7 +72,7 @@ export const Tabs = ({
             </div>
 
             {activeTab?.content && (
-                <div className="py-4 text-sm text-slate-600">
+                <div className={cn("py-4 text-sm text-slate-600", fill && "flex-1 min-h-0 overflow-hidden")}>
                     {activeTab.content()}
                 </div>
             )}
