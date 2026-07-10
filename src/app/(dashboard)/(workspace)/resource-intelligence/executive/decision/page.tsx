@@ -19,7 +19,7 @@ export default function Decision() {
         <div className="w-full flex relative flex-1">
             <div className={`flex-1 px-6 transition-all duration-300`}>
                 {/* AI dropdown */}
-                <div className="w-full flex justify-end mt-4 mb-3">
+                <div className="w-full flex justify-end mt-4">
                     <AIDropdown
                         selectedValue={activeAI}
                         onChange={setActiveAI}
@@ -27,7 +27,7 @@ export default function Decision() {
                 </div>
 
                 {/* Metric Banner Card */}
-                <div className="w-full h-[128px] bg-white rounded-2xl shadow-sm border border-slate-100 grid mb-4 overflow-hidden" style={{ gridTemplateColumns: '35% 1fr 1fr 1fr 1fr' }}>
+                <div className="w-full h-[128px] bg-white rounded-2xl shadow-sm border border-slate-100 grid my-4 overflow-hidden" style={{ gridTemplateColumns: '35% 1fr 1fr 1fr 1fr' }}>
                     {/* Column 1: Vision & Title */}
                     <div className="px-5 py-3 flex items-center gap-3 hover:bg-slate-50/50 transition-colors h-full">
                         <div className="w-11 h-11 bg-blue-50 rounded-full flex items-center justify-center shrink-0">

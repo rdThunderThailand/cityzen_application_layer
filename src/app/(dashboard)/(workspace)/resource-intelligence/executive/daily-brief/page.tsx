@@ -19,14 +19,14 @@ export default function DailyBrief() {
         <div className="w-full flex relative flex-1">
             <div className={`flex-1 px-6 transition-all duration-300`}>
                 {/* AI dropdown */}
-                <div className="w-full flex justify-end mt-4 mb-3">
+                <div className="w-full flex justify-end mt-4">
                     <AIDropdown
                         selectedValue={activeAI}
                         onChange={setActiveAI}
                     />
                 </div>
 
-                <div className="flex flex-col lg:flex-row gap-4 w-full">
+                <div className="flex flex-col lg:flex-row gap-4 w-full mt-3">
                     <CardGreeting
                         className="flex-1 h-[139px]"
                         recipient="ผู้ว่าราชการจังหวัดภูเก็ต"

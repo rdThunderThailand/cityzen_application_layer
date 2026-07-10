@@ -14,6 +14,12 @@ import {
     Leaf,
     ChevronRight
 } from "lucide-react";
+import { forecastTrendCardData } from "../../../../../../../../migration/executive/situation/seed_forecast";
+import { watchListCardData } from "../../../../../../../../migration/executive/situation/seed_watchlist";
+import CardDataHorizontal from "@/components/dashboard/cardDataHorizontal";
+import CardDataMedia from "@/components/dashboard/cardDataMedia";
+import { cctvMediaData } from "../../../../../../../../migration/executive/situation/seed_cctvMediaData";
+import { metricSourceData } from "../../../../../../../../migration/executive/situation/seed_metricSourceData";
 
 const categoryMetrics = [
     {
@@ -66,22 +72,22 @@ const categoryMetrics = [
 
 export function Tabs1Panel() {
     return (
-        <div className="w-full flex flex-col h-[calc(100vh-210px)] min-h-0 overflow-hidden pb-2">
+        <div className="w-full flex flex-col h-[calc(100vh-210px)] min-h-0 pb-2">
             {/* Top metrics row */}
             <div className="flex gap-4 mb-4 shrink-0">
                 {situationMetricsData.map((item, index) => (
-                    <CardMetric key={index} {...item} className="bg-white hover:shadow-md transition-shadow duration-200" />
+                    <CardMetric key={index} {...item} showChevron className="bg-white hover:shadow-md transition-shadow duration-200" />
                 ))}
             </div>
 
             {/* Main content area */}
-            <div className="flex flex-col lg:flex-row gap-4 items-stretch flex-1 min-h-0 overflow-hidden">
+            <div className="flex flex-col lg:flex-row gap-4 items-stretch flex-1 min-h-0">
                 {/* Left Area (Map + Accent Card + Category Summary Card) */}
                 <div className="flex-1 min-w-0 flex flex-col min-h-0 overflow-hidden">
                     {/* Top part: Map + Accent CardData */}
                     <div className="flex gap-4 flex-1 min-h-0">
                         <CardWMap className="flex-1 min-w-0 max-w-none h-full" />
-                        <CardData variant="accent" heading={cardEventData.heading} count={cardEventData.count} items={cardEventData.items} className="w-[400px] shrink-0 h-full" />
+                        <CardData variant="accent" heading={cardEventData.heading} items={cardEventData.items} className="w-[400px] shrink-0 h-full" maxItems={3} />
                     </div>
 
                     {/* Bottom part: Horizontal Category Summary Card */}
@@ -115,12 +121,23 @@ export function Tabs1Panel() {
                     </div>
                 </div>
 
-                {/* Right Column (List of 4 CardData cards) */}
-                <div className="w-full lg:w-[270px] shrink-0 flex flex-col gap-4 justify-between h-full overflow-hidden">
-                    <CardData variant="number" heading={cardTaskData.heading} count={cardTaskData.count} items={cardTaskData.items} className="flex-1 min-h-0" />
-                    <CardData variant="number" heading={cardTaskData.heading} count={cardTaskData.count} items={cardTaskData.items} className="flex-1 min-h-0" />
-                    <CardData variant="number" heading={cardTaskData.heading} count={cardTaskData.count} items={cardTaskData.items} className="flex-1 min-h-0" />
-                    <CardData variant="number" heading={cardTaskData.heading} count={cardTaskData.count} items={cardTaskData.items} className="flex-1 min-h-0" />
+                {/* Right Column */}
+                <div className="w-full lg:w-[440px] shrink-0 flex flex-col gap-2 h-full min-h-0">
+                    <CardData
+                        variant={forecastTrendCardData.variant}
+                        heading={forecastTrendCardData.heading}
+                        items={forecastTrendCardData.items}
+                        maxItems={5}
+                        className="shrink-0 p-2 gap-2 [&>div:last-child]:gap-1"
+                    />
+                    <CardData
+                        variant={watchListCardData.variant}
+                        heading={watchListCardData.heading}
+                        items={watchListCardData.items}
+                        className="shrink-0 p-2 gap-2 [&>div:last-child]:gap-1"
+                    />
+                    <CardDataHorizontal heading={metricSourceData.heading} allDataHref={metricSourceData.allDataHref} items={metricSourceData.items} className="shrink-0" />
+                    <CardDataMedia heading={cctvMediaData.heading} allDataHref={cctvMediaData.allDataHref} items={cctvMediaData.items} className="flex-1 min-h-0 overflow-hidden" />
                 </div>
             </div>
         </div>

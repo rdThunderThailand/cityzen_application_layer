@@ -6,9 +6,9 @@ import SideBarBlock from "@/components/global/SideBarBlock";
 import { footerContent } from "./footerContent";
 import { usePathname } from "next/navigation";
 
-const FULL_CANVAS_ROUTES = new Set(["/organic/executive/storyboard"]);
+const FULL_CANVAS_ROUTES = new Set(["/resource-intelligence/executive/storyboard"]);
 
-export default function DashboardLayout({ children }: { children: React.ReactNode }){
+export default function DashboardLayout({ children }: { children: React.ReactNode }) {
     const pathname = usePathname();
 
     if (FULL_CANVAS_ROUTES.has(pathname)) {

@@ -10,8 +10,8 @@ export function Tabs1Panel() {
         <div className="">
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                 <CardWMap className="h-[290px]" />
-                <CardData variant="accent" heading={cardEventData.heading} count={cardEventData.count} items={cardEventData.items} className="h-[290px]" />
-                <CardData variant="number" heading={cardTaskData.heading} count={cardTaskData.count} items={cardTaskData.items} className="h-[290px]" />
+                <CardData variant="accent" heading={cardEventData.heading} items={cardEventData.items} maxItems={2} className="h-[290px]" />
+                <CardData variant="number" heading={cardTaskData.heading} items={cardTaskData.items} maxItems={4} className="h-[290px]" />
             </div>
             <div className="flex flex-col gap-4 p-4 border border-slate-100 rounded-xl shadow-sm w-full font-sans bg-white my-5">
                 <h1 className="font-bold text-[15px]">แนวโน้มสำคัญ 24 ชั่วโมงข้างหน้า</h1>

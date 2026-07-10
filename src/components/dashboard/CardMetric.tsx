@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react';
 import { cn } from '../../utils/cn';
-import { ArrowDown, ArrowUp, Leaf } from 'lucide-react';
+import { ArrowDown, ArrowUp, ChevronRight, Leaf } from 'lucide-react';
 
 export interface CardMetricProps {
     title?: string;
@@ -12,6 +12,7 @@ export interface CardMetricProps {
     subUnit?: string;
     positiveData?: boolean;
     date?: Date;
+    showChevron?: boolean;
     className?: string;
 }
 
@@ -25,6 +26,7 @@ export const CardMetric = ({
     subUnit,
     positiveData,
     date,
+    showChevron = false,
     className,
     ...props
 }: CardMetricProps) => {
@@ -39,7 +41,8 @@ export const CardMetric = ({
     return (
         <div
             className={cn(
-                "flex flex-row items-center gap-3 sm:gap-3 md:gap-4 p-3 border border-slate-100 rounded-xl shadow-sm w-full min-w-[160px] font-sans max-h-[105px]",
+                "relative flex flex-row items-center gap-3 sm:gap-3 md:gap-4 p-3 border border-slate-100 rounded-xl shadow-sm w-full min-w-[160px] font-sans max-h-[105px]",
+                showChevron && "pr-8",
                 className
             )}
             {...props}
@@ -74,6 +77,10 @@ export const CardMetric = ({
                 )}
                 {subtitle && <span className="text-xs text-slate-500">{subtitle}</span>}
             </div>
+
+            {showChevron && (
+                <ChevronRight className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-300 shrink-0" />
+            )}
         </div>
     );
 };

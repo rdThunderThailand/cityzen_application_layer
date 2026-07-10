@@ -46,4 +46,5 @@ session_handoff.md
 .claude
 
 docs/hidden
-.codex-video-frames
+/.codex-video-frames
+/claude

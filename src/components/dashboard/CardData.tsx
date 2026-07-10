@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react';
 import { cn } from '../../utils/cn';
-import { ChevronRight, Box, MapPin } from 'lucide-react';
+import { ChevronRight, Box, MapPin, UsersRound } from 'lucide-react';
 
 export type CardDataStatusKey =
     | 'increasing'
@@ -23,6 +23,7 @@ export interface CardDataItemProps {
     status?: CardDataStatusKey;
     description?: string;
     locations?: string[];
+    effectedPeople?: string;
     time?: string;
     tone?: CardDataTone;
 }
@@ -32,8 +33,7 @@ export interface CardDataProps {
     allDataHref?: string;
     items: CardDataItemProps[];
     className?: string;
-    variant?: 'icon' | 'accent' | 'number' | 'time' ;
-    count?: number; 
+    variant?: 'icon' | 'accent' | 'number' | 'time';
     maxItems?: number;
 }
 
@@ -109,6 +109,12 @@ const AccentItem = ({ item }: { item: CardDataItemProps }) => {
                     {item.locations.join(', ')}
                 </div>
             )}
+            {item.effectedPeople && (
+                <div className="flex items-center gap-1 text-xs text-slate-400">
+                    <UsersRound className="w-3 h-3 shrink-0" />
+                    {item.effectedPeople}
+                </div>
+            )}
         </div>
     );
 };
@@ -162,8 +168,7 @@ export const CardData = ({
     items = [],
     className,
     variant = 'icon',
-    count,
-    maxItems = 3,
+    maxItems,
     ...props
 }: CardDataProps) => {
     return (
@@ -177,11 +182,11 @@ export const CardData = ({
             {/* Header section */}
             <div className="flex items-center justify-between gap-2 border-b border-slate-50 pb-2">
                 <h3 className="text-sm font-semibold text-slate-800 truncate">
-                    {count !== undefined ? `${heading} (${count})` : heading}
+                    {items.length > 0 ? `${heading} (${items.length})` : heading}
                 </h3>
                 <a
                     href={allDataHref}
-                    className="flex items-center gap-0.5 text-xs font-medium text-emerald-600 hover:text-emerald-700 transition-colors duration-150 shrink-0"
+                    className="flex items-center gap-0.5 text-xs font-medium text-[#3B82F6] hover:text-blue-800 transition-colors duration-150 shrink-0"
                 >
                     ดูทั้งหมด
                     <ChevronRight className="w-3.5 h-3.5" />
