@@ -5,11 +5,10 @@ import { ArrowDown, ArrowUp, ChevronRight, Leaf } from 'lucide-react';
 export interface CardMetricProps {
     title?: string;
     subtitle?: string;
-    status?: string;
     value: number | string;
-    unit?: string;
+    unit: string;
     icon?: ComponentType<{ className?: string }>;
-    subValue?: number | null;
+    subValue?:  | number | null;
     subUnit?: string | null;
     positiveData?: boolean;
     date?: Date;
@@ -49,14 +48,16 @@ export const CardMetric = ({
             )}
             {...props}
         >
-            <div className="flex h-full">
+            <div className="flex h-full mt-2">
                 <div className="flex items-center justify-center w-8 h-8 bg-emerald-50 text-emerald-600 rounded-full shrink-0">
-                    <Icon className="w-4.5 h-4.5" />
+                    <Icon className="w-5 h-5" />
                 </div>
             </div>
 
             <div className="flex flex-col gap-1 min-w-0">
-                <span className="text-xs font-medium text-slate-500 truncate">{title}</span>
+                <div className='flex items-center gap-2'>
+                    <span className="text-xs font-medium text-slate-500 truncate">{title}</span>
+                </div>
                 <div className="flex gap-1.5 items-baseline">
                     <span className="text-xl font-bold text-slate-800 tracking-tight">
                         {(value !== undefined && value !== null)

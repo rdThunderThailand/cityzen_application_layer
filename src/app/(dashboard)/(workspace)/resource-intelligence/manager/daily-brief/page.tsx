@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronsRight, Settings, Plus, Image, Mic, Building2, Truck, Sparkles } from "lucide-react";
+import { ChevronDown, ChevronsRight, Settings, Plus, Image, Mic, Building2, Truck, Sparkles, Calendar, Clock } from "lucide-react";
 import { AIDropdown } from "@/components/basic/AIDropdown";
 import { CardMetric } from "@/components/dashboard/CardMetric";
 import { HotelMapCard } from "@/features/resource-intelligence/manager/components/HotelMapCard";
@@ -23,77 +23,104 @@ const getToneClasses = (tone: string) => {
 
 export default function DailyBrief() {
     const [activeAI, setActiveAI] = useState<string | null>(null);
+    const [now] = useState(new Date());
+    const dateText = now.toLocaleDateString("th-TH", { weekday: 'long', day: "numeric", month: "long", year: "numeric" });
+    const timeText = now.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" }) + " น.";
 
     return (
-        <div className="w-full flex relative flex-1">
-            <div className={`flex-1 px-6 transition-all duration-300 pb-8`}>
-                {/* AI dropdown */}
-                <div className="w-full flex justify-end mt-4">
-                    <AIDropdown
-                        selectedValue={activeAI}
-                        onChange={setActiveAI}
-                    />
+        <div className="w-full h-screen flex relative overflow-hidden bg-slate-50/50">
+            <div className={`flex-1 px-6 transition-all duration-300 h-full flex flex-col`}>
+                {/* Top Filter Bar */}
+                <div className="w-full flex items-center justify-start gap-5 py-3 mt-4 mb-2 border-b border-slate-200/60 shrink-0">
+                    <div className="flex items-center gap-2 cursor-pointer group">
+                        <div className="text-indigo-900 rounded-lg flex items-center justify-center">
+                            <Building2 className="w-4 h-4" />
+                        </div>
+                        <span className="text-sm font-bold text-indigo-900">Hotel Bangkok</span>
+                        <ChevronDown className="w-3.5 h-3.5 text-indigo-900 group-hover:translate-y-0.5 transition-transform" />
+                    </div>
+                    <div className="h-5 w-px bg-slate-200"></div>
+                    <div className="flex items-center gap-2">
+                        <div className="text-indigo-900 rounded-lg flex items-center justify-center">
+                            <Calendar className="w-4 h-4" />
+                        </div>
+                        <span className="text-[13px] font-bold text-indigo-900" suppressHydrationWarning>{dateText}</span>
+                    </div>
+                    <div className="h-5 w-px bg-slate-200"></div>
+                    <div className="flex items-center gap-2">
+                        <div className="text-indigo-900 rounded-lg flex items-center justify-center">
+                            <Clock className="w-4 h-4" />
+                        </div>
+                        <span className="text-[13px] font-bold text-indigo-900" suppressHydrationWarning>{timeText}</span>
+                    </div>
+                    
+                    <div className="ml-auto flex items-center gap-3">
+                        <AIDropdown
+                            selectedValue={activeAI}
+                            onChange={setActiveAI}
+                        />
+                    </div>
                 </div>
 
-                <div className="flex flex-col  gap-4 w-full mt-3">
+                <div className="flex flex-col gap-3 w-full mt-2 flex-1 min-h-0 pb-4">
                     {/* Left Column */}
-                    <div className="flex flex-col gap-4 ">
+                    <div className="flex flex-col gap-3 h-full">
                         {/* 5 Metric Tiles */}
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 w-full">
+                        <div className="flex gap-3 w-full shrink-0">
                             {wasteData.map((item, index) => (
-                                <CardMetric key={index} {...item} className="h-60 bg-white hover:shadow-md transition-shadow duration-200" />
+                                <CardMetric key={index} {...item} className="h-40 bg-white hover:shadow-md transition-shadow duration-200" />
                             ))}
                         </div>
 
                         {/* AI Executive Brief Banner */}
-                        <div className="bg-white border border-slate-100 rounded-xl p-5 flex flex-col md:flex-row justify-between items-center gap-6 shadow-sm">
-                            <div className="flex gap-4 items-start flex-1">
-                                <div className="bg-blue-50 w-14 h-14 rounded-full flex items-center justify-center shrink-0 mt-1">
-                                    <RiRobot2Fill className="w-7 h-7 text-blue-800" />
+                        <div className="bg-white border border-slate-100 rounded-xl p-3 flex flex-col md:flex-row justify-between items-center gap-4 shadow-sm shrink-0">
+                            <div className="flex gap-3 items-start flex-1">
+                                <div className="bg-blue-50 w-10 h-10 rounded-full flex items-center justify-center shrink-0 mt-0.5">
+                                    <RiRobot2Fill className="w-5 h-5 text-blue-800" />
                                 </div>
-                                <div className="flex flex-col gap-2">
+                                <div className="flex flex-col gap-1.5">
                                     <div className="flex items-center gap-2">
-                                        <h2 className="text-base font-bold text-slate-800 tracking-tight">AI Executive Brief</h2>
-                                        <span className="bg-blue-100 text-blue-700 text-[9px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">BETA</span>
+                                        <h2 className="text-sm font-bold text-slate-800 tracking-tight">AI Executive Brief</h2>
+                                        <span className="bg-blue-100 text-blue-700 text-[8px] font-bold px-2 py-0.5 rounded uppercase tracking-wider">BETA</span>
                                     </div>
-                                    <div className="text-sm text-slate-700 leading-[1.6] font-medium max-w-150">
+                                    <div className="text-xs text-slate-700 leading-[1.5] font-medium max-w-150">
                                         วันนี้ปริมาณ Organic Waste สูงกว่าค่าเฉลี่ย 14% สาเหตุหลักมาจาก Breakfast Buffet และ Banquet Hall หากแนวโน้มยังคงเดิม ต้นทุนกำจัดขยะเดือนนี้จะเพิ่มประมาณ 38,000 บาท แนะนำให้เพิ่มรอบเก็บเวลา 13:00 และตรวจสอบ Buffet Line B    
                                     </div>
-                                    <div className="flex gap-2 mt-1">
-                                        <span className="text-[10px] font-bold bg-blue-50 text-blue-700 px-2.5 py-1 rounded-md">Insight</span>
-                                        <span className="text-[10px] font-bold bg-blue-50 text-blue-700 px-2.5 py-1 rounded-md">Prediction</span>
-                                        <span className="text-[10px] font-bold bg-blue-50 text-blue-700 px-2.5 py-1 rounded-md">Recommendation</span>
+                                    <div className="flex gap-2 mt-0.5">
+                                        <span className="text-[9px] font-bold bg-blue-50 text-blue-700 px-2 py-1 rounded-md">Insight</span>
+                                        <span className="text-[9px] font-bold bg-blue-50 text-blue-700 px-2 py-1 rounded-md">Prediction</span>
+                                        <span className="text-[9px] font-bold bg-blue-50 text-blue-700 px-2 py-1 rounded-md">Recommendation</span>
                                     </div>
                                 </div>
                             </div>
                             <div className="hidden md:block shrink-0">
-                                <img src="/mockPic.png" alt="AI Illustration" className="h-[200px] w-[350px] mr-20 " />
+                                <img src="/mockPic.png" alt="AI Illustration" className="h-[100px] w-[200px] mr-10 object-contain" />
                             </div>
                         </div>
 
                         {/* 3-column row */}
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 flex-1 min-h-0">
                             {/* Map */}
                             <HotelMapCard />
 
                             {/* ประเด็นสำคัญวันนี้ */}
-                            <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-4 h-full overflow-hidden flex flex-col">
-                                <h3 className="text-sm font-semibold text-slate-800 mb-3">ประเด็นสำคัญวันนี้</h3>
-                                <div className="flex flex-col gap-3 flex-1 overflow-y-auto pr-1">
+                            <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-3 h-full flex flex-col min-h-0">
+                                <h3 className="text-sm font-semibold text-slate-800 mb-2 shrink-0">ประเด็นสำคัญวันนี้</h3>
+                                <div className="flex flex-col gap-2 flex-1 overflow-y-auto pr-1">
                                     {cardEventData.map((item, idx) => {
                                         const tones = getToneClasses(item.badgeTone);
                                         return (
-                                            <div key={idx} className="flex items-start justify-between gap-3 p-2 rounded-lg hover:bg-slate-50 transition-colors">
-                                                <div className="flex items-start gap-3">
-                                                    <div className={`mt-0.5 shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${tones.iconBg} ${tones.iconText}`}>
-                                                        <item.icon className="w-4 h-4" />
+                                            <div key={idx} className="flex items-start justify-between gap-2 p-2 rounded-lg hover:bg-slate-50 transition-colors">
+                                                <div className="flex items-start gap-2.5">
+                                                    <div className={`mt-0.5 shrink-0 w-7 h-7 rounded-full flex items-center justify-center ${tones.iconBg} ${tones.iconText}`}>
+                                                        <item.icon className="w-3.5 h-3.5" />
                                                     </div>
                                                     <div className="flex flex-col">
-                                                        <span className="text-sm font-medium text-slate-800">{item.title}</span>
-                                                        <span className="text-xs text-slate-500 line-clamp-1">{item.subtitle}</span>
+                                                        <span className="text-xs font-medium text-slate-800">{item.title}</span>
+                                                        <span className="text-[10px] text-slate-500 line-clamp-1">{item.subtitle}</span>
                                                     </div>
                                                 </div>
-                                                <span className={`shrink-0 text-[10px] font-semibold px-2 py-1 rounded-md ${tones.bg} ${tones.badgeText}`}>
+                                                <span className={`shrink-0 text-[9px] font-semibold px-2 py-1 rounded-md ${tones.bg} ${tones.badgeText}`}>
                                                     {item.badgeText}
                                                 </span>
                                             </div>
@@ -107,7 +134,7 @@ export default function DailyBrief() {
                         </div>
 
                         {/* Bottom 2-col row */}
-                        <div className="flex gap-4 justify-baseline">
+                        <div className="flex gap-3 justify-baseline shrink-0">
                             {/* การดำเนินงานวันนี้ */}
                             <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-4 flex-1">
                                 <h3 className="text-sm font-semibold text-slate-800 mb-4">การดำเนินงานวันนี้</h3>
@@ -150,7 +177,7 @@ export default function DailyBrief() {
 
             {/* AI panel (exactly as-is) */}
             {activeAI && (
-                <div className="-z-1 w-[380px] shrink-0 border-l-2 border-gray-200 bg-white backdrop-blur-md p-4 flex flex-col h-full overflow-y-auto animate-in slide-in-from-right duration-300">
+                <div className="w-[380px] shrink-0 border-l-2 border-gray-200 bg-white backdrop-blur-md p-4 flex flex-col h-full overflow-y-auto animate-in slide-in-from-right duration-300">
                     {/* Header Navigation Utilities */}
                     <div className="flex justify-between items-center mb-6">
                         <button className="flex items-center gap-1 rounded-lg bg-slate-600 px-3 py-1.5 text-xs text-white hover:bg-slate-700 transition-colors font-medium">

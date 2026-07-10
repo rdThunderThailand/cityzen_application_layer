@@ -45,10 +45,17 @@ export const Header = ({
     const timeText = now.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
 
     return (
-        <div className="w-full shadow-md min-h-[8vh] px-4 py-2 flex items-center justify-between gap-3">
+        <div className="w-full shadow-md min-h-[8vh] px-4 py-2 flex items-center justify-between gap-3 z-3">
             <div className="flex flex-col justify-center min-w-0">
-                <h3 className="text-lg font-semibold text-slate-800 leading-tight uppercase truncate">{displayText}</h3>
-                <p className="text-xs text-slate-400" suppressHydrationWarning>{dateText} | {timeText}</p>
+                <div className="flex items-baseline gap-3">
+                    <h3 className="text-[22px] font-black text-indigo-950 leading-tight uppercase truncate tracking-wide">{displayText}</h3>
+                    {pathname.includes('/daily-brief') && (
+                        <span className="text-[17px] font-bold text-indigo-950 tracking-tight">สรุปภาพรวมองค์กร</span>
+                    )}
+                </div>
+                <p className="text-sm font-medium text-slate-500 mt-1" suppressHydrationWarning>
+                    ข้อมูล ณ วันที่ {dateText} | {timeText}
+                </p>
             </div>
 
             <div className="flex items-center gap-3 md:gap-6 shrink-0">

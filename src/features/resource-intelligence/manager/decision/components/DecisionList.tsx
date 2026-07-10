@@ -46,27 +46,12 @@ const decisionItems = [
         dueDate: "วันนี้ 14:00 น.",
         impact: "กลาง",
         impactColor: "text-amber-600 bg-amber-50"
-    },
-    {
-        id: 4,
-        title: "อนุมัติแผนล้างทำความสะอาดถังขยะ",
-        subtitle: "ตามแผนงานสัปดาห์ ทุกวันอาทิตย์",
-        type: 'normal',
-        typeLabel: 'ปกติ',
-        icon: Info,
-        iconColor: 'text-blue-500',
-        iconBg: 'bg-blue-50',
-        value: "2,000 บาท",
-        requester: "หัวหน้าแม่บ้าน",
-        dueDate: "พรุ่งนี้ 09:00 น.",
-        impact: "ต่ำ",
-        impactColor: "text-blue-600 bg-blue-50"
     }
 ];
 
 export const DecisionList = () => {
     return (
-        <div className="w-full flex flex-col gap-3">
+        <div className="flex-1 flex flex-col gap-3 overflow-y-auto min-h-0">
             {decisionItems.map((item) => (
                 <div key={item.id} className="bg-white border border-slate-100 rounded-xl shadow-sm p-5 flex items-start gap-5 hover:border-blue-100 transition-colors cursor-pointer group">
                     {/* Priority Icon */}

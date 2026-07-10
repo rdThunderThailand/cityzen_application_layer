@@ -3,7 +3,7 @@ import { ChevronDown, Plus, Minus, ArrowRight } from 'lucide-react';
 
 export const HotelMapCard = () => {
     return (
-        <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-4 flex flex-col h-full min-h-[300px]">
+        <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-4 flex flex-col h-full min-h-0">
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
                 <h3 className="text-sm font-bold text-slate-800">แผนที่สถานการณ์จุดกำเนิดขยะ</h3>

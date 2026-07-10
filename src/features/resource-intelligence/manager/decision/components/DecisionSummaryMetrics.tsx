@@ -3,7 +3,7 @@ import { CheckCircle2, Clock, AlertCircle, CheckCheck, TrendingUp } from 'lucide
 
 export const DecisionSummaryMetrics = () => {
     return (
-        <div className="w-full flex flex-col mb-8">
+        <div className="w-full flex flex-col">
             <div className="grid grid-cols-5 gap-3">
                 {/* Metric 1 */}
                 <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-4 flex flex-col items-center justify-center text-center">

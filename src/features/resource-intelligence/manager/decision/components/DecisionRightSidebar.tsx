@@ -3,7 +3,7 @@ import { Settings, CheckCircle2, TrendingUp, AlertTriangle, FileText, UserPlus, 
 
 export const DecisionRightSidebar = () => {
     return (
-        <div className="flex flex-col gap-6">
+        <div className="w-[280px] shrink-0 flex flex-col gap-4 overflow-y-auto min-h-0">
 
             {/* ข้อมูลประกอบการตัดสินใจ */}
             <div className="bg-white border border-slate-100 rounded-xl p-5 shadow-sm">

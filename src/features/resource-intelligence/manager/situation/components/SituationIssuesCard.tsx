@@ -3,7 +3,7 @@ import { ChevronDown, AlertTriangle, AlertCircle, Lock, HeartHandshake } from 'l
 
 export const SituationIssuesCard = () => {
     return (
-        <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-4 flex flex-col h-full min-h-[400px]">
+        <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-4 flex flex-col h-full min-h-0">
             {/* Header */}
             <div className="flex items-center justify-between mb-6">
                 <h3 className="text-sm font-bold text-slate-800">จุดเสี่ยง / ค่าเบี่ยงเบน</h3>

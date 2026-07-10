@@ -41,7 +41,7 @@ const CustomTooltip = ({ active, payload, label }: any) => {
 
 export const OrganicWasteTrendCard = () => {
     return (
-        <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-4 flex flex-col h-full min-h-[300px]">
+        <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-4 flex flex-col h-full min-h-0">
             <div className="flex items-center justify-between mb-2">
                 <h3 className="text-sm font-bold text-slate-800">แนวโน้มปริมาณขยะอินทรีย์</h3>
                 <button className="flex items-center gap-1 px-2 py-1 text-[11px] font-medium text-slate-600 bg-white border border-slate-200 rounded shadow-sm hover:bg-slate-50 transition-colors">
@@ -50,7 +50,7 @@ export const OrganicWasteTrendCard = () => {
             </div>
             
             {/* top part */}
-            <div className="flex flex-col gap-3 mb-6 mt-4">
+            <div className="flex flex-col gap-2 mb-2">
                 {wasteTrendSummary.map((item, idx) => (
                     <div key={idx} className="flex items-center text-xs">
                         <span className="w-28 text-slate-600 font-medium">{item.label}</span>
@@ -70,9 +70,9 @@ export const OrganicWasteTrendCard = () => {
             </div>
             
             {/* bottom part - Recharts AreaChart */}
-            <div className="mt-auto pt-2 flex-1 flex flex-col min-h-0">
-                <div className="text-[10px] font-semibold text-slate-500 mb-2">ปริมาณขยะ (kg)</div>
-                <div className="w-full flex-1 relative -ml-4 min-h-[120px]">
+            <div className="flex flex-col">
+                <div className="text-[10px] font-semibold text-slate-500 mb-1">ปริมาณขยะ (kg)</div>
+                <div className="w-full h-[130px] relative">
                     <ResponsiveContainer width="100%" height="100%">
                         <AreaChart data={wasteTrend7d} margin={{ top: 20, right: 15, left: -10, bottom: 0 }}>
                             <defs>

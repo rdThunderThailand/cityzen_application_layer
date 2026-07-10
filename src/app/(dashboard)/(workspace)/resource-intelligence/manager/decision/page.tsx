@@ -11,47 +11,48 @@ import { AIDropdown } from '@/components/basic/AIDropdown';
 export default function DecisionPage() {
     const [activeAI, setActiveAI] = useState<string | null>(null);
     return (
-        <div className="w-full flex relative flex-1 min-h-screen bg-slate-50/50">
-            <div className="flex-1 px-6 transition-all duration-300 pb-8 pt-6">
+        <div className="w-full h-screen flex relative overflow-hidden bg-slate-50/50">
+            <div className="flex-1 px-6 transition-all duration-300 pt-4 h-full flex flex-col min-h-0">
                 
-                {/* AI dropdown */}
-                <div className="w-full flex justify-between mb-4">
-                    <div className="">
-                          <div className="flex items-center gap-3">
-                    <h2 className="text-[15px] font-bold text-slate-800">เรื่องที่ต้องตัดสินใจวันนี้</h2>
-                    <span className="bg-rose-50 text-rose-600 text-[10px] font-bold px-2 py-0.5 rounded-full">4 เรื่อง</span>
-                    <p className="text-[11px] text-slate-500 font-medium">กรุณาพิจารณาและอนุมัติ</p>
-                </div>
+                {/* Top Bar */}
+                <div className="w-full flex justify-between mb-3 shrink-0">
+                    <div className="flex items-center gap-3">
+                        <h2 className="text-[15px] font-bold text-slate-800">เรื่องที่ต้องตัดสินใจวันนี้</h2>
+                        <span className="bg-rose-50 text-rose-600 text-[10px] font-bold px-2 py-0.5 rounded-full">4 เรื่อง</span>
+                        <p className="text-[11px] text-slate-500 font-medium">กรุณาพิจารณาและอนุมัติ</p>
                     </div>
-                    <div className="flex justify-end gap-8">
+                    <div className="flex justify-end gap-3">
                         <button className="flex items-center gap-2 text-[11px] font-medium text-slate-500 hover:text-slate-700 transition-colors bg-white border border-slate-200 px-3 py-1.5 rounded-lg shadow-sm">
                             เรียงตามความสำคัญ
                             <ChevronDownIcon className="w-3.5 h-3.5" />
                         </button>
-                    <AIDropdown
-                        selectedValue={activeAI}
-                        onChange={setActiveAI}
-                    />
+                        <AIDropdown
+                            selectedValue={activeAI}
+                            onChange={setActiveAI}
+                        />
                     </div>
                 </div>
-                
-                <div className="flex flex-col">
-                        <DecisionSummaryMetrics />
-                    {/* Main Content Area */}
-                    <div className="flex gap-8">
-                        <DecisionList />    
-                        <DecisionRightSidebar />
-                    </div>
+
+                {/* Summary Metrics */}
+                <div className="shrink-0 mb-3">
+                    <DecisionSummaryMetrics />
                 </div>
+
+                {/* Main Content Area — fills remaining height */}
+                <div className="flex gap-4 flex-1 min-h-0 mb-3">
+                    <DecisionList />
+                    <DecisionRightSidebar />
+                </div>
+
                 {/* Decision Bottom Section */}
-                <div className="w-ful">
+                <div className="shrink-0 pb-4">
                     <DecisionBottomSection />
                 </div>
             </div>
 
             {/* AI panel slide-out */}
             {activeAI && (
-                <div className="-z-1 mt-3 w-[380px] shrink-0 border-l-2 border-gray-200 bg-white backdrop-blur-md p-4 flex flex-col h-full overflow-y-auto animate-in slide-in-from-right duration-300">
+                <div className="w-[380px] shrink-0 border-l-2 border-gray-200 bg-white backdrop-blur-md p-4 flex flex-col h-full overflow-y-auto animate-in slide-in-from-right duration-300">
                     {/* Header Navigation Utilities */}
                     <div className="flex justify-between items-center mb-6">
                         <button className="flex items-center gap-1 rounded-lg bg-slate-600 px-3 py-1.5 text-xs text-white hover:bg-slate-700 transition-colors font-medium">
@@ -86,7 +87,6 @@ export default function DecisionPage() {
                             className="bg-transparent w-full text-xs text-slate-800 placeholder-slate-400 focus:outline-none mb-3"
                         />
                         <div className="flex justify-between items-center">
-                            {/* Left Side Actions */}
                             <div className="flex items-center gap-3 text-slate-400">
                                 <button className="hover:text-slate-600 transition-colors">
                                     <Plus className="w-4 h-4" />
@@ -95,8 +95,6 @@ export default function DecisionPage() {
                                     <Image className="w-4 h-4" />
                                 </button>
                             </div>
-
-                            {/* Right Side Actions */}
                             <div className="flex items-center gap-2">
                                 <div className="text-[11px] text-slate-500 bg-slate-50 border border-slate-100 rounded-md px-2 py-1 flex items-center gap-1">
                                     <span className="w-1.5 h-1.5 rounded-full bg-orange-500"></span>

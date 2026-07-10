@@ -3,7 +3,7 @@ import { ChevronDown, Maximize2, Info, Plus, Minus } from 'lucide-react';
 
 export const SituationMapCard = () => {
     return (
-        <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-4 flex flex-col h-full min-h-[400px]">
+        <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-4 flex flex-col h-full min-h-0">
             {/* Header */}
             <div className="flex items-center justify-between mb-4">
                 <div className="flex items-center gap-2">
@@ -20,7 +20,7 @@ export const SituationMapCard = () => {
                 </div>
             </div>
 
-            <div className="flex flex-1 gap-4 h-[300px]">
+            <div className="flex flex-1 gap-4 min-h-0">
                 {/* Left Legend */}
                 <div className="w-[120px] shrink-0 flex flex-col gap-2 border-r border-slate-100 pr-2">
                     <div className="text-[10px] font-bold text-slate-500 mb-1">ระดับปริมาณขยะ</div>
