@@ -5,6 +5,7 @@ import { cn } from "../../utils/cn";
 import { defaultUser } from "./mockUserData";
 import { WeatherCard } from "../basic/WeatherCard";
 import { executiveNavigationItems } from "@/app/(dashboard)/(workspace)/resource-intelligence/executive/navItem";
+import { managerNavigationItems } from "@/app/(dashboard)/(workspace)/resource-intelligence/manager/navItem";
 
 
 export interface HeaderProps {
@@ -15,7 +16,8 @@ export const Header = ({
     navigationText,
 }: HeaderProps) => {
     const pathname = usePathname();
-    const currentPageLabel = executiveNavigationItems.find((item) => item.href === pathname)?.label;
+    const allNavigationItems = [...executiveNavigationItems, ...managerNavigationItems];
+    const currentPageLabel = allNavigationItems.find((item) => item.href === pathname)?.label;
     const displayText = navigationText ?? currentPageLabel ?? 'สวัสดี';
 
     const [now, setNow] = useState(new Date());
@@ -45,7 +47,7 @@ export const Header = ({
     return (
         <div className="w-full shadow-md min-h-[8vh] px-4 py-2 flex items-center justify-between gap-3">
             <div className="flex flex-col justify-center min-w-0">
-                <h3 className="text-lg font-semibold text-slate-800 leading-tight uppercase truncate">{displayText} สรุปภาพรวมจังหวัดภูเก็ต</h3>
+                <h3 className="text-lg font-semibold text-slate-800 leading-tight uppercase truncate">{displayText}</h3>
                 <p className="text-xs text-slate-400" suppressHydrationWarning>{dateText} | {timeText}</p>
             </div>
 

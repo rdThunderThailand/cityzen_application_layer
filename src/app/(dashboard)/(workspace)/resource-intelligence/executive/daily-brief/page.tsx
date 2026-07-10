@@ -55,7 +55,6 @@ export default function DailyBrief() {
             </div>
 
             {/* AI panel */}
-            {/* AI panel */}
             {activeAI && (
                 <div className="-z-1 w-[380px] shrink-0 border-l-2 border-gray-200 bg-white backdrop-blur-md p-4 flex flex-col h-full overflow-y-auto animate-in slide-in-from-right duration-300">
                     {/* Header Navigation Utilities */}

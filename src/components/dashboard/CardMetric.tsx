@@ -5,11 +5,11 @@ import { ArrowDown, ArrowUp, ChevronRight, Leaf } from 'lucide-react';
 export interface CardMetricProps {
     title?: string;
     subtitle?: string;
-    value: number;
+    value: number | string;
     unit: string;
     icon?: ComponentType<{ className?: string }>;
-    subValue?: number;
-    subUnit?: string;
+    subValue?: number | null;
+    subUnit?: string | null;
     positiveData?: boolean;
     date?: Date;
     showChevron?: boolean;
@@ -30,7 +30,7 @@ export const CardMetric = ({
     className,
     ...props
 }: CardMetricProps) => {
-    const hasTrend = subValue !== undefined;
+    const hasTrend = subValue !== undefined && subValue !== null;
     const isTrendingUp = hasTrend ? subValue > 0 : false;
     const isPositiveOutcome = positiveData !== undefined
         ? (positiveData ? isTrendingUp : !isTrendingUp)
@@ -41,7 +41,7 @@ export const CardMetric = ({
     return (
         <div
             className={cn(
-                "relative flex flex-row items-center gap-3 sm:gap-3 md:gap-4 p-3 border border-slate-100 rounded-xl shadow-sm w-full min-w-[160px] font-sans max-h-[105px]",
+                "relative flex flex-row items-center gap-3 sm:gap-3 md:gap-4 p-3 border border-slate-100 rounded-xl shadow-sm w-full min-w-[160px] font-sans max-h-[140px]",
                 showChevron && "pr-8",
                 className
             )}
@@ -58,7 +58,7 @@ export const CardMetric = ({
                 <div className="flex flex-col items-baseline">
                     <span className="text-xl font-bold text-slate-800 tracking-tight">
                         {(value !== undefined && value !== null)
-                            ? Number(value).toLocaleString(undefined, { minimumFractionDigits: 1 })
+                            ? (typeof value === 'number' ? Number(value).toLocaleString(undefined, { minimumFractionDigits: 1 }) : value)
                             : '-'}
                     </span>
                     {unit && <span className="text-[11px] font-light text-slate-500">{unit}</span>}
