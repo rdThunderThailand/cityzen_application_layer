@@ -27,7 +27,7 @@ export default function DashboardLayout({ children }: { children: React.ReactNod
                 <SideBarBlock navigationItems={navigationItems} />
             </div>
             <div className="flex-1 min-w-0 flex flex-col h-full overflow-hidden">
-                <Header />
+                <Header navigationText={navigationItems.find((item) => item.href === pathname)?.labelTh} />
                 <div className="flex-1 flex flex-col overflow-y-auto">
                     {children}
                 </div>

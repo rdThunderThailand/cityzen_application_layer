@@ -8,5 +8,5 @@ export const wasteData: Array<{
     { title: "Prediction (พรุ่งนี้)", value: 560, unit: "kg", icon: TrendingUp, subValue: 9, subUnit: "%", subtitle: " คาดการณ์ 97%", positiveData: false },
     { title: "Waste per Guest (7 วัน)", value: 0.36, unit: "kg", icon: UsersRound, subValue: -0.05, subUnit: "", subtitle: " จากค่าเฉลี่ย 7 วัน", positiveData: true },
     { title: "Carbon Saving (7 วัน)", value: 128, unit: "kgCO2e", icon: Cloud, subValue: 18, subUnit: "%", subtitle: " จากค่าเฉลี่ย 7 วัน", positiveData: true },
-    { title: "Pickup (วันนี้)", value: "14:00", unit: "รอบเดียว", icon: Truck, subValue: null, subUnit: null, subtitle: "โดย Green Waste Co., Ltd."},
-];
+    { title: "Pickup (วันนี้)", value: "14:00", unit: "รอบเดียว", icon: Truck, subValue: null, subUnit:" ", subtitle: "โดย Green Waste Co., Ltd."},
+];  

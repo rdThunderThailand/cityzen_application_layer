@@ -35,7 +35,7 @@ export default function DailyBrief() {
                     />
                 </div>
 
-                <div className="flex flex-col lg:flex-row gap-4 w-full mt-3">
+                <div className="flex flex-col  gap-4 w-full mt-3">
                     {/* Left Column */}
                     <div className="flex flex-col gap-4 ">
                         {/* 5 Metric Tiles */}
@@ -107,9 +107,9 @@ export default function DailyBrief() {
                         </div>
 
                         {/* Bottom 2-col row */}
-                        <div className="flex gap-4">
+                        <div className="flex gap-4 justify-baseline">
                             {/* การดำเนินงานวันนี้ */}
-                            <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-4">
+                            <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-4 flex-1">
                                 <h3 className="text-sm font-semibold text-slate-800 mb-4">การดำเนินงานวันนี้</h3>
                                 <div className="grid grid-cols-2 sm:grid-cols-5 gap-3">
                                     {opsToday.map((item, idx) => (
