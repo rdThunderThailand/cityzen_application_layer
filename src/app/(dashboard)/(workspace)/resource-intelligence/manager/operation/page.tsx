@@ -1,58 +1,73 @@
 "use client";
 
 import React, { useState } from 'react';
-import { DecisionSummaryMetrics } from '@/features/resource-intelligence/manager/decision/components/DecisionSummaryMetrics';
-import { DecisionList } from '@/features/resource-intelligence/manager/decision/components/DecisionList';
-import { DecisionBottomSection } from '@/features/resource-intelligence/manager/decision/components/DecisionBottomSection';
-import { DecisionRightSidebar } from '@/features/resource-intelligence/manager/decision/components/DecisionRightSidebar';
-import { ChevronDown, ChevronDownIcon, ChevronsRight, Image, Mic, Plus, Settings } from 'lucide-react';
+import { ChevronDown, ChevronsRight, Image, Mic, Plus, Settings, ArrowRight } from 'lucide-react';
 import { AIDropdown } from '@/components/basic/AIDropdown';
+import { OperationKPICards } from '@/features/resource-intelligence/manager/operation/components/OperationKPICards';
+import { OperationTabs } from '@/features/resource-intelligence/manager/operation/components/OperationTabs';
+import { OperationMapCard } from '@/features/resource-intelligence/manager/operation/components/OperationMapCard';
+import { OperationTrucksTable } from '@/features/resource-intelligence/manager/operation/components/OperationTrucksTable';
+import { OperationGeneratorStatus } from '@/features/resource-intelligence/manager/operation/components/OperationGeneratorStatus';
+import { OperationCollectionProgress } from '@/features/resource-intelligence/manager/operation/components/OperationCollectionProgress';
+import { OperationProcessingStorage } from '@/features/resource-intelligence/manager/operation/components/OperationProcessingStorage';
+import { OperationBottomStatuses } from '@/features/resource-intelligence/manager/operation/components/OperationBottomStatuses';
 
-export default function DecisionPage() {
+export default function OperationPage() {
     const [activeAI, setActiveAI] = useState<string | null>(null);
+
     return (
         <div className="w-full flex relative flex-1 min-h-screen bg-slate-50/50">
-            <div className="flex-1 px-6 transition-all duration-300 pb-8 pt-6">
+            <div className="flex-1 px-6 transition-all duration-300 pb-8 pt-6 overflow-x-hidden">
                 
-                {/* AI dropdown */}
-                <div className="w-full flex justify-between mb-4">
-                    <div className="">
-                          <div className="flex items-center gap-3">
-                    <h2 className="text-[15px] font-bold text-slate-800">เรื่องที่ต้องตัดสินใจวันนี้</h2>
-                    <span className="bg-rose-50 text-rose-600 text-[10px] font-bold px-2 py-0.5 rounded-full">4 เรื่อง</span>
-                    <p className="text-[11px] text-slate-500 font-medium">กรุณาพิจารณาและอนุมัติ</p>
-                </div>
+                {/* Header Section */}
+                <div className="w-full flex justify-between items-center mb-6">
+                    <div>
+                        <div className="flex items-center gap-3">
+                            <h2 className="text-2xl font-bold text-slate-800 uppercase tracking-tight">OPERATIONS</h2>
+                            <span className="text-xl font-bold text-slate-600">ปฏิบัติการ</span>
+                        </div>
                     </div>
-                    <div className="flex justify-end gap-8">
-                        <button className="flex items-center gap-2 text-[11px] font-medium text-slate-500 hover:text-slate-700 transition-colors bg-white border border-slate-200 px-3 py-1.5 rounded-lg shadow-sm">
-                            เรียงตามความสำคัญ
-                            <ChevronDownIcon className="w-3.5 h-3.5" />
-                        </button>
-                    <AIDropdown
-                        selectedValue={activeAI}
-                        onChange={setActiveAI}
-                    />
+                    <div className="flex justify-end">
+                        <AIDropdown
+                            selectedValue={activeAI}
+                            onChange={setActiveAI}
+                        />
                     </div>
                 </div>
-                
-                <div className="flex flex-col">
-                        <DecisionSummaryMetrics />
-                    {/* Main Content Area */}
-                    <div className="flex gap-8">
-                        <DecisionList />    
-                        <DecisionRightSidebar />
+
+                {/* KPI Cards */}
+                <OperationKPICards />
+
+                {/* Tabs */}
+                <OperationTabs />
+
+                {/* Main Content Grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-12 gap-4">
+                    
+                    {/* Left Column (Map & Trucks) */}
+                    <div className="lg:col-span-5 flex flex-col gap-4">
+                        <OperationMapCard />
+                        <OperationTrucksTable />
                     </div>
-                </div>
-                {/* Decision Bottom Section */}
-                <div className="w-ful">
-                    <DecisionBottomSection />
+
+                    {/* Right Column (Statuses) */}
+                    <div className="lg:col-span-7 flex flex-col gap-4">
+                        <div className="grid grid-cols-2 gap-4">
+                            <OperationCollectionProgress />
+                            <OperationGeneratorStatus />
+                        </div>
+                        
+                        <OperationProcessingStorage />
+                        
+                        <OperationBottomStatuses />
+
+                    </div>
                 </div>
             </div>
 
             {/* AI panel slide-out */}
             {activeAI && (
                 <div className="-z-1 mt-3 w-[380px] shrink-0 border-l-2 border-gray-200 bg-white backdrop-blur-md p-4 flex flex-col h-full overflow-y-auto animate-in slide-in-from-right duration-300">
-                    {/* Header Navigation Utilities */}
                     <div className="flex justify-between items-center mb-6">
                         <button className="flex items-center gap-1 rounded-lg bg-slate-600 px-3 py-1.5 text-xs text-white hover:bg-slate-700 transition-colors font-medium">
                             <span>แชทใหม่</span>
@@ -63,7 +78,6 @@ export default function DecisionPage() {
                         </button>
                     </div>
 
-                    {/* Central Empty State Content */}
                     <div className="flex flex-col items-center justify-center flex-1 text-center py-20">
                         <div className="bg-gradient-to-br from-blue-500 to-blue-700 w-12 h-12 rounded-xl flex items-center justify-center shadow-sm mb-4">
                             <Settings className="w-6 h-6 text-white" />
@@ -78,7 +92,6 @@ export default function DecisionPage() {
                         </p>
                     </div>
 
-                    {/* Interactive Bottom Input Container */}
                     <div className="w-full border border-slate-100 rounded-2xl p-4 bg-white shadow-sm mt-auto">
                         <input
                             type="text"
@@ -86,7 +99,6 @@ export default function DecisionPage() {
                             className="bg-transparent w-full text-xs text-slate-800 placeholder-slate-400 focus:outline-none mb-3"
                         />
                         <div className="flex justify-between items-center">
-                            {/* Left Side Actions */}
                             <div className="flex items-center gap-3 text-slate-400">
                                 <button className="hover:text-slate-600 transition-colors">
                                     <Plus className="w-4 h-4" />
@@ -95,8 +107,6 @@ export default function DecisionPage() {
                                     <Image className="w-4 h-4" />
                                 </button>
                             </div>
-
-                            {/* Right Side Actions */}
                             <div className="flex items-center gap-2">
                                 <div className="text-[11px] text-slate-500 bg-slate-50 border border-slate-100 rounded-md px-2 py-1 flex items-center gap-1">
                                     <span className="w-1.5 h-1.5 rounded-full bg-orange-500"></span>
