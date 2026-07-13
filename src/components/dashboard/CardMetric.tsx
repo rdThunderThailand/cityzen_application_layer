@@ -1,20 +1,22 @@
-import type { ComponentType } from 'react';
+import type { ComponentType, ReactNode } from 'react';
 import { cn } from '../../utils/cn';
 import { ArrowDown, ArrowUp, ChevronRight, Leaf } from 'lucide-react';
 
 export interface CardMetricProps {
     title?: string;
-    subtitle?: string;
+    subtitle?: string | ReactNode;
     value: number | string;
-    unit: string;
+    unit?: string;
     icon?: ComponentType<{ className?: string }>;
+    status?: string | ReactNode;
     subValue?:  | number | null;
-    subUnit?: string | null;
+    subUnit?: string | ReactNode | null;
     positiveData?: boolean;
     date?: Date;
     showChevron?: boolean;
     className?: string;
     classNameForIcon?: string;
+    action?: ReactNode;
 }
 
 export const CardMetric = ({
@@ -31,6 +33,7 @@ export const CardMetric = ({
     showChevron = false,
     className,
     classNameForIcon,
+    action,
     ...props
 }: CardMetricProps) => {
     const hasTrend = subValue !== undefined && subValue !== null;
@@ -52,7 +55,7 @@ export const CardMetric = ({
         >
             <div className="flex h-full">
                 <div className={cn("flex items-center justify-center w-8 h-8 bg-emerald-50 text-emerald-600 rounded-full shrink-0", classNameForIcon)}>
-                    <Icon className={cn("w-4.5 h-4.5", classNameForIcon)} />
+                    <Icon className="w-4.5 h-4.5" />
                 </div>
             </div>
 
@@ -76,12 +79,13 @@ export const CardMetric = ({
                             </span>
                         )}
                         <p className={cn("font-semibold", hasTrend ? cn("-ml-2", trendColorClass) : "text-slate-500")}>
-                            {hasTrend ? `${subValue} ` : ''}{subUnit}
+                            {hasTrend ? `${Math.abs(Number(subValue))} ` : ''}{subUnit}
                         </p>
                     </div>
                 )}
                 {status && <span className="text-xs font-medium text-black">{status}</span>}
                 {subtitle && <span className="text-xs text-slate-500">{subtitle}</span>}
+                {action && <div className="mt-0.5">{action}</div>}
             </div>
 
             {showChevron && (

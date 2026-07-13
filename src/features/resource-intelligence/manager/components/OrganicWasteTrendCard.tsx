@@ -71,8 +71,8 @@ export const OrganicWasteTrendCard = () => {
             
             {/* bottom part - Recharts AreaChart */}
             <div className="flex flex-col">
-                <div className="text-[10px] font-semibold text-slate-500 mb-1">ปริมาณขยะ (kg)</div>
-                <div className="w-full h-[130px] relative">
+                <div className="text-[10px] font-semibold text-slate-500 ">ปริมาณขยะ (kg)</div>
+                <div className="w-full h-[110px] relative">
                     <ResponsiveContainer width="100%" height="100%">
                         <AreaChart data={wasteTrend7d} margin={{ top: 20, right: 15, left: -10, bottom: 0 }}>
                             <defs>

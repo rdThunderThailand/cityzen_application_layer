@@ -9,6 +9,8 @@ import { SituationCauseCard } from '@/features/resource-intelligence/manager/sit
 import { SituationTrendCard } from '@/features/resource-intelligence/manager/situation/components/SituationTrendCard';
 import { SituationForecastCard } from '@/features/resource-intelligence/manager/situation/components/SituationForecastCard';
 import { ManagerFilterBar } from '@/features/resource-intelligence/manager/components/ManagerFilterBar';
+import { wasteTrendSummary } from '../../../../../../../migration/manager/daily-brief/seed_trend_items';
+import { CardMetric } from '@/components/dashboard/CardMetric';
 
 export default function Situation() {
     const [activeTab, setActiveTab] = useState('ภาพรวมสถานการณ์');
@@ -20,53 +22,61 @@ export default function Situation() {
             <ManagerFilterBar activeAI={activeAI} onAIChange={setActiveAI} />
             {/* Top Metrics Row */}
             <div className="grid grid-cols-1 md:grid-cols-5 gap-3 mt-4 mb-3 shrink-0">
-                <div className="bg-white border border-slate-100 rounded-xl p-3 shadow-sm">
-                    <div className="flex items-center gap-2 text-slate-600 mb-1.5 text-xs font-medium">
-                        <Sprout className="w-3.5 h-3.5 text-emerald-600" />
-                        Organic Generated (วันนี้)
-                    </div>
-                    <div className="text-xl font-bold text-slate-800 mb-0.5">524 kg</div>
-                    <div className="text-[10px] text-emerald-600 font-semibold">↑ 14% <span className="text-slate-400 font-normal">จากเมื่อวาน (460 kg)</span></div>
-                </div>
+                <CardMetric
+                    title="Organic Generated (วันนี้)"
+                    value={524}
+                    unit="kg"
+                    icon={Sprout}
+                    classNameForIcon="bg-emerald-50 text-emerald-600"
+                    subValue={14}
+                    subUnit={<span className="text-slate-400 font-normal">% จากเมื่อวาน (460 kg)</span>}
+                />
                 
-                <div className="bg-white border border-slate-100 rounded-xl p-3 shadow-sm">
-                    <div className="flex items-center gap-2 text-slate-600 mb-1.5 text-xs font-medium">
-                        <BarChart3 className="w-3.5 h-3.5 text-emerald-600" />
-                        เฉลี่ย 7 วัน
-                    </div>
-                    <div className="text-xl font-bold text-slate-800 mb-0.5">489 kg</div>
-                    <div className="text-[10px] text-emerald-600 font-semibold">↑ 9% <span className="text-slate-400 font-normal">จากค่าเฉลี่ย 7 วัน</span></div>
-                </div>
+                <CardMetric
+                    title="เฉลี่ย 7 วัน"
+                    value={489}
+                    unit="kg"
+                    icon={BarChart3}
+                    classNameForIcon="bg-emerald-50 text-emerald-600"
+                    subValue={9}
+                    subUnit={<span className="text-slate-400 font-normal">% จากค่าเฉลี่ย 7 วัน</span>}
+                />
                 
-                <div className="bg-white border border-slate-100 rounded-xl p-3 shadow-sm">
-                    <div className="flex items-center gap-2 text-slate-600 mb-1.5 text-xs font-medium">
-                        <UsersRound className="w-3.5 h-3.5 text-blue-500" />
-                        Waste per Guest (7 วัน)
-                    </div>
-                    <div className="text-xl font-bold text-slate-800 mb-0.5">0.36 kg</div>
-                    <div className="text-[10px] text-slate-500 font-semibold">↓ -0.05 <span className="text-slate-400 font-normal">จากค่าเฉลี่ย 7 วัน</span></div>
-                </div>
+                <CardMetric
+                    title="Waste per Guest (7 วัน)"
+                    value={0.36}
+                    unit="kg"
+                    icon={UsersRound}
+                    classNameForIcon="bg-blue-50 text-blue-500"
+                    subValue={-0.05}
+                    subUnit={<span className="text-slate-400 font-normal">จากค่าเฉลี่ย 7 วัน</span>}
+                    positiveData={false}
+                />
                 
-                <div className="bg-white border border-slate-100 rounded-xl p-3 shadow-sm flex flex-col justify-between">
-                    <div className="flex items-center gap-2 text-slate-600 mb-1.5 text-xs font-medium">
-                        <PieChart className="w-3.5 h-3.5 text-emerald-600" />
-                        สัดส่วนตามแหล่งกำเนิด (วันนี้)
-                    </div>
-                    <button className="text-[11px] font-semibold text-emerald-600 hover:text-emerald-700 text-left flex items-center gap-1">
-                        ดูรายละเอียดด้านล่าง →
-                    </button>
-                </div>
+                <CardMetric
+                    title="สัดส่วนตามแหล่งกำเนิด (วันนี้)"
+                    value={10}
+                    icon={PieChart}
+                    classNameForIcon="bg-emerald-50 text-emerald-600"
+                    action={
+                        <button className="text-[11px] font-semibold text-emerald-600 hover:text-emerald-700 text-left flex items-center gap-1">
+                            ดูรายละเอียดด้านล่าง →
+                        </button>
+                    }
+                />
                 
-                <div className="bg-white border border-slate-100 rounded-xl p-3 shadow-sm flex flex-col justify-between">
-                    <div className="flex items-center gap-2 text-slate-600 mb-1.5 text-xs font-medium">
-                        <AlertTriangle className="w-3.5 h-3.5 text-rose-500" />
-                        ประเด็นที่ต้องสนใจ
-                    </div>
-                    <div className="text-xl font-bold text-slate-800">3 <span className="text-sm font-medium text-slate-600">เรื่อง</span></div>
-                    <button className="text-[11px] font-semibold text-rose-500 hover:text-rose-600 text-left flex items-center gap-1">
-                        ดูรายละเอียด →
-                    </button>
-                </div>
+                <CardMetric
+                    title="ประเด็นที่ต้องสนใจ"
+                    value={3}
+                    unit="เรื่อง"
+                    icon={AlertTriangle}
+                    classNameForIcon="bg-rose-50 text-rose-500"
+                    action={
+                        <button className="text-[11px] font-semibold text-rose-500 hover:text-rose-600 text-left flex items-center gap-1">
+                            ดูรายละเอียด →
+                        </button>
+                    }
+                />
             </div>
 
             {/* Tabs */}

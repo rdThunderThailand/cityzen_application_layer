@@ -1,59 +1,50 @@
 import React from 'react';
 import { CheckCircle2, Clock, AlertCircle, CheckCheck, TrendingUp } from 'lucide-react';
+import { CardMetric } from '@/components/dashboard/CardMetric';
 
 export const DecisionSummaryMetrics = () => {
     return (
         <div className="w-full flex flex-col">
             <div className="grid grid-cols-5 gap-3">
-                {/* Metric 1 */}
-                <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-4 flex flex-col items-center justify-center text-center">
-                    <div className="flex items-center gap-1.5 mb-2">
-                        <CheckCircle2 className="w-4 h-4 text-emerald-500" />
-                        <span className="text-[11px] font-semibold text-slate-600">รอพิจารณา</span>
-                    </div>
-                    <span className="text-2xl font-bold text-slate-800 leading-none">4</span>
-                    <span className="text-[10px] text-slate-400 mt-1 font-medium">เรื่อง</span>
-                </div>
+                <CardMetric
+                    title="รอพิจารณา"
+                    value={4}
+                    icon={CheckCircle2}
+                    classNameForIcon="bg-emerald-50 text-emerald-500"
+                    subUnit={<span className="text-slate-400 font-normal">เรื่อง</span>}
+                />
 
-                {/* Metric 2 */}
-                <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-4 flex flex-col items-center justify-center text-center">
-                    <div className="flex items-center gap-1.5 mb-2">
-                        <Clock className="w-4 h-4 text-amber-500" />
-                        <span className="text-[11px] font-semibold text-slate-600">ใกล้ครบกำหนด</span>
-                    </div>
-                    <span className="text-2xl font-bold text-slate-800 leading-none">1</span>
-                    <span className="text-[10px] text-slate-400 mt-1 font-medium">เรื่อง</span>
-                </div>
+                <CardMetric
+                    title="ใกล้ครบกำหนด"
+                    value={1}
+                    icon={Clock}
+                    classNameForIcon="bg-amber-50 text-amber-500"
+                    subUnit={<span className="text-slate-400 font-normal">เรื่อง</span>}
+                />
 
-                {/* Metric 3 */}
-                <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-4 flex flex-col items-center justify-center text-center">
-                    <div className="flex items-center gap-1.5 mb-2">
-                        <AlertCircle className="w-4 h-4 text-rose-500" />
-                        <span className="text-[11px] font-semibold text-slate-600">เกินกำหนด</span>
-                    </div>
-                    <span className="text-2xl font-bold text-slate-800 leading-none">0</span>
-                    <span className="text-[10px] text-slate-400 mt-1 font-medium">เรื่อง</span>
-                </div>
+                <CardMetric
+                    title="เกินกำหนด"
+                    value={0}
+                    icon={AlertCircle}
+                    classNameForIcon="bg-rose-50 text-rose-500"
+                    subUnit={<span className="text-slate-400 font-normal">เรื่อง</span>}
+                />
 
-                {/* Metric 4 */}
-                <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-4 flex flex-col items-center justify-center text-center">
-                    <div className="flex items-center gap-1.5 mb-2">
-                        <CheckCheck className="w-4 h-4 text-blue-500" />
-                        <span className="text-[11px] font-semibold text-slate-600">อนุมัติแล้ววันนี้</span>
-                    </div>
-                    <span className="text-2xl font-bold text-slate-800 leading-none">2</span>
-                    <span className="text-[10px] text-slate-400 mt-1 font-medium">เรื่อง</span>
-                </div>
+                <CardMetric
+                    title="อนุมัติแล้ววันนี้"
+                    value={2}
+                    icon={CheckCheck}
+                    classNameForIcon="bg-blue-50 text-blue-500"
+                    subUnit={<span className="text-slate-400 font-normal">เรื่อง</span>}
+                />
 
-                {/* Metric 5 */}
-                <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-4 flex flex-col items-center justify-center text-center">
-                    <div className="flex items-center gap-1.5 mb-2">
-                        <TrendingUp className="w-4 h-4 text-purple-500" />
-                        <span className="text-[11px] font-semibold text-slate-600">มูลค่ารวมที่ต้องอนุมัติ</span>
-                    </div>
-                    <span className="text-2xl font-bold text-slate-800 leading-none">38,000</span>
-                    <span className="text-[10px] text-slate-400 mt-1 font-medium">บาท</span>
-                </div>
+                <CardMetric
+                    title="มูลค่ารวมที่ต้องอนุมัติ"
+                    value="38,000"
+                    icon={TrendingUp}
+                    classNameForIcon="bg-purple-50 text-purple-500"
+                    subUnit={<span className="text-slate-400 font-normal">บาท</span>}
+                />
             </div>
         </div>
     );

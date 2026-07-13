@@ -48,7 +48,7 @@ export const OutcomeTrendChart = () => {
                     </div>
                 </div>
                 
-                <div className="relative w-full h-[150px]">
+                <div className="relative w-full h-[110px]">
                     <ResponsiveContainer width="100%" height="100%">
                         <AreaChart data={mockData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
                             <defs>
@@ -99,7 +99,7 @@ export const OutcomeTrendChart = () => {
                     </ResponsiveContainer>
 
                     {/* Overlay Stats */}
-                    <div className="absolute right-4 top-[22%] bg-white border border-slate-200 rounded-lg shadow-sm px-2.5 py-1.5 flex flex-col items-center">
+                    <div className="absolute right-4 top-[30%] bg-white border border-slate-200 rounded-lg shadow-sm px-2.5 py-1.5 flex flex-col items-center">
                         <div className="absolute -left-[5px] top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-white border-l border-b border-slate-200 rotate-45"></div>
                         <div className="relative z-10 flex flex-col items-center gap-0.5">
                             <span className="text-[10px] text-emerald-700 font-medium tracking-tight">เฉลี่ย <span className="font-bold text-emerald-800">514 kg</span></span>
@@ -110,7 +110,7 @@ export const OutcomeTrendChart = () => {
                         </div>
                     </div>
                     
-                    <div className="absolute right-4 top-[55%] bg-white border border-slate-200 rounded-lg shadow-sm px-2.5 py-1.5 flex flex-col items-center">
+                    <div className="absolute right-4 top-[0%] bg-white border border-slate-200 rounded-lg shadow-sm px-2.5 py-1.5 flex flex-col items-center">
                         <div className="absolute -left-[5px] top-1/2 -translate-y-1/2 w-2.5 h-2.5 bg-white border-l border-b border-slate-200 rotate-45"></div>
                         <div className="relative z-10">
                             <span className="text-[10px] text-slate-600 font-medium tracking-tight">เฉลี่ย <span className="font-bold text-slate-700">584 kg</span></span>

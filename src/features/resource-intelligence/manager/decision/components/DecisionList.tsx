@@ -87,7 +87,7 @@ export const DecisionList = () => {
                     <div className="flex items-center gap-6 pt-1">
                         <div className="flex flex-col items-center gap-1.5">
                             <span className="text-[10px] text-slate-400">ผลกระทบ</span>
-                            <div className={`px-4 py-1 rounded font-bold text-[11px] ${item.impactColor}`}>
+                            <div className={`px-4 py-1 rounded font-bold text-[11px] min-w-[60px] text-center ${item.impactColor}`}>
                                 {item.impact}
                             </div>
                         </div>
