@@ -14,8 +14,8 @@ export const wasteData = [
     },
     {
         title: "ประชาชนได้รับผลกระทบ",
-        value: 842.35,
-        unit: "kg",
+        value: 844,
+        unit: "คน",
         icon: UsersRound,
         subValue: -7.47,
         subUnit: "%",
@@ -25,8 +25,8 @@ export const wasteData = [
     },
     {
         title: "นักท่องเที่ยววันนี้",
-        value: 87.8,
-        unit: "%",
+        value: 20019,
+        unit: "คน",
         icon: Plane,
         subValue: 17,
         subUnit: "%",
@@ -37,7 +37,7 @@ export const wasteData = [
     {
         title: "ผลกระทบเชิงบวก (มูลค่า)",
         value: 532.4,
-        unit: "kg",
+        unit: "ล้านบาท",
         icon: ChartLine,
         subValue: 10.2,
         subUnit: "%",
@@ -47,12 +47,12 @@ export const wasteData = [
     },
     {
         title: "ความพร้อมรับมือ",
-        value: 340.2,
-        unit: "kg",
+        value: 80.2,
+        unit: "%",
         icon: ShieldPlus,
         subValue: 12.5,
         subUnit: "%",
-        positiveData: false,
+        positiveData: true,
         classNameForIcon: 'bg-blue-50 text-blue-500',
         date: new Date()
     },

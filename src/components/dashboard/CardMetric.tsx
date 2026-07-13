@@ -62,7 +62,7 @@ export const CardMetric = ({
                 <div className="flex gap-1.5 items-baseline">
                     <span className="text-xl font-bold text-slate-800 tracking-tight">
                         {(value !== undefined && value !== null)
-                            ? Number(value).toLocaleString(undefined, { minimumFractionDigits: 1 })
+                            ? Number(value).toLocaleString(undefined, { minimumFractionDigits: 0 })
                             : '-'}
                     </span>
                     {unit && <span className="text-[11px] font-light text-slate-500">{unit}</span>}
