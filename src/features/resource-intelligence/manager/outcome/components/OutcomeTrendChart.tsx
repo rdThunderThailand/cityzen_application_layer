@@ -28,8 +28,8 @@ const mockData = [
 export const OutcomeTrendChart = () => {
     return (
         <div className="bg-white rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.04)] p-0 h-full flex flex-col justify-between overflow-hidden">
-            <div className="p-5 pb-0">
-                <div className="flex justify-between items-center mb-6">
+            <div className="p-4 pb-0">
+                <div className="flex justify-between items-center mb-3">
                     <h3 className="text-[14px] font-bold text-indigo-900 tracking-tight">แนวโน้มปริมาณ Organic Waste</h3>
                     <div className="flex items-center gap-2 border border-slate-200 rounded-lg px-2.5 py-1.5 cursor-pointer">
                         <span className="text-[11px] text-slate-600 font-medium">รายวัน</span>
@@ -37,7 +37,7 @@ export const OutcomeTrendChart = () => {
                     </div>
                 </div>
 
-                <div className="flex items-center gap-6 mb-6 px-4">
+                <div className="flex items-center gap-6 mb-3 px-4">
                     <div className="flex items-center gap-2">
                         <div className="w-2.5 h-2.5 rounded-full bg-emerald-600"></div>
                         <span className="text-[11px] font-medium text-slate-700">ช่วงนี้ (1 - 18 ก.ค. 67)</span>
@@ -48,7 +48,7 @@ export const OutcomeTrendChart = () => {
                     </div>
                 </div>
                 
-                <div className="relative w-full h-[180px]">
+                <div className="relative w-full h-[150px]">
                     <ResponsiveContainer width="100%" height="100%">
                         <AreaChart data={mockData} margin={{ top: 10, right: 10, left: -25, bottom: 0 }}>
                             <defs>
@@ -119,7 +119,7 @@ export const OutcomeTrendChart = () => {
                 </div>
             </div>
 
-            <div className="mx-5 mb-5 mt-3 bg-[#f4fbf7] rounded-xl p-3.5 flex items-center justify-between border border-emerald-50">
+            <div className="mx-4 mb-4 mt-3 bg-[#f4fbf7] rounded-xl p-3 flex items-center justify-between border border-emerald-50">
                 <span className="text-[11px] text-emerald-700 font-medium tracking-tight">
                     แนวโน้มลดลงอย่างต่อเนื่อง โดยเฉพาะหลังมาตรการเพิ่มรอบเก็บเวลา 13:00 น.
                 </span>

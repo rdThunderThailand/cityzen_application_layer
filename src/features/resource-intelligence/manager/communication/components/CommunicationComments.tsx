@@ -4,12 +4,12 @@ import { ThumbsUp } from 'lucide-react';
 export const CommunicationComments = () => {
     return (
         <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-5 mt-[-5px]">
-            <div className="flex justify-between items-center mb-6">
+            <div className="flex justify-between items-center mb-2">
                 <h3 className="text-[13px] font-bold text-slate-800">การมีส่วนร่วม (ความคิดเห็น / คำตอบ)</h3>
                 <span className="text-[10px] font-medium text-slate-500">12 ความคิดเห็น</span>
             </div>
 
-            <div className="flex flex-col gap-5">
+            <div className="flex flex-col gap-3">
                 <div className="flex gap-3 items-start">
                     <div className="w-8 h-8 rounded-full bg-blue-100 shrink-0 overflow-hidden relative">
                         {/* Placeholder avatar */}

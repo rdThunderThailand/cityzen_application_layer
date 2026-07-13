@@ -3,10 +3,10 @@ import { ArrowUp, ArrowDown } from 'lucide-react';
 
 export const SituationForecastCard = () => {
     return (
-        <div className="bg-slate-50/70 rounded-xl p-5 flex flex-col h-full min-h-[300px] w-full">
-            <h3 className="text-sm font-bold text-emerald-700 mb-6">คาดการณ์ล่วงหน้า</h3>
+        <div className="rounded-xl p-5 flex flex-col h-full min-h-[200px] w-full ">
+            <h3 className="text-sm font-bold text-emerald-700 mb-4">คาดการณ์ล่วงหน้า</h3>
             
-            <div className="flex flex-col gap-5 flex-1 mt-2">
+            <div className="flex flex-col gap-3">
                 {/* Item 1 */}
                 <div className="flex items-center justify-between text-xs">
                     <span className="text-slate-600 font-medium">พรุ่งนี้ (19 ก.ค.)</span>
@@ -44,7 +44,7 @@ export const SituationForecastCard = () => {
                 </div>
             </div>
 
-            <button className="mt-auto pt-4 text-[11px] font-semibold text-blue-600 hover:text-blue-700 flex items-center">
+            <button className="mt-3 text-[11px] font-semibold text-blue-600 hover:text-blue-700 flex items-center">
                 ดูการคาดการณ์ทั้งหมด →
             </button>
         </div>

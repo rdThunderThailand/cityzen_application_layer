@@ -49,7 +49,7 @@ export const DecisionRightSidebar = () => {
             </div>
 
             {/* การดำเนินการด่วน */}
-            <div className="bg-white border border-slate-100 rounded-xl p-5 shadow-sm">
+            <div className="bg-white border border-slate-100 rounded-xl p-4 shadow-sm">
                 <h3 className="text-[13px] font-bold text-slate-800 mb-4">การดำเนินการด่วน</h3>
                 
                 <div className="grid grid-cols-2 gap-3">

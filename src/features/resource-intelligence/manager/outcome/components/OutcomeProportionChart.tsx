@@ -14,19 +14,19 @@ const data = [
 export const OutcomeProportionChart = () => {
     return (
         <div className="bg-white rounded-2xl shadow-[0_2px_10px_rgba(0,0,0,0.04)] p-0 h-full flex flex-col justify-between overflow-hidden">
-            <div className="p-5 pb-0">
-                <h3 className="text-[14px] font-bold text-indigo-900 tracking-tight mb-6">สัดส่วนการจัดการ Organic Waste</h3>
-                
+            <div className="p-4 pb-0">
+                <h3 className="text-[14px] font-bold text-indigo-900 tracking-tight mb-4">สัดส่วนการจัดการ Organic Waste</h3>
+
                 <div className="flex items-center gap-4">
-                    <div className="w-[140px] h-[140px] shrink-0 relative">
+                    <div className="w-[125px] h-[125px] shrink-0 relative">
                         <ResponsiveContainer width="100%" height="100%">
                             <PieChart>
                                 <Pie
                                     data={data}
                                     cx="50%"
                                     cy="50%"
-                                    innerRadius={45}
-                                    outerRadius={65}
+                                    innerRadius={40}
+                                    outerRadius={58}
                                     paddingAngle={0}
                                     dataKey="value"
                                     stroke="#ffffff"
@@ -43,12 +43,12 @@ export const OutcomeProportionChart = () => {
                             </PieChart>
                         </ResponsiveContainer>
                         <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
-                            <span className="text-xl font-bold text-slate-800 leading-none">9,256</span>
-                            <span className="text-[10px] font-semibold text-slate-500 mt-1">kg</span>
+                            <span className="text-lg font-bold text-slate-800 leading-none">9,256</span>
+                            <span className="text-[9px] font-semibold text-slate-500 mt-1">kg</span>
                         </div>
                     </div>
 
-                    <div className="flex-1 flex flex-col gap-3">
+                    <div className="flex-1 flex flex-col gap-2.5">
                         {data.map((item, index) => (
                             <div key={index} className="flex items-center justify-between">
                                 <div className="flex items-center gap-2">
@@ -68,7 +68,7 @@ export const OutcomeProportionChart = () => {
                 </div>
             </div>
 
-            <div className="w-full border-t border-slate-100 py-3 mt-6 flex justify-center">
+            <div className="w-full border-t border-slate-100 py-2.5 mt-3 flex justify-center">
                 <button className="flex items-center gap-1.5 text-blue-600 hover:text-blue-700 transition-colors">
                     <span className="text-[11px] font-bold">ดูรายละเอียด</span>
                     <ArrowRight className="w-3.5 h-3.5" />

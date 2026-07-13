@@ -51,9 +51,9 @@ const decisionItems = [
 
 export const DecisionList = () => {
     return (
-        <div className="flex-1 flex flex-col gap-3 overflow-y-auto min-h-0">
+        <div className="flex-1 flex flex-col gap-3 min-h-0">
             {decisionItems.map((item) => (
-                <div key={item.id} className="bg-white border border-slate-100 rounded-xl shadow-sm p-5 flex items-start gap-5 hover:border-blue-100 transition-colors cursor-pointer group">
+                <div key={item.id} className="bg-white border border-slate-100 rounded-xl shadow-sm p-3.5 flex items-start gap-5 hover:border-blue-100 transition-colors cursor-pointer group">
                     {/* Priority Icon */}
                     <div className="flex flex-col items-center gap-1.5 min-w-[50px] pt-1">
                         <div className={`w-10 h-10 rounded-full flex items-center justify-center ${item.iconBg}`}>

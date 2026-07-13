@@ -5,7 +5,7 @@ export const SituationIssuesCard = () => {
     return (
         <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-4 flex flex-col h-full min-h-0">
             {/* Header */}
-            <div className="flex items-center justify-between mb-6">
+            <div className="flex items-center justify-between mb-2">
                 <h3 className="text-sm font-bold text-slate-800">จุดเสี่ยง / ค่าเบี่ยงเบน</h3>
                 <button className="flex items-center gap-1.5 px-2 py-1 text-[10px] font-medium text-slate-600 bg-white border border-slate-200 rounded shadow-sm hover:bg-slate-50 transition-colors">
                     ทั้งหมด <ChevronDown className="w-3 h-3 text-slate-400" />

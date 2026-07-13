@@ -14,7 +14,7 @@ export const OutcomeTabs = () => {
     ];
 
     return (
-        <div className="flex gap-8 border-b border-slate-200 mb-6 px-2">
+        <div className="flex gap-8 border-b border-slate-200 px-2">
             {tabs.map((tab) => (
                 <button
                     key={tab}

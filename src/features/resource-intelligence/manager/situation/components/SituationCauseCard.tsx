@@ -3,7 +3,7 @@ import React from 'react';
 export const SituationCauseCard = () => {
     return (
         <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-4 flex flex-col flex-1">
-            <h3 className="text-sm font-bold text-slate-800 mb-4">สาเหตุหลักที่ทำให้ปริมาณเพิ่มขึ้น</h3>
+            <h3 className="text-sm font-bold text-slate-800">สาเหตุหลักที่ทำให้ปริมาณเพิ่มขึ้น</h3>
             
             <div className="flex flex-col gap-3">
                 <div className="flex items-center text-[10px] text-slate-400 font-semibold mb-1">

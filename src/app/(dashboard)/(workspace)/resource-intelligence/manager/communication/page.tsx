@@ -18,7 +18,7 @@ export default function CommunicationPage() {
     const [activeAI, setActiveAI] = useState<string | null>(null);
 
     return (
-        <div className="w-full h-screen flex relative overflow-hidden bg-slate-50/50">
+        <div className="w-full h-screen flex relative overflow-hidden ">
             <div className="flex-1 px-6 transition-all duration-300 h-full flex flex-col min-h-0 overflow-hidden">
 
                 <ManagerFilterBar activeAI={activeAI} onAIChange={setActiveAI} />

@@ -57,7 +57,7 @@ export const DecisionBottomSection = () => {
 
              {/* Budget Section */}
             <div className="flex-1 bg-white border border-slate-100 rounded-xl shadow-sm p-6">
-                <div className="flex items-center justify-between mb-4">
+                <div className="flex items-center justify-between">
                     <h3 className="text-[13px] font-bold text-slate-800">วงเงินที่สามารถอนุมัติได้</h3>
                     <button className="text-[10px] font-semibold text-blue-600 hover:text-blue-700 transition-colors">
                         ดูรายละเอียด

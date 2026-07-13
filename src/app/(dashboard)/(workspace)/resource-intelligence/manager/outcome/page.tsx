@@ -19,48 +19,60 @@ export default function OutcomePage() {
     const [activeAI, setActiveAI] = useState<string | null>(null);
 
     return (
-        <div className="w-full flex relative flex-1 min-h-screen ">
-            <div className="flex-1 px-6 transition-all duration-300 pb-8 pt-6 overflow-x-hidden">
-                
+        <div className="w-full h-screen flex relative overflow-hidden bg-slate-50/50">
+            <div className="flex-1 px-6 transition-all duration-300 h-full flex flex-col min-h-0 overflow-hidden">
+
                 <ManagerFilterBar activeAI={activeAI} onAIChange={setActiveAI} />
 
-                {/* Main Content Area */}
-                <div className="bg-white ">
-                    
-                    {/* KPI Cards */}
+                {/* KPI Cards */}
+                <div className="shrink-0 mb-2">
                     <OutcomeKPICards />
+                </div>
 
-                    {/* Tabs */}
+                {/* Tabs */}
+                <div className="shrink-0 mb-2">
                     <OutcomeTabs />
+                </div>
+
+                {/* Main Content Area — fills remaining height */}
+                <div className="flex-1 min-h-0 flex flex-col gap-3 pb-3">
 
                     {/* Charts Grid */}
-                    <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 mb-4">
-                        <div className="lg:col-span-5">
+                    <div className="grid grid-cols-1 lg:grid-cols-16 gap-3 flex-[3] min-h-0">
+                        <div className="lg:col-span-6 min-h-0">
                             <OutcomeTrendChart />
                         </div>
-                        <div className="lg:col-span-3">
+                        <div className="lg:col-span-4 min-h-0">
                             <OutcomeProportionChart />
                         </div>
-                        <div className="lg:col-span-4">
+                        <div className="lg:col-span-6 min-h-0">
                             <OutcomePerformanceMetrics />
                         </div>
                     </div>
 
                     {/* Impact Grid */}
-                    <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-                        <OutcomeEnvironmentalImpact />
-                        <OutcomeSocialImpact />
-                        <OutcomeEconomicImpact />
+                    <div className="grid grid-cols-1 lg:grid-cols-16 gap-3  min-h-0">
+                        <div className="lg:col-span-6 min-h-0">
+                            <OutcomeEnvironmentalImpact />
+                        </div>
+                        <div className="lg:col-span-4 min-h-0">
+                            <OutcomeSocialImpact />
+                        </div>
+                        <div className="lg:col-span-6 min-h-0">
+                            <OutcomeEconomicImpact />
+                        </div>
                     </div>
 
                     {/* Highlights */}
-                    <OutcomeHighlights />
+                    <div className="shrink-0 h-[100px]">
+                        <OutcomeHighlights />
+                    </div>
                 </div>
             </div>
 
             {/* AI panel slide-out */}
             {activeAI && (
-                <div className="-z-1 mt-3 w-[380px] shrink-0 border-l-2 border-gray-200 bg-white backdrop-blur-md p-4 flex flex-col h-full overflow-y-auto animate-in slide-in-from-right duration-300">
+                <div className="w-[380px] shrink-0 border-l-2 border-gray-200 bg-white backdrop-blur-md p-4 flex flex-col h-full overflow-y-auto animate-in slide-in-from-right duration-300">
                     <div className="flex justify-between items-center mb-6">
                         <button className="flex items-center gap-1 rounded-lg bg-slate-600 px-3 py-1.5 text-xs text-white hover:bg-slate-700 transition-colors font-medium">
                             <span>แชทใหม่</span>

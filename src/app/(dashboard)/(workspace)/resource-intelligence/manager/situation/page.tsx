@@ -106,11 +106,11 @@ export default function Situation() {
                 </div>
 
                 {/* Bottom Row - Trend & Forecast */}
-                <div className="lg:col-span-12 bg-white border border-slate-100 rounded-xl shadow-sm p-4 flex flex-col lg:flex-row gap-4 shrink-0 h-[200px]">
-                    <div className="flex-1 min-w-0">
+                <div className="lg:col-span-12 border border-slate-100 rounded-xl shadow-sm   flex flex-col lg:flex-row gap-4 shrink-0 h-[200px]">
+                    <div className="flex-1 min-w-0 p-5">
                         <SituationTrendCard />
                     </div>
-                    <div className="w-full lg:w-[280px] shrink-0">
+                    <div className="w-full lg:w-[280px] ">
                         <SituationForecastCard />
                     </div>
                 </div>

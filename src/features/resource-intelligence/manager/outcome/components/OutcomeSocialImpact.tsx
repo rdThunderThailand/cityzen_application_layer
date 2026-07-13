@@ -5,10 +5,10 @@ export const OutcomeSocialImpact = () => {
     return (
         <div className="bg-white border border-slate-100 rounded-xl shadow-sm p-5 h-full flex flex-col justify-between">
             <div>
-                <h3 className="text-[13px] font-bold text-slate-800 mb-6">ผลลัพธ์ด้านสังคม (Social Impact)</h3>
-                
-                <div className="grid grid-cols-2 gap-4">
-                    
+                <h3 className="text-[13px] font-bold text-slate-800 mb-4">ผลลัพธ์ด้านสังคม (Social Impact)</h3>
+
+                <div className="grid grid-cols-2 gap-4 mt-9">
+
                     {/* Food Donation */}
                     <div className="flex items-start gap-3">
                         <div className="w-10 h-10 rounded-full bg-emerald-50 border border-emerald-100 flex items-center justify-center shrink-0">
@@ -44,7 +44,7 @@ export const OutcomeSocialImpact = () => {
                 </div>
             </div>
 
-            <div className="flex justify-center mt-6">
+            <div className="flex justify-center mt-4">
                 <button className="flex items-center gap-1 text-blue-600 hover:text-blue-700 transition-colors">
                     <span className="text-[10px] font-bold">ดูรายละเอียดสังคม</span>
                     <ArrowRight className="w-3 h-3" />

@@ -3,7 +3,7 @@ import { Leaf, Cloud, Bitcoin, Utensils, Star, ArrowDown, ArrowUp } from 'lucide
 
 export const OutcomeKPICards = () => {
     return (
-        <div className="mb-6">
+        <div>
             <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
                 
                 {/* Card 1 */}

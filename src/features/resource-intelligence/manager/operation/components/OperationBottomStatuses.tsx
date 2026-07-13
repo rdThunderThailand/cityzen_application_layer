@@ -68,7 +68,7 @@ export const OperationBottomStatuses = () => {
                     </button>
                 </div>
                 
-                <div className="flex flex-col gap-2.5">
+                <div className="flex flex-col gap-4">
                     <div className="flex justify-between items-center">
                         <div className="flex items-center gap-2">
                             <Cog className="w-4 h-4 text-emerald-500" />

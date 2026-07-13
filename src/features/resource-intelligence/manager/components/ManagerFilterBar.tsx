@@ -15,7 +15,7 @@ export const ManagerFilterBar = ({ activeAI, onAIChange }: ManagerFilterBarProps
     const timeText = now.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit" }) + " น.";
 
     return (
-        <div className="w-full flex items-center justify-start gap-5 py-3 border-b border-slate-200/60 shrink-0">
+        <div className="w-full flex items-center justify-start gap-5 py-3  shrink-0">
             <div className="flex items-center gap-2 cursor-pointer group">
                 <div className="text-indigo-900 rounded-lg flex items-center justify-center">
                     <Building2 className="w-4 h-4" />

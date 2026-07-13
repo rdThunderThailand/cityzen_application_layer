@@ -16,7 +16,7 @@ export const OperationProcessingStorage = () => {
                         <span className="text-[9px] text-slate-500">กำลังการผลิต</span>
                     </div>
                     
-                    <div className="flex justify-between items-end mb-1.5">
+                    <div className="flex justify-between items-end mb-2">
                         <div className="flex items-baseline gap-0.5">
                             <span className="text-[13px] font-bold text-slate-800">312</span>
                             <span className="text-[9px] font-bold text-slate-600">kg</span>
@@ -30,16 +30,16 @@ export const OperationProcessingStorage = () => {
                 </div>
 
                 {/* Col 2 */}
-                <div className="flex flex-col">
+                <div className="flex flex-col border-l border-slate-100 pl-4">
                     <span className="text-[11px] font-bold text-slate-700 mb-1">ถังหมัก (Composter)</span>
-                    <span className="text-[9px] text-slate-400 mb-3">ทำงานปกติ</span>
+                    <span className="text-[9px] text-slate-400 mb-2">ทำงานปกติ</span>
                     
                     <div className="flex justify-between items-end mb-1">
                         <span className="text-[9px] text-slate-500">ปริมาณรับเข้า</span>
                         <span className="text-[9px] text-slate-500">ความจุ</span>
                     </div>
                     
-                    <div className="flex justify-between items-end mb-1.5">
+                    <div className="flex justify-between items-end mb-2">
                         <div className="flex items-baseline gap-0.5">
                             <span className="text-[13px] font-bold text-slate-800">420</span>
                             <span className="text-[9px] font-bold text-slate-600">kg</span>
@@ -75,7 +75,7 @@ export const OperationProcessingStorage = () => {
                         <span className="text-[9px] text-slate-500">การใช้พื้นที่</span>
                     </div>
                     
-                    <div className="flex justify-between items-end mb-1.5">
+                    <div className="flex justify-between items-end mb-2">
                         <span className="text-[13px] font-bold text-slate-800">72%</span>
                         <span className="text-[9px] text-slate-500">ความจุ 2,000 kg</span>
                     </div>
