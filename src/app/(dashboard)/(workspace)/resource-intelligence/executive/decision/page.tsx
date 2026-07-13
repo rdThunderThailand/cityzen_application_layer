@@ -31,10 +31,10 @@ import { decisionPageTabs } from "./tabs/tabsData";
 export default function Decision() {
     const [activeAI, setActiveAI] = useState<string | null>(null);
     return (
-        <div className="w-full flex relative flex-1">
-            <div className={`flex-1 px-6 transition-all duration-300 pb-4`}>
+        <div className="w-full flex relative flex-1 min-h-0">
+            <div className="flex-1 min-h-0 flex flex-col overflow-hidden px-6 transition-all duration-300 pb-4">
                 {/* AI dropdown */}
-                <div className="w-full flex justify-end mt-4">
+                <div className="w-full flex justify-end mt-4 shrink-0">
                     <AIDropdown
                         selectedValue={activeAI}
                         onChange={setActiveAI}
@@ -42,7 +42,7 @@ export default function Decision() {
                 </div>
 
                 {/* Metric Banner Card */}
-                <div className="w-full h-[128px] bg-white rounded-2xl shadow-sm border border-slate-100 grid my-4 overflow-hidden" style={{ gridTemplateColumns: '35% 1fr 1fr 1fr 1fr' }}>
+                <div className="w-full h-[128px] bg-white rounded-2xl shadow-sm border border-slate-100 grid my-4 overflow-hidden shrink-0" style={{ gridTemplateColumns: '35% 1fr 1fr 1fr 1fr' }}>
                     {/* Column 1: Vision & Title */}
                     <div className="px-5 py-3 flex items-center gap-3 hover:bg-slate-50/50 transition-colors h-full">
                         <div className="w-11 h-11 bg-blue-50 rounded-full flex items-center justify-center shrink-0">
@@ -112,12 +112,12 @@ export default function Decision() {
                     </div>
                 </div>
 
-                <Tabs tabs={decisionPageTabs} fill />
+                <Tabs tabs={decisionPageTabs} fill className="flex-1 min-h-0" />
             </div>
 
             {/* AI panel */}
             {activeAI && (
-                <div className="-z-1 mt-3 w-[380px] shrink-0 border-l-2 border-gray-200 bg-white backdrop-blur-md p-4 flex flex-col h-full overflow-y-auto animate-in slide-in-from-right duration-300">
+                <div className="-z-1 w-[380px] h-full shrink-0 border-l-2 border-gray-200 bg-white backdrop-blur-md p-4 flex flex-col h-full overflow-y-auto animate-in slide-in-from-right duration-300">
                     {/* Header Navigation Utilities */}
                     <div className="flex justify-between items-center mb-6">
                         <button className="flex items-center gap-1 rounded-lg bg-slate-600 px-3 py-1.5 text-xs text-white hover:bg-slate-700 transition-colors font-medium">
@@ -175,6 +175,7 @@ export default function Decision() {
                             </div>
                         </div>
                     </div>
+
                 </div>
             )}
         </div>

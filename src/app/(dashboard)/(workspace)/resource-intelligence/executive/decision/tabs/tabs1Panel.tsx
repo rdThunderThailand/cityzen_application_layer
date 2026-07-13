@@ -30,11 +30,11 @@ function getChartPoints(data: number[], max: number) {
 
 export function Tabs1Panel() {
     return (
-        <div className="flex flex-col lg:flex-row gap-4 items-start mt-4">
+        <div className="h-full min-h-0 flex flex-col lg:flex-row gap-4 overflow-hidden mt-4">
             {/* Left: decision items list — no existing component supports the badge + icon +
                 right-aligned impact value row shape, so this list is composed inline. */}
-            <div className="flex-1 min-w-0 flex flex-col gap-2 p-4 border border-slate-100 rounded-xl shadow-sm bg-white">
-                <div className="flex items-center justify-between gap-2 border-b border-slate-50 pb-2">
+            <div className="flex-1 min-w-0 h-full min-h-0 flex flex-col gap-2 p-4 border border-slate-100 rounded-xl shadow-sm bg-white overflow-hidden">
+                <div className="flex items-center justify-between gap-2 border-b border-slate-50 pb-2 shrink-0">
                     <h3 className="text-sm font-semibold text-slate-800">
                         {decisionItemData.heading} ({decisionItemData.items.length})
                     </h3>
@@ -47,7 +47,7 @@ export function Tabs1Panel() {
                     </a>
                 </div>
 
-                <div className="flex flex-col divide-y divide-slate-50">
+                <div className="flex-1 min-h-0 overflow-hidden flex flex-col divide-y divide-slate-50">
                     {decisionItemData.items.map((item, index) => {
                         const Icon = item.icon;
                         const urgency = decisionUrgencyConfig[item.urgency];
@@ -89,10 +89,10 @@ export function Tabs1Panel() {
             </div>
 
             {/* Right column */}
-            <div className="w-1/2 shrink-0 flex flex-col gap-4">
+            <div className="w-1/2 shrink-0 h-full min-h-0 flex flex-col gap-4 overflow-hidden">
                 {/* Impact forecast — compact stat tiles + multi-series line chart, no existing
                     chart component in components/ so both are composed inline. */}
-                <div className="flex flex-col gap-3 p-4 border border-slate-100 rounded-xl shadow-sm bg-white">
+                <div className="shrink-0 flex flex-col gap-3 p-4 border border-slate-100 rounded-xl shadow-sm bg-white">
                     <div className="flex items-center justify-between gap-2 border-b border-slate-50 pb-2">
                         <h3 className="flex items-center gap-1 text-sm font-semibold text-slate-800">
                             คาดการณ์ผลกระทบหากตัดสินใจ
@@ -140,7 +140,7 @@ export function Tabs1Panel() {
                                 <span>250</span>
                                 <span>0</span>
                             </div>
-                            <div className="relative flex-1 h-[150px] pr-14 min-w-0">
+                            <div className="relative flex-1 h-[150px] min-w-0">
                                 <svg
                                     viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`}
                                     preserveAspectRatio="none"
@@ -177,16 +177,17 @@ export function Tabs1Panel() {
                                         );
                                     })}
                                 </svg>
+                            </div>
+                            <div className="relative w-16 h-[150px] shrink-0">
                                 {impactChartSeries.map((series) => {
                                     const points = getChartPoints(series.data, impactChartYMax);
                                     const last = points[points.length - 1];
                                     return (
                                         <span
                                             key={series.key}
-                                            className="absolute text-[9px] font-semibold whitespace-nowrap -translate-y-1/2"
+                                            className="absolute left-0 text-[9px] font-semibold whitespace-nowrap -translate-y-1/2"
                                             style={{
                                                 color: series.strokeHex,
-                                                left: `calc(${(last.x / CHART_WIDTH) * 100}% + 6px)`,
                                                 top: `${(last.y / CHART_HEIGHT) * 100}%`,
                                             }}
                                         >
@@ -196,7 +197,7 @@ export function Tabs1Panel() {
                                 })}
                             </div>
                         </div>
-                        <div className="flex justify-between text-[10px] text-slate-400 mt-1 pl-8">
+                        <div className="flex justify-between text-[10px] text-slate-400 mt-1 pl-8 pr-16">
                             {impactChartXLabels.map((label, index) => (
                                 <span key={index}>{label}</span>
                             ))}
@@ -205,7 +206,7 @@ export function Tabs1Panel() {
                 </div>
 
                 {/* Comparison table — no table component exists in components/, composed inline. */}
-                <div className="flex flex-col gap-3 p-4 border border-slate-100 rounded-xl shadow-sm bg-white">
+                <div className="shrink-0 flex flex-col gap-3 p-4 border border-slate-100 rounded-xl shadow-sm bg-white">
                     <div className="flex items-center justify-between gap-2 border-b border-slate-50 pb-2">
                         <h3 className="text-sm font-semibold text-slate-800">{comparisonOptionData.heading}</h3>
                         <a
@@ -265,8 +266,8 @@ export function Tabs1Panel() {
 
                 {/* Recent decisions summary — status icon + two-line right-aligned value shape has
                     no matching CardData variant, composed inline. */}
-                <div className="flex flex-col gap-2 p-4 border border-slate-100 rounded-xl shadow-sm bg-white">
-                    <div className="flex items-center justify-between gap-2 border-b border-slate-50 pb-2">
+                <div className="flex-1 min-h-0 overflow-hidden flex flex-col gap-2 p-4 border border-slate-100 rounded-xl shadow-sm bg-white">
+                    <div className="flex items-center justify-between gap-2 border-b border-slate-50 pb-2 shrink-0">
                         <h3 className="text-sm font-semibold text-slate-800">{recentDecisionData.heading}</h3>
                         <a
                             href={recentDecisionData.allDataHref}
@@ -276,7 +277,7 @@ export function Tabs1Panel() {
                             <ChevronRight className="w-3.5 h-3.5" />
                         </a>
                     </div>
-                    <div className="flex flex-col divide-y divide-slate-50">
+                    <div className="flex-1 min-h-0 overflow-hidden flex flex-col divide-y divide-slate-50">
                         {recentDecisionData.items.map((item, index) => {
                             const statusCfg = recentDecisionStatusConfig[item.status];
                             const StatusIcon = item.icon;

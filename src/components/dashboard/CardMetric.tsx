@@ -14,6 +14,7 @@ export interface CardMetricProps {
     date?: Date;
     showChevron?: boolean;
     className?: string;
+    classNameForIcon?: string;
 }
 
 export const CardMetric = ({
@@ -29,6 +30,7 @@ export const CardMetric = ({
     date,
     showChevron = false,
     className,
+    classNameForIcon,
     ...props
 }: CardMetricProps) => {
     const hasTrend = subValue !== undefined && subValue !== null;
@@ -48,9 +50,9 @@ export const CardMetric = ({
             )}
             {...props}
         >
-            <div className="flex h-full mt-2">
-                <div className="flex items-center justify-center w-8 h-8 bg-emerald-50 text-emerald-600 rounded-full shrink-0">
-                    <Icon className="w-5 h-5" />
+            <div className="flex h-full">
+                <div className={cn("flex items-center justify-center w-8 h-8 bg-emerald-50 text-emerald-600 rounded-full shrink-0", classNameForIcon)}>
+                    <Icon className={cn("w-4.5 h-4.5", classNameForIcon)} />
                 </div>
             </div>
 

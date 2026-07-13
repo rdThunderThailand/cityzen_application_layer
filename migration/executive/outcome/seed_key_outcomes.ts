@@ -10,7 +10,8 @@ export const keyOutcomeStats: CardMetricProps[] = [
     subValue: 18,
     subUnit: '% จากสัปดาห์ก่อน',
     positiveData: true,
-    className: '[&_div:first-child]:bg-emerald-50 [&_div:first-child]:text-emerald-500 border-slate-100',
+    className: 'border-slate-100',
+    classNameForIcon: 'bg-emerald-50 text-emerald-500',
   },
   {
     icon: UsersRound,
@@ -20,7 +21,8 @@ export const keyOutcomeStats: CardMetricProps[] = [
     subValue: -32,
     subUnit: '% จากสัปดาห์ก่อน',
     positiveData: false,
-    className: '[&_div:first-child]:bg-purple-50 [&_div:first-child]:text-purple-500 border-slate-100',
+    className: 'border-slate-100',
+    classNameForIcon: 'bg-purple-50 text-purple-500',
   },
   {
     icon: Clock,
@@ -30,7 +32,8 @@ export const keyOutcomeStats: CardMetricProps[] = [
     subValue: -28,
     subUnit: '% จากสัปดาห์ก่อน',
     positiveData: false,
-    className: '[&_div:first-child]:bg-blue-50 [&_div:first-child]:text-blue-500 border-slate-100',
+    className: 'border-slate-100',
+    classNameForIcon: 'bg-blue-50 text-blue-500',
   },
   {
     icon: Coins,
@@ -40,7 +43,8 @@ export const keyOutcomeStats: CardMetricProps[] = [
     subValue: 12,
     subUnit: '% จากสัปดาห์ก่อน',
     positiveData: true,
-    className: '[&_div:first-child]:bg-orange-50 [&_div:first-child]:text-orange-500 border-slate-100',
+    className: 'border-slate-100',
+    classNameForIcon: 'bg-yellow-50 text-yellow-500',
   },
   {
     icon: Heart,
@@ -50,6 +54,7 @@ export const keyOutcomeStats: CardMetricProps[] = [
     subValue: 0.6,
     subUnit: ' จากสัปดาห์ก่อน',
     positiveData: true,
-    className: '[&_div:first-child]:bg-rose-50 [&_div:first-child]:text-rose-500 border-slate-100',
+    className: 'border-slate-100',
+    classNameForIcon: 'bg-rose-50 text-rose-500',
   },
 ];
