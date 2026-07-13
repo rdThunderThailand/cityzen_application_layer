@@ -1,12 +1,10 @@
-import { cookies } from "next/headers";
-import { verifyAppSession, APP_SESSION_COOKIE, DEV_BYPASS_ENABLED, devBypassClaims } from "@/lib/app-session";
+import { getWorkspaceUser } from "@/lib/workspace-user";
 import { getExecutiveDailyBriefKpis } from "@/lib/executive-daily-brief";
 import DailyBriefClient from "@/features/resource-intelligence/executive/daily-brief/DailyBriefClient";
+import { executiveUser } from "@/components/global/mockUserData";
 
 export default async function DailyBriefPage() {
-  const cookieStore = await cookies();
-  const token = cookieStore.get(APP_SESSION_COOKIE)?.value;
-  const claims = DEV_BYPASS_ENABLED ? devBypassClaims() : token ? await verifyAppSession(token) : null;
-  const kpis = claims ? await getExecutiveDailyBriefKpis(claims.tenant_id) : null;
-  return <DailyBriefClient kpis={kpis} />;
+  const { claims, user } = await getWorkspaceUser("executive_viewer");
+  const kpis = await getExecutiveDailyBriefKpis(claims.tenant_id);
+  return <DailyBriefClient defaultUser={user ?? executiveUser} kpis={kpis} />;
 }

@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { Bell, Scan, ChevronDown, Settings, Info, LogOut } from "lucide-react";
 import { cn } from "../../utils/cn";
-import { defaultUser } from "./mockUserData";
+import { managerUser, executiveUser, operatorUser, type UserProfile } from "./mockUserData";
 import { WeatherCard } from "../basic/WeatherCard";
 import { executiveNavigationItems } from "@/app/(dashboard)/(workspace)/resource-intelligence/executive/navItem";
 import { managerNavigationItems } from "@/app/(dashboard)/(workspace)/resource-intelligence/manager/navItem";
@@ -10,12 +10,20 @@ import { managerNavigationItems } from "@/app/(dashboard)/(workspace)/resource-i
 
 export interface HeaderProps {
     navigationText?: string; // Overrides the auto-derived page title when set
+    user?: UserProfile; // Real signed-in user; falls back to a pathname-based mock when omitted
 }
 
 export const Header = ({
     navigationText,
+    user,
 }: HeaderProps) => {
     const pathname = usePathname();
+    const fallbackUser = pathname.includes('/executive')
+        ? executiveUser
+        : pathname.includes('/operator')
+            ? operatorUser
+            : managerUser;
+    const defaultUser = user ?? fallbackUser;
     const allNavigationItems = [...executiveNavigationItems, ...managerNavigationItems];
     const currentPageLabel = allNavigationItems.find((item) => item.href === pathname)?.label;
     const displayText = navigationText ?? currentPageLabel ?? 'สวัสดี';
@@ -73,7 +81,7 @@ export const Header = ({
                             className="w-11 h-11 rounded-full object-cover shrink-0 bg-gray-200"
                         />
                         <div className="text-left leading-tight">
-                            <p className="text-sm font-bold">{defaultUser.name}</p>
+                            <p className="text-sm font-bold">{defaultUser.displayName}</p>
                             <p className="text-[11px] text-slate-400">{defaultUser.role}</p>
                         </div>
                         <ChevronDown className={cn(

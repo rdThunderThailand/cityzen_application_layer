@@ -1,5 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import { getTenantOrganizations, type ThunderMe, type ThunderMembership, type ThunderOrg } from "./thunder";
+import type { Database } from "@/types/database.types";
 
 // Directory Cache: local identity mirror of Thunder (user/tenant/membership) so cityzen
 // doesn't cross-call Thunder every request and can revoke near-real-time (ADR 0001/0004).
@@ -9,7 +10,7 @@ import { getTenantOrganizations, type ThunderMe, type ThunderMembership, type Th
 // keep working unchanged. Plug the env in later → cache turns on, zero code change.
 // Tables live in the `core` schema (not public); service-role key bypasses RLS.
 const makeDirectoryClient = (url: string, key: string) =>
-  createClient(url, key, { auth: { persistSession: false }, db: { schema: "core" } });
+  createClient<Database, "core">(url, key, { auth: { persistSession: false }, db: { schema: "core" } });
 
 let cached: ReturnType<typeof makeDirectoryClient> | null | undefined;
 function directoryDb(): ReturnType<typeof makeDirectoryClient> | null {
@@ -330,15 +331,10 @@ export async function getDirectoryDisplayProfile(
   const db = directoryDb();
   if (!db) return { displayName: null, avatarUrl: null, tenantName: null };
 
-
-  console.log(userId)
-
   const [{ data: user }, { data: tenant }] = await Promise.all([
     db.from("user_directory_cache").select("display_name, avatar_url").eq("thundercore_user_id", userId).maybeSingle(),
     db.from("tenant_directory_cache").select("name").eq("thundercore_tenant_id", tenantId).maybeSingle(),
   ]);
-
-console.log("[getDirectoryDisplayProfile]", { user })
 
   return {
     displayName: user?.display_name ?? null,

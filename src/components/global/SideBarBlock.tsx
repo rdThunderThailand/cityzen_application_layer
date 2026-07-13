@@ -16,7 +16,7 @@ import {
 } from 'lucide-react';
 import logo from "../../../public/logo.png";
 import logoFull from "../../../public/logo-full.png";
-import { defaultUser } from './mockUserData';
+
 import type { UserProfile } from './mockUserData';
 import Image from 'next/image';
 import { executiveNavigationItems } from '@/app/(dashboard)/(workspace)/resource-intelligence/executive/navItem';
@@ -57,7 +57,7 @@ export const SideBarBlock = ({
     brandLogo = <Image src={logo} alt="brand-logo" className="w-full h-full object-contain" />,
     brandFullLogo = <Image src={logoFull} alt="brand-logo" className="w-full h-full object-contain" />,
     navigationItems = executiveNavigationItems,
-    user = defaultUser,
+    user ,
     onLogout = () => logoutAction(),
     customStyles = {}
 }: SidebarProps) => {

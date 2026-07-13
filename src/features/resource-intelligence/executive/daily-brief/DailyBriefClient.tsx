@@ -7,14 +7,14 @@ import { dailyBriefTabs } from "@/app/(dashboard)/(workspace)/resource-intellige
 import CardGreeting from "@/components/dashboard/CardGreeting";
 import CardScoreGauge from "@/components/dashboard/CardScoreGauge";
 import CardTrend from "@/components/dashboard/CardTrend";
-import { defaultUser } from "@/components/global/mockUserData";
 import { headerTrendItems } from "../../../../../migration/executive/daily-brief/seed_trend_items";
 import { WandSparkles, ChevronDown, Send, ChevronsRight, Settings, Plus, Image, Mic } from "lucide-react";
 import { AIDropdown } from "@/components/basic/AIDropdown";
 import { useState } from "react";
 import type { ExecutiveKpiValues } from "@/lib/executive-daily-brief";
+import type { UserProfile } from "@/components/global/mockUserData";
 
-export default function DailyBriefClient({ kpis }: { kpis: ExecutiveKpiValues | null }) {
+export default function DailyBriefClient({ defaultUser, kpis }: { defaultUser: UserProfile, kpis: ExecutiveKpiValues | null }) {
     const [activeAI, setActiveAI] = useState<string | null>(null);
 
     const displayData = kpis ? wasteData.map((item, index) => {
@@ -48,10 +48,10 @@ export default function DailyBriefClient({ kpis }: { kpis: ExecutiveKpiValues | 
                 <div className="flex flex-col lg:flex-row gap-4 w-full mt-3 shrink-0">
                     <CardGreeting
                         className="flex-1 h-[139px]"
-                        recipient={defaultUser.name}
+                        recipient={defaultUser.displayName}
                         summary="วันนี้จังหวัดภูเก็ตมี 2 เหตุการณ์ที่ต้องเฝ้าระวังเป็นพิเศษ คาดว่าจะมีนักท่องเที่ยวเพิ่มขึ้น 18% จากเมื่อวาน โดยพื้นที่กะทู้และป่าตองมีความเสี่ยงสูงสุด แนะนำติดตามสถานการณ์อย่างใกล้ชิด"
                         avatarSrc={defaultUser.profileImg}
-                        avatarAlt={defaultUser.name}
+                        avatarAlt={defaultUser.displayName}
                     />
                     <CardScoreGauge
                         className="h-[139px] w-[200px]"
