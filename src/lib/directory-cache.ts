@@ -120,8 +120,9 @@ export async function upsertDirectorySnapshot(
             .in("thundercore_department_id", staleIds);
           if (delErr) throw delErr;
         }
-      } catch {
+      } catch (error) {
         // best-effort backfill — see comment above; never block the rest of the snapshot.
+        console.error("[directory-cache] org backfill failed", { tenantId, error });
       }
     }
   }
@@ -295,8 +296,10 @@ export type MembershipLiveness = { allow: boolean; roleCodes: string[] | null };
 // Per-request authorization state (ADR 0004). Single seam so the strategy (add TTL,
 // session_version, short-token) can change without touching proxy.ts.
 // Fail-open: cache disabled OR row absent → allow (the JWT already proved identity; the guard
-// falls back to the cookie's role). Only an explicit status !== 'active' blocks. This is what
-// keeps live sessions from bricking before the DB is plugged in / before cold-populate runs.
+// falls back to the cookie's role). This is what keeps live sessions from bricking before the
+// DB is plugged in / before cold-populate runs. A query *error* (DB reachable but the call
+// failed) is fail-closed instead — that means we genuinely don't know the state, which is a
+// different case from "no row yet" and shouldn't grant access.
 export async function checkMembershipLiveness(
   userId: string,
   tenantId: string,
@@ -309,7 +312,11 @@ export async function checkMembershipLiveness(
     .eq("thundercore_user_id", userId)
     .eq("thundercore_tenant_id", tenantId)
     .maybeSingle();
-  if (error || !data) return { allow: true, roleCodes: null };
+  if (error) {
+    console.error("[directory-cache] liveness check query failed — failing closed", { userId, tenantId, error });
+    return { allow: false, roleCodes: null };
+  }
+  if (!data) return { allow: true, roleCodes: null };
   return {
     allow: data.status === "active",
     roleCodes: Array.isArray(data.role_codes) ? data.role_codes : null,

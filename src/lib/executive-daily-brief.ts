@@ -43,9 +43,11 @@ export async function getExecutiveDailyBriefKpis(tenantId: string): Promise<Exec
   }
 
   try {
-    // ponytail: disaster_ops queries below aren't tenant-scoped (no join through
-    // districts/departments across schemas) — fine for the single demo tenant.
-    // Add the join when a second tenant needs real disaster_ops data.
+    // ponytail: resources/missions queries below still aren't tenant-scoped.
+    // thundercore_department_id exists on both tables but is null on every seeded row
+    // (confirmed 2026-07-13) — there's no department assignment to join through yet.
+    // Scoping them needs a data-model decision (who assigns a resource/mission to a
+    // department?), not just a query change. incidents *is* scoped below via districts.
     const [
       { data: kpiSnapshots, error: kpiError },
       { data: activeIncidents, error: incidentsError, count: incidentsCountVal },
@@ -53,7 +55,7 @@ export async function getExecutiveDailyBriefKpis(tenantId: string): Promise<Exec
       { error: missionsError, count: missionsCountVal }
     ] = await Promise.all([
       core.from("kpi_snapshots").select("metric_name, value, trend_percent, direction").eq("thundercore_tenant_id", tenantId).eq("module", "city_pulse"),
-      disasterOps.from("incidents").select("impact_count", { count: "exact" }).eq("status", "active"),
+      disasterOps.from("incidents").select("impact_count, districts!inner(thundercore_tenant_id)", { count: "exact" }).eq("status", "active").eq("districts.thundercore_tenant_id", tenantId),
       disasterOps.from("resources").select("readiness_percent"),
       disasterOps.from("missions").select("*", { count: "exact", head: true }).eq("status", "in_progress")
     ]);
@@ -97,7 +99,8 @@ export async function getExecutiveDailyBriefKpis(tenantId: string): Promise<Exec
       readinessPercent,
       missionsInProgressCount,
     };
-  } catch {
+  } catch (error) {
+    console.error("[executive-daily-brief] KPI query failed", { tenantId, error });
     return null;
   }
 }
