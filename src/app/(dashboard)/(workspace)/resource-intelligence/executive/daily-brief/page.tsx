@@ -8,6 +8,5 @@ export default async function DailyBriefPage() {
   const token = cookieStore.get(APP_SESSION_COOKIE)?.value;
   const claims = DEV_BYPASS_ENABLED ? devBypassClaims() : token ? await verifyAppSession(token) : null;
   const kpis = claims ? await getExecutiveDailyBriefKpis(claims.tenant_id) : null;
-  console.log(kpis)
   return <DailyBriefClient kpis={kpis} />;
 }
