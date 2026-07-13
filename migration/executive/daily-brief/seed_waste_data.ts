@@ -14,7 +14,7 @@ export const wasteData = [
     },
     {
         title: "ประชาชนได้รับผลกระทบ",
-        value: 842.35,
+        value: 844,
         unit: "คน",
         icon: UsersRound,
         subValue: -7.47,
@@ -25,8 +25,8 @@ export const wasteData = [
     },
     {
         title: "นักท่องเที่ยววันนี้",
-        value: 87.8,
-        unit: "%",
+        value: 20019,
+        unit: "คน",
         icon: Plane,
         subValue: 17,
         subUnit: "%",

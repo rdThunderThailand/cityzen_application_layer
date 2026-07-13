@@ -176,7 +176,7 @@ export const CardData = ({
     return (
         <div
             className={cn(
-                "flex flex-col gap-4 p-4 border border-slate-100 rounded-xl shadow-sm w-full min-h-0 font-sans bg-white",
+                "flex flex-col gap-4 p-4 border border-slate-100 rounded-xl shadow-sm w-full min-h-0 font-sans bg-white overflow-hidden",
                 className
             )}
             {...props}
