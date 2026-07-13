@@ -1,27 +1,4 @@
-import { createClient } from "@supabase/supabase-js";
-
-const makeCoreClient = (url: string, key: string) =>
-  createClient(url, key, { auth: { persistSession: false }, db: { schema: "core" } });
-const makeDisasterOpsClient = (url: string, key: string) =>
-  createClient(url, key, { auth: { persistSession: false }, db: { schema: "disaster_ops" } });
-
-let cachedCore: ReturnType<typeof makeCoreClient> | null | undefined;
-let cachedDisasterOps: ReturnType<typeof makeDisasterOpsClient> | null | undefined;
-
-function coreDb() {
-  if (cachedCore !== undefined) return cachedCore;
-  const url = process.env.CITYZEN_DIRECTORY_DB_URL;
-  const key = process.env.CITYZEN_DIRECTORY_DB_KEY;
-  cachedCore = url && key ? makeCoreClient(url, key) : null;
-  return cachedCore;
-}
-function disasterOpsDb() {
-  if (cachedDisasterOps !== undefined) return cachedDisasterOps;
-  const url = process.env.CITYZEN_DIRECTORY_DB_URL;
-  const key = process.env.CITYZEN_DIRECTORY_DB_KEY;
-  cachedDisasterOps = url && key ? makeDisasterOpsClient(url, key) : null;
-  return cachedDisasterOps;
-}
+import { getDbClient } from "./supabase-db";
 
 export type ExecutiveKpiValues = {
   incidentsCount: number;
@@ -35,8 +12,8 @@ export type ExecutiveKpiValues = {
 };
 
 export async function getExecutiveDailyBriefKpis(tenantId: string): Promise<ExecutiveKpiValues | null> {
-  const core = coreDb();
-  const disasterOps = disasterOpsDb();
+  const core = getDbClient("core");
+  const disasterOps = getDbClient("disaster_ops");
 
   if (!core || !disasterOps) {
     return null;

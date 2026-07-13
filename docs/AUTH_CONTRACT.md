@@ -3,7 +3,8 @@
 > **สถานะ:** Spec นี้คือ source of truth ของ contract ข้ามระบบ 3 เรื่อง: Role Resolution, Launch Token Schema, Cookie Security
 > ถ้าโค้ดฝั่งใดฝั่งหนึ่งขัดกับเอกสารนี้ = bug (แก้โค้ดหรือแก้เอกสารพร้อม PR เดียวกัน ห้ามปล่อยให้แยกทาง)
 >
-> อัปเดตล่าสุด: 2026-07-08 · อ้างอิงโค้ด: cityzen `src/lib/roles.ts`, `src/lib/app-session.ts` · Thunder `src/lib/core/ApplicationService.ts` (`launchApplication`)
+> อัปเดตล่าสุด: 2026-07-13 · อ้างอิงโค้ด: cityzen `src/lib/roles.ts`, `src/lib/app-session.ts` · Thunder `src/lib/core/ApplicationService.ts` (`launchApplication`)
+> เอกสารพี่น้อง: [`AUTHENTICATION_FLOW.md`](AUTHENTICATION_FLOW.md) = flow walkthrough + diagram (ไฟล์นี้ = contract/canonical values)
 
 ---
 
@@ -22,18 +23,18 @@ Thunder `roles.code` (ระดับ membership ใน tenant) → CityZen role
 
 | Thunder `roles.code`              | CityZen role          | หมายเหตุ                                                                                    |
 | --------------------------------- | --------------------- | ------------------------------------------------------------------------------------------- |
-| `admin_company` & `company_admin` | `owner`               | seed ของ Thunder ใช้ code นี้                                                               |
-| `department_admin`                | `owner`               | `UserRole` type ของ Thunder ใช้ code นี้ — **รับทั้งสองแบบ**                                |
+| `admin_company` & `company_admin` | `manager`             | seed ของ Thunder ใช้ code นี้                                                               |
+| `department_admin`                | `manager`             | `UserRole` type ของ Thunder ใช้ code นี้ — **รับทั้งสามแบบ**                                |
 | `executive_viewer`                | `executive_viewer`    |                                                                                             |
 | `operator*` (prefix match)        | `operator`            | ครอบคลุม `operator`, `operator_supervisor`, …                                               |
 | `viewer_auditor`                  | _(ไม่มีสิทธิ์)_       | → `/no-access`                                                                              |
-| `super_admin`                     | _(ไม่ map เป็น role)_ | เช็คแยกเป็น `isSuperAdmin` (god mode, ข้าม prefix guard) — role claim fallback เป็น `owner` |
+| `super_admin`                     | _(ไม่ map เป็น role)_ | เช็คแยกเป็น `isSuperAdmin` (god mode, ข้าม prefix guard) — role claim fallback เป็น `manager` |
 | อื่นๆ / ไม่รู้จัก                 | _(ไม่มีสิทธิ์)_       | fail closed → `/no-access`                                                                  |
 
 ### 1.3 Priority เมื่อ 1 membership มีหลาย role
 
 ```
-owner > executive_viewer > operator
+manager > executive_viewer > operator
 ```
 
 ### 1.4 กติกาเพิ่มเติม
@@ -109,7 +110,9 @@ Token ที่ Thunder ออกให้ตอนกด Launch app → CityZen
 | Secret    | `APP_SESSION_SECRET` (CityZen เท่านั้น — คนละตัวกับ §2) |
 | อายุ      | **8 ชั่วโมง** ไม่มี refresh — หมดแล้ว login/launch ใหม่ |
 
-Claims: `sub`, `email`, `tenant_id`, `role` (CityZen role ตาม §1), `isSuperAdmin?`, `app_name?`, `profile?`, `memberships?` (snapshot จาก Thunder ณ ตอน mint — ไม่ sync ต่อ)
+Claims: `sub`, `email`, `tenant_id`, `role` (CityZen role ตาม §1 — fallback/แสดงผล; authz จริงดู §3.3), `isSuperAdmin?`, `app_name?`
+
+> **Phase 2:** `profile`/`memberships` snapshot **ถูกถอดออกจาก cookie แล้ว** (กัน cookie บวม) — display data ย้ายไปอ่าน Directory Cache (`user_directory_cache`) แทน
 
 ### 3.2 Cookie attributes (มาตรฐานที่ทั้งสอง repo ต้องยึด)
 
@@ -127,8 +130,8 @@ Claims: `sub`, `email`, `tenant_id`, `role` (CityZen role ตาม §1), `isSup
 
 ### 3.3 การ revoke
 
-ปัจจุบัน: ไม่มี server-side revocation — ถอนสิทธิ์ใน Thunder จะมีผลกับ CityZen เมื่อ session หมดอายุ (สูงสุด 8 ชม.) หรือ user logout
-Upgrade path เมื่อมี Supabase ของตัวเอง: เก็บ `session_id` + เช็ค denylist (ดู FUTURE notes)
+ปัจจุบัน (Phase 2, ADR 0004): **มี near-real-time revocation ผ่าน liveness check** — ทุก request ที่เข้า `/resource-intelligence/*` `proxy.ts` query `membership_directory_cache` row `(sub, tenant_id)`: `status !== 'active'` → เด้ง `/no-access` และ role resolve สดจาก `role_codes` (role change มีผลทันที) การถอนสิทธิ์ใน Thunder ไหลเข้ามาผ่าน webhook `/api/webhooks/thunder` (warm update) → มีผลรอบ request ถัดไป ไม่ต้องรอ JWT 8 ชม. หมด
+ก่อน plug DB จริง (`CITYZEN_DIRECTORY_DB_URL/KEY` ยังไม่ตั้ง): liveness เป็น no-op (fail-open ตอน cache disabled / ไม่มี row; query error = fail-closed) → พฤติกรรมถอยกลับเป็นแบบเดิม (มีผลเมื่อ session หมดอายุ ≤8 ชม.)
 
 ---
 

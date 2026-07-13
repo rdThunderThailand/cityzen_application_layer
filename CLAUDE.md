@@ -31,27 +31,34 @@ Sub-app แรก: **Organic Intelligence** (POC สำหรับ BDI Hackatho
 ```
 src/
   app/                      ← routing เท่านั้น — page.tsx (import client จาก features)
-    (auth)/login/
-    auth/launch/            ← แลก launch token จาก Thunder → cityzen_session
-    auth/session/           ← ทางเข้า login ตรง → resolve tenant+role → cityzen_session
-    page.tsx                ← "/" redirect ไป home ของ role (ยังไม่มี hub UI)
-    organic/                ← sub-app: Organic Intelligence
-      executive/…  owner/…  operator/…
+    (auth)/login/           ← login ตรง (UI) → loginAction (Server Action ใน features/auth)
+    (auth)/register/        ← UI ค้าง ยังไม่ wire (identity เป็นของ Thunder — ไม่มี sign-up)
+    (auth)/auth/launch/     ← แลก launch token จาก Thunder → cityzen_session
+    (dashboard)/(platform)/overview/        ← CityZen hub (เลือก sub-app)
+    (dashboard)/(workspace)/resource-intelligence/   ← sub-app: Organic Intelligence
+      executive/…  manager/…  operator/…
+    api/webhooks/thunder/   ← Thunder→CityZen webhook receiver (self-auth ด้วย WEBHOOK_SECRET)
     no-access/
-  features/organic/<role>/<page>/
+    page.tsx                ← "/" redirect ไป home ของ role
+  features/resource-intelligence/<role>/<page>/
     <Prefix>Client.tsx      ← entry ของหน้า
     components/             ← section ย่อย (Header, KpiCards, …)
-    mock.ts                 ← mock data ของหน้านี้ (typed)
-  lib/                      ← thunder.ts (API client), app-session.ts (JWT sign/verify)
+    mock.ts                 ← mock data ของหน้า (typed) — หน้าที่ wire แล้วดึงจาก hospitality_waste แทน
+  features/auth/            ← loginAction / logoutAction (Server Actions)
+  lib/                      ← thunder.ts (API client), app-session.ts (JWT), roles.ts, supabase-db.ts (DB client factory), directory-cache.ts
   utils/supabase/           ← client.ts / server.ts
-  proxy.ts                  ← middleware: auth guard + role/path guard
+  proxy.ts                  ← middleware: auth guard + liveness + role/path guard
 ```
+
+> **หมายเหตุ:** `features/organic/…` เก่ายังหลงเหลือ (`owner/storyboard`) จากก่อน rename — dead code รอลบ ห้ามยึดเป็นแบบ
 
 - **`page.tsx` ทำแค่ import + render client** — logic/components/actions ทั้งหมดอยู่ `src/features/`
 - ตัวอย่าง pattern ที่ยึด: `../Thunder_Core/src/app/(dashboard)/(workspace)/[tenant_id]/assets/officer/general/page.tsx` กับ feature คู่กันที่ `../Thunder_Core/src/features/tenant-assets/officer/general/`
 - Sub-app ใหม่ในอนาคต (water, energy, …) = โฟลเดอร์ใหม่ใต้ `app/` + `features/` — ห้ามแตะ `/organic`
 
 ## Auth & RBAC (สรุป — รายละเอียดใน CONTEXT.md)
+
+> **วิธี login/auth ทำงานยังไง (flow + diagram):** [`docs/AUTHENTICATION_FLOW.md`](docs/AUTHENTICATION_FLOW.md) — เอกสารอธิบาย end-to-end auth flow (launch / login ตรง / per-request guard / logout) พร้อม mermaid diagram · ค่า canonical (role table, token schema, cookie) อยู่ที่ [`docs/AUTH_CONTRACT.md`](docs/AUTH_CONTRACT.md)
 
 - 2 ทางเข้า จบที่ cookie `cityzen_session` (JWT HS256, 8 ชม.) เสมอ:
   - **Launch จาก Thunder**: `/auth/launch?token=` (launch token อายุ 1 นาที)
@@ -66,9 +73,9 @@ src/
 
 ## Data Policy (Hackathon)
 
-- **Mock data ล้วน** — `mock.ts` ต่อ feature, ไม่มีตาราง domain จริง
-- Supabase ปัจจุบัน (project เดียวกับ Thunder) ใช้ **auth เท่านั้น** ห้ามสร้างตาราง domain
-- อนาคต: Organic Intelligence data store (Supabase แยก) มาแทน mock
+- **ส่วนใหญ่ยัง mock** — `mock.ts` ต่อ feature สำหรับหน้าที่ยังไม่ wire
+- **Data-plane จริงมีแล้ว (บางส่วน):** Supabase project แยก (`wmcliqjttbpihjcosmmc`, schema `core`/`disaster_ops`) ต่อผ่าน service-role — executive daily-brief อ่าน KPI/incident จริงจากตรงนี้ · **วิธีต่อ DB + security model + ช่องโหว่ tenant-scoping:** [`docs/DATA_ACCESS.md`](docs/DATA_ACCESS.md)
+- Supabase project เดียวกับ Thunder = **auth เท่านั้น** (คนละ project กับ data-plane) — ห้ามสร้างตาราง domain ในนั้น
 
 ## Environment Variables (`.env` — มี `.env.local.example`)
 
