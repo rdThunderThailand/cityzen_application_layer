@@ -1,28 +1,38 @@
 import type { ThunderMembership } from "./thunder";
 
 // The 3 CityZen application roles (RBAC), distinct from Thunder platform roles.
-export const CITYZEN_ROLES = ["owner", "executive_viewer", "operator"] as const;
+export const CITYZEN_ROLES = ["manager", "executive_viewer", "operator"] as const;
 export type CityzenRole = (typeof CITYZEN_ROLES)[number];
 
-// Priority when one membership carries several roles: owner > executive_viewer > operator.
+// Priority when one membership carries several roles: manager > executive_viewer > operator.
 const PRIORITY: readonly CityzenRole[] = CITYZEN_ROLES;
 
-// Each role's home page — "/" dispatches here (super_admin's role claim falls back to owner).
+// Each role's home page — "/" dispatches here (super_admin's role claim falls back to manager).
 export const ROLE_HOME: Record<CityzenRole, string> = {
-  owner: "/organic/owner/storyboard",
-  executive_viewer: "/organic/executive/daily-brief",
-  operator: "/organic/operator/tasks",
+  manager: "/resource-intelligence/manager/daily-brief",
+  executive_viewer: "/resource-intelligence/executive/daily-brief",
+  operator: "/resource-intelligence/operator/tasks",
 };
 
 // Maps Thunder role codes → CityZen roles.
-// Thunder is inconsistent about the org-admin code: seed uses `admin_company`,
-// the UserRole type uses `company_admin` — accept both.
+// Thunder's department-admin code is `department_admin`; older seeds used
+// `admin_company` / `company_admin` — accept all three → manager.
 // super_admin / viewer_auditor have no CityZen role → null (→ /no-access).
 function toCityzenRole(code: string): CityzenRole | null {
-  if (code === "admin_company" || code === "company_admin") return "owner";
+  if (code === "department_admin" || code === "admin_company" || code === "company_admin")
+    return "manager";
   if (code === "executive_viewer") return "executive_viewer";
   if (code.startsWith("operator")) return "operator"; // operator, operator_supervisor, …
   return null;
+}
+
+// Highest-priority CityZen role from raw Thunder role codes. Shared by auth-time resolution
+// (membership snapshot) and the Phase 2 liveness check (cache row's role_codes).
+export function resolveCityzenRoleFromCodes(codes: readonly string[]): CityzenRole | null {
+  const cityzenRoles = new Set(
+    codes.map(toCityzenRole).filter((r): r is CityzenRole => r !== null)
+  );
+  return PRIORITY.find((r) => cityzenRoles.has(r)) ?? null;
 }
 
 // RBAC source of truth = membership_roles[].roles.code for the launched tenant.
@@ -34,14 +44,10 @@ export function resolveCityzenRole(
 ): CityzenRole | null {
   const membership = memberships?.find((m) => m.tenant_id === tenantId);
   if (!membership) return null;
-  const codes = new Set(
-    membership.membership_roles
-      .map((mr) => mr.roles?.code)
-      .filter((c): c is string => !!c)
-      .map(toCityzenRole)
-      .filter((r): r is CityzenRole => r !== null)
-  );
-  return PRIORITY.find((r) => codes.has(r)) ?? null;
+  const codes = membership.membership_roles
+    .map((mr) => mr.roles?.code)
+    .filter((c): c is string => !!c);
+  return resolveCityzenRoleFromCodes(codes);
 }
 
 // Thunder platform super_admin — bypasses CityZen RBAC entirely (god mode),

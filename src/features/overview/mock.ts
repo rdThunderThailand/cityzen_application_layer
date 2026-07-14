@@ -10,6 +10,6 @@ export const subApps: SubApp[] = [
     id: "organic",
     name: "Organic Intelligence",
     description: "Organic waste tracking and operations",
-    href: "/organic",
+    href: "/resource-intelligence",
   },
 ];

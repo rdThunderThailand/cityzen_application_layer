@@ -2,20 +2,30 @@ import { useState, useEffect, useRef } from "react";
 import { usePathname } from "next/navigation";
 import { Bell, Scan, ChevronDown, Settings, Info, LogOut } from "lucide-react";
 import { cn } from "../../utils/cn";
-import { defaultUser } from "./mockUserData";
-import { WeatherCard } from "./WeatherCard";
-import { executiveNavigationItems } from "@/app/(dashboard)/(workspace)/organic/executive/navItem";
+import { managerUser, executiveUser, operatorUser, type UserProfile } from "./mockUserData";
+import { WeatherCard } from "../basic/WeatherCard";
+import { executiveNavigationItems } from "@/app/(dashboard)/(workspace)/resource-intelligence/executive/navItem";
+import { managerNavigationItems } from "@/app/(dashboard)/(workspace)/resource-intelligence/manager/navItem";
 
 
 export interface HeaderProps {
     navigationText?: string; // Overrides the auto-derived page title when set
+    user?: UserProfile; // Real signed-in user; falls back to a pathname-based mock when omitted
 }
 
 export const Header = ({
     navigationText,
+    user,
 }: HeaderProps) => {
     const pathname = usePathname();
-    const currentPageLabel = executiveNavigationItems.find((item) => item.href === pathname)?.label;
+    const fallbackUser = pathname.includes('/executive')
+        ? executiveUser
+        : pathname.includes('/operator')
+            ? operatorUser
+            : managerUser;
+    const defaultUser = user ?? fallbackUser;
+    const allNavigationItems = [...executiveNavigationItems, ...managerNavigationItems];
+    const currentPageLabel = allNavigationItems.find((item) => item.href === pathname)?.label;
     const displayText = navigationText ?? currentPageLabel ?? 'สวัสดี';
 
     const [now, setNow] = useState(new Date());
@@ -43,13 +53,20 @@ export const Header = ({
     const timeText = now.toLocaleTimeString("th-TH", { hour: "2-digit", minute: "2-digit", second: "2-digit" });
 
     return (
-        <div className="w-full shadow-md h-[8vh] px-4 flex items-center justify-between">
-            <div className="flex flex-col justify-center">
-                <h3 className="text-lg font-semibold text-slate-800 leading-tight uppercase">{displayText} สรุปภาพรวมจังหวัดภูเก็ต</h3>
-                <p className="text-xs text-slate-400" suppressHydrationWarning>{dateText} | {timeText}</p>
+        <div className="w-full shadow-md min-h-[8vh] px-4 py-2 flex items-center justify-between gap-3 z-3">
+            <div className="flex flex-col justify-center min-w-0">
+                <div className="flex items-baseline gap-3">
+                    <h3 className="text-[22px] font-black text-indigo-950 leading-tight uppercase truncate tracking-wide">{displayText}</h3>
+                    {pathname.includes('/daily-brief') && (
+                        <span className="text-[17px] font-bold text-indigo-950 tracking-tight">สรุปภาพรวมองค์กร</span>
+                    )}
+                </div>
+                <p className="text-sm font-medium text-slate-500 mt-1" suppressHydrationWarning>
+                    ข้อมูล ณ วันที่ {dateText} | {timeText}
+                </p>
             </div>
 
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-3 md:gap-6 shrink-0">
                 <WeatherCard />
 
                 {/* Profile Dropdown */}
@@ -64,7 +81,7 @@ export const Header = ({
                             className="w-11 h-11 rounded-full object-cover shrink-0 bg-gray-200"
                         />
                         <div className="text-left leading-tight">
-                            <p className="text-sm font-bold">{defaultUser.name}</p>
+                            <p className="text-sm font-bold">{defaultUser.displayName}</p>
                             <p className="text-[11px] text-slate-400">{defaultUser.role}</p>
                         </div>
                         <ChevronDown className={cn(
