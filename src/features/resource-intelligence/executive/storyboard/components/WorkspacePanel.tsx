@@ -2,7 +2,7 @@ import { workspaceModules } from "../mock";
 
 export function WorkspacePanel() {
   return (
-    <section className="relative col-span-2 flex h-full min-h-0 flex-col justify-between rounded-lg border border-slate-200 bg-slate-50 px-8 py-6 shadow-sm">
+    <section className="relative flex h-full min-h-0 flex-col justify-between rounded-lg bg-slate-50 px-8 py-6 shadow-sm">
       <div className="text-center">
         <h2 className="text-lg font-bold text-blue-800">CityZen Executive Office</h2>
         <p className="mx-auto mt-1 max-w-2xl text-xs text-slate-500">

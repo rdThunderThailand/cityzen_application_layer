@@ -22,6 +22,7 @@ const metricToneClasses: Record<StoryboardStepTone, string> = {
 
 export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
   const Icon = step.icon;
+  
   const hoverFooter = (
     <div className="group/footer absolute inset-x-0 bottom-0 h-12">
       <div className="flex h-12 translate-y-full items-center justify-between border-t border-slate-200 bg-white px-4 text-slate-800 shadow-[0_-8px_18px_rgba(15,23,42,0.08)] transition-transform duration-200 group-hover/footer:translate-y-0">
@@ -33,8 +34,8 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
 
   if (step.id === "01") {
     return (
-      <article className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-all duration-150 hover:border-blue-500 hover:ring-2 hover:ring-blue-500">
-        <header className="flex items-center justify-between border-b border-slate-100 px-2.5 py-2">
+      <article className="group relative flex h-[80vh] flex-col overflow-hidden rounded-lg bg-blue-300 shadow-sm ">
+        {/* <header className="flex items-center justify-between border-b border-slate-100 px-2.5 py-2">
           <div className="flex min-w-0 items-center gap-2">
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-900 text-[10px] font-bold text-white">
               {step.id}
@@ -42,7 +43,7 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
             <h3 className="truncate text-[11px] font-bold text-slate-800">{step.title}</h3>
           </div>
           <span className="text-[10px] text-slate-400">{step.time}</span>
-        </header>
+        </header> */}
 
         <div className="flex flex-1 flex-col items-center justify-center px-3 py-3 text-center">
           <Image src={logo} alt="CityZen Executive Office" className="h-10 w-auto object-contain" loading="eager" />
@@ -56,7 +57,7 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
             <p className="line-clamp-2">ได้จัดเตรียมข้อมูลประกอบการบริหารราชการประจำวันนี้เรียบร้อยแล้ว</p>
           </div>
         </div>
-        {hoverFooter}
+        {/* {hoverFooter} */}
       </article>
     );
   }
@@ -77,7 +78,7 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
     };
 
     return (
-      <article className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-all duration-150 hover:border-blue-500 hover:ring-2 hover:ring-blue-500">
+      <article className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg bg-white shadow-sm">
         <header className="flex items-center justify-between border-b border-slate-100 px-2.5 py-2">
           <div className="flex min-w-0 items-center gap-2">
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white">
@@ -116,7 +117,7 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
             </p>
           </div>
         </div>
-        {hoverFooter}
+        {/* {hoverFooter} */}
       </article>
     );
   }
@@ -130,7 +131,7 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
     ];
 
     return (
-      <article className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-all duration-150 hover:border-blue-500 hover:ring-2 hover:ring-blue-500">
+      <article className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg bg-white shadow-sm">
         <header className="flex items-center justify-between border-b border-slate-100 px-2.5 py-2">
           <div className="flex min-w-0 items-center gap-2">
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white">
@@ -168,7 +169,7 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
             ))}
           </div>
         </div>
-        {hoverFooter}
+        {/* {hoverFooter} */}
       </article>
     );
   }
@@ -189,7 +190,7 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
     ];
 
     return (
-      <article className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-all duration-150 hover:border-blue-500 hover:ring-2 hover:ring-blue-500">
+      <article className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg bg-white shadow-sm">
         <header className="flex items-center justify-between border-b border-slate-100 px-2.5 py-2">
           <div className="flex min-w-0 items-center gap-2">
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white">
@@ -236,7 +237,7 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
             </div>
           </div>
         </div>
-        {hoverFooter}
+        {/* {hoverFooter} */}
       </article>
     );
   }
@@ -251,7 +252,7 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
     const trendLabels = ["2 พ.ค.", "3 พ.ค.", "4 พ.ค.", "5 พ.ค.", "6 พ.ค.", "7 พ.ค.", "8 พ.ค."];
 
     return (
-      <article className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-all duration-150 hover:border-blue-500 hover:ring-2 hover:ring-blue-500">
+      <article className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg bg-white shadow-sm">
         <header className="flex items-center justify-between border-b border-slate-100 px-2.5 py-2">
           <div className="flex min-w-0 items-center gap-2">
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white">
@@ -304,7 +305,7 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
             ))}
           </div>
         </div>
-        {hoverFooter}
+        {/* {hoverFooter} */}
       </article>
     );
   }
@@ -318,7 +319,7 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
     ];
 
     return (
-      <article className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-all duration-150 hover:border-blue-500 hover:ring-2 hover:ring-blue-500">
+      <article className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg bg-white shadow-sm">
         <header className="flex items-center justify-between border-b border-slate-100 px-2.5 py-2">
           <div className="flex min-w-0 items-center gap-2">
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white">
@@ -340,7 +341,7 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
             </div>
           ))}
         </div>
-        {hoverFooter}
+        {/* {hoverFooter} */}
       </article>
     );
   }
@@ -365,7 +366,7 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
     ];
 
     return (
-      <article className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-all duration-150 hover:border-blue-500 hover:ring-2 hover:ring-blue-500">
+      <article className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg bg-white shadow-sm">
         <header className="flex items-center justify-between border-b border-slate-100 px-2.5 py-2">
           <div className="flex min-w-0 items-center gap-2">
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white">
@@ -387,7 +388,7 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
             </div>
           ))}
         </div>
-        {hoverFooter}
+        {/* {hoverFooter} */}
       </article>
     );
   }
@@ -402,7 +403,7 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
     ];
 
     return (
-      <article className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-all duration-150 hover:border-blue-500 hover:ring-2 hover:ring-blue-500">
+      <article className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg bg-white shadow-sm">
         <header className="flex items-center justify-between border-b border-slate-100 px-2.5 py-2">
           <div className="flex min-w-0 items-center gap-2">
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white">
@@ -429,14 +430,14 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
             <p className="truncate text-[13px] font-extrabold text-slate-600">Executive Office พร้อมจัดเตรียมร่างคำสั่งให้ท่าน</p>
           </div>
         </div>
-        {hoverFooter}
+        {/* {hoverFooter} */}
       </article>
     );
   }
 
   if (step.id === "09") {
     return (
-      <article className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-all duration-150 hover:border-blue-500 hover:ring-2 hover:ring-blue-500">
+      <article className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg bg-white shadow-sm">
         <header className="flex items-center justify-between border-b border-slate-100 px-2.5 py-2">
           <div className="flex min-w-0 items-center gap-2">
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white">
@@ -456,7 +457,7 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
             ลงนามคำสั่ง
           </button>
         </div>
-        {hoverFooter}
+        {/* {hoverFooter} */}
       </article>
     );
   }
@@ -476,7 +477,7 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
     ];
 
     return (
-      <article className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-all duration-150 hover:border-blue-500 hover:ring-2 hover:ring-blue-500">
+      <article className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg bg-white shadow-sm">
         <header className="flex items-center justify-between border-b border-slate-100 px-2.5 py-2">
           <div className="flex min-w-0 items-center gap-2">
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white">
@@ -526,7 +527,7 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
             </div>
           </div>
         </div>
-        {hoverFooter}
+        {/* {hoverFooter} */}
       </article>
     );
   }
@@ -541,7 +542,7 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
     ];
 
     return (
-      <article className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-all duration-150 hover:border-blue-500 hover:ring-2 hover:ring-blue-500">
+      <article className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg bg-white shadow-sm">
         <header className="flex items-center justify-between border-b border-slate-100 px-2.5 py-2">
           <div className="flex min-w-0 items-center gap-2">
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white">
@@ -574,7 +575,7 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
             </div>
           </div>
         </div>
-        {hoverFooter}
+        {/* {hoverFooter} */}
       </article>
     );
   }
@@ -592,7 +593,7 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
     ];
 
     return (
-      <article className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-all duration-150 hover:border-blue-500 hover:ring-2 hover:ring-blue-500">
+      <article className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg bg-white shadow-sm">
         <header className="flex items-center justify-between border-b border-slate-100 px-2.5 py-2">
           <div className="flex min-w-0 items-center gap-2">
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white">
@@ -639,7 +640,7 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
 
   if (step.id === "13") {
     return (
-      <article className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-all duration-150 hover:border-blue-500 hover:ring-2 hover:ring-blue-500">
+      <article className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg bg-white shadow-sm">
         <header className="flex items-center justify-between border-b border-slate-100 px-2.5 py-2">
           <div className="flex min-w-0 items-center gap-2">
             <span className="flex h-5 w-5 items-center justify-center rounded-full bg-blue-600 text-[10px] font-bold text-white">
@@ -660,17 +661,13 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
             หมายเหตุเพิ่มเติม: หากมีเหตุการณ์สำคัญเพิ่มเติม CityZen Executive Office จะแจ้งให้ท่านทราบทันที
           </p>
         </div>
-        {hoverFooter}
+        {/* {hoverFooter} */}
       </article>
     );
   }
 
   return (
-    <article
-      className={cn(
-        "group relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg border border-slate-200 bg-white shadow-sm transition-all duration-150 hover:border-blue-500 hover:ring-2 hover:ring-blue-500"
-      )}
-    >
+    <article className="group relative flex h-full min-h-0 flex-col overflow-hidden rounded-lg bg-white shadow-sm">
       <header className="flex items-center justify-between border-b border-slate-100 px-2.5 py-2">
         <div className="flex min-w-0 items-center gap-2">
           <span className={cn("flex h-5 w-5 items-center justify-center rounded-full text-[10px] font-bold", toneClasses[step.tone])}>
@@ -706,7 +703,7 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
           )}
         </div>
       </div>
-      {hoverFooter}
+      {/* {hoverFooter} */}
     </article>
   );
 }

@@ -11,12 +11,12 @@ import type { NavItem } from "@/components/global/SideBarBlock";
 import type { FooterProps } from "@/components/global/Footer";
 import type { UserProfile } from "@/components/global/mockUserData";
 
-const FULL_CANVAS_ROUTES = new Set(["/resource-intelligence/executive/storyboard"]);
+const FULL_CANVAS_ROUTE_PREFIX = "/resource-intelligence/executive/storyboard";
 
 export default function LayoutShell({ children, user }: { children: React.ReactNode; user?: UserProfile }) {
     const pathname = usePathname();
 
-    if (FULL_CANVAS_ROUTES.has(pathname)) {
+    if (pathname.startsWith(FULL_CANVAS_ROUTE_PREFIX)) {
         return <>{children}</>;
     }
 
