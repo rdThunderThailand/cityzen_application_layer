@@ -9,22 +9,22 @@ import { useState } from "react";
 export default function Situation() {
     const [activeAI, setActiveAI] = useState<string | null>(null);
     return (
-        <div className="w-full flex relative flex-1">
-            <div className={`flex-1 px-6 transition-all duration-300`}>
+        <div className="w-full flex relative flex-1 min-h-0">
+            <div className="flex-1 min-h-0 flex flex-col overflow-hidden px-6 transition-all duration-300">
                 {/* AI dropdown */}
-                <div className="w-full flex justify-end mt-4 mb-3">
+                <div className="w-full flex justify-end mt-4 shrink-0">
                     <AIDropdown
                         selectedValue={activeAI}
                         onChange={setActiveAI}
                     />
                 </div>
 
-                <Tabs tabs={situationTabs} />
+                <Tabs tabs={situationTabs} fill className="flex-1 min-h-0" />
             </div>
 
             {/* AI panel */}
             {activeAI && (
-                <div className="-z-1 w-[380px] shrink-0 border-l-2 border-gray-200 bg-white backdrop-blur-md p-4 flex flex-col h-full overflow-y-auto animate-in slide-in-from-right duration-300">
+                <div className="-z-1 w-[380px] h-full shrink-0 border-l-2 border-gray-200 bg-white backdrop-blur-md p-4 flex flex-col h-full overflow-y-auto animate-in slide-in-from-right duration-300">
                     {/* Header Navigation Utilities */}
                     <div className="flex justify-between items-center mb-6">
                         <button className="flex items-center gap-1 rounded-lg bg-slate-600 px-3 py-1.5 text-xs text-white hover:bg-slate-700 transition-colors font-medium">

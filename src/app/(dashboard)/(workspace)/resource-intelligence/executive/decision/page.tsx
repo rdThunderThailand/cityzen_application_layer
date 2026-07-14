@@ -1,25 +1,40 @@
 "use client";
 
-import { CardMetric } from "@/components/dashboard/CardMetric";
-import { wasteData } from "../../../../../../../migration/executive/daily-brief/seed_waste_data";
-import Tabs from "@/components/basic/Tabs";
-import { decisionTabs } from "./tabs/tabsData";
-import CardGreeting from "@/components/dashboard/CardGreeting";
-import CardScoreGauge from "@/components/dashboard/CardScoreGauge";
-import CardTrend from "@/components/dashboard/CardTrend";
-import { defaultUser } from "@/components/global/mockUserData";
-import { headerTrendItems } from "../../../../../../../migration/executive/daily-brief/seed_trend_items";
-import { WandSparkles, ChevronDown, Send, Target, FileText, TrendingUp, Users, ShieldCheck, ChevronsRight, Settings, Plus, Image, Mic } from "lucide-react";
-import { AIDropdown } from "@/components/basic/AIDropdown";
 import { useState } from "react";
+import {
+    ChevronDown,
+    ChevronRight,
+    ChevronsRight,
+    Settings,
+    Plus,
+    Image,
+    Mic,
+    Target,
+    FileText,
+    TrendingUp,
+    Users,
+    ShieldCheck,
+    MapPin,
+    Paperclip,
+    Info,
+    Star,
+} from "lucide-react";
+import { cn } from "@/utils/cn";
+import { AIDropdown } from "@/components/basic/AIDropdown";
+import Tabs, { type TabItem } from "@/components/basic/Tabs";
+import { decisionPageTabs } from "./tabs/tabsData";
+
+
+
+
 
 export default function Decision() {
     const [activeAI, setActiveAI] = useState<string | null>(null);
     return (
-        <div className="w-full flex relative flex-1">
-            <div className={`flex-1 px-6 transition-all duration-300`}>
+        <div className="w-full flex relative flex-1 min-h-0">
+            <div className="flex-1 min-h-0 flex flex-col overflow-hidden px-6 transition-all duration-300 pb-4">
                 {/* AI dropdown */}
-                <div className="w-full flex justify-end mt-4 mb-3">
+                <div className="w-full flex justify-end mt-4 shrink-0">
                     <AIDropdown
                         selectedValue={activeAI}
                         onChange={setActiveAI}
@@ -27,7 +42,7 @@ export default function Decision() {
                 </div>
 
                 {/* Metric Banner Card */}
-                <div className="w-full h-[128px] bg-white rounded-2xl shadow-sm border border-slate-100 grid mb-4 overflow-hidden" style={{ gridTemplateColumns: '35% 1fr 1fr 1fr 1fr' }}>
+                <div className="w-full h-[128px] bg-white rounded-2xl shadow-sm border border-slate-100 grid my-4 overflow-hidden shrink-0" style={{ gridTemplateColumns: '35% 1fr 1fr 1fr 1fr' }}>
                     {/* Column 1: Vision & Title */}
                     <div className="px-5 py-3 flex items-center gap-3 hover:bg-slate-50/50 transition-colors h-full">
                         <div className="w-11 h-11 bg-blue-50 rounded-full flex items-center justify-center shrink-0">
@@ -36,7 +51,7 @@ export default function Decision() {
                         <div className="min-w-0">
                             <p className="text-[11px] text-slate-500 leading-none">วิสัยทัศน์การตัดสินใจวันนี้</p>
                             <h2 className="text-[17px] font-bold text-slate-800 leading-snug mt-1">ตัดสินใจอย่างแม่นยำ<br />รวดเร็ว โปร่งใส</h2>
-                            <p className="text-[11px] text-slate-400 mt-1 leading-tight line-clamp-1">เพื่อความปลอดภัยของประชาชน การบริหารทรัพยากรอย่างคุ้มค่า</p>
+                            <p className="text-[11px] text-slate-400 mt-1 leading-tight line-clamp-1">เพื่อความปลอดภัยของประชาชน การบริหารทรัพยากรอย่างคุ้มค่า และการพัฒนาจังหวัดอย่างยั่งยืน</p>
                         </div>
                     </div>
 
@@ -97,13 +112,12 @@ export default function Decision() {
                     </div>
                 </div>
 
-                <Tabs tabs={decisionTabs} />
+                <Tabs tabs={decisionPageTabs} fill className="flex-1 min-h-0" />
             </div>
 
             {/* AI panel */}
-            {/* AI panel */}
             {activeAI && (
-                <div className="-z-1 w-[380px] shrink-0 border-l-2 border-gray-200 bg-white backdrop-blur-md p-4 flex flex-col h-full overflow-y-auto animate-in slide-in-from-right duration-300">
+                <div className="-z-1 w-[380px] h-full shrink-0 border-l-2 border-gray-200 bg-white backdrop-blur-md p-4 flex flex-col h-full overflow-y-auto animate-in slide-in-from-right duration-300">
                     {/* Header Navigation Utilities */}
                     <div className="flex justify-between items-center mb-6">
                         <button className="flex items-center gap-1 rounded-lg bg-slate-600 px-3 py-1.5 text-xs text-white hover:bg-slate-700 transition-colors font-medium">
@@ -165,5 +179,5 @@ export default function Decision() {
                 </div>
             )}
         </div>
-    )
+    );
 }

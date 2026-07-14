@@ -1,25 +1,10 @@
-import { createClient } from "@supabase/supabase-js";
 import { getTenantOrganizations, type ThunderMe, type ThunderMembership, type ThunderOrg } from "./thunder";
+import { getDbClient } from "./supabase-db";
 
 // Directory Cache: local identity mirror of Thunder (user/tenant/membership) so cityzen
 // doesn't cross-call Thunder every request and can revoke near-real-time (ADR 0001/0004).
-//
-// Config seam (build-now-plug-link-later): the cache lives in its own DB. Until
-// CITYZEN_DIRECTORY_DB_URL/KEY are set, every op below is a no-op — auth + webhook flows
-// keep working unchanged. Plug the env in later → cache turns on, zero code change.
-// Tables live in the `core` schema (not public); service-role key bypasses RLS.
-const makeDirectoryClient = (url: string, key: string) =>
-  createClient(url, key, { auth: { persistSession: false }, db: { schema: "core" } });
-
-let cached: ReturnType<typeof makeDirectoryClient> | null | undefined;
-function directoryDb(): ReturnType<typeof makeDirectoryClient> | null {
-  if (cached !== undefined) return cached;
-  const url = process.env.CITYZEN_DIRECTORY_DB_URL;
-  const key = process.env.CITYZEN_DIRECTORY_DB_KEY;
-  cached = url && key ? makeDirectoryClient(url, key) : null;
-  if (!cached) console.warn("[directory-cache] CITYZEN_DIRECTORY_DB_URL/KEY unset — cache ops are no-ops");
-  return cached;
-}
+// Tables live in the `core` schema; connection + config-seam live in supabase-db.ts.
+const directoryDb = () => getDbClient("core");
 
 const nowIso = () => new Date().toISOString();
 
@@ -86,6 +71,7 @@ export async function upsertDirectorySnapshot(
     for (const tenantId of tenantIds) {
       try {
         const orgs = flattenOrgs(await getTenantOrganizations(tenantId, accessToken));
+        const fetchedIds = new Set(orgs.map((org) => org.id));
         for (const org of orgs) {
           const abbrev = org.name_en ?? org.code;
           const { error } = await db.from("department_directory_cache").upsert({
@@ -99,8 +85,28 @@ export async function upsertDirectorySnapshot(
           });
           if (error) throw error;
         }
-      } catch {
+
+        // Reconcile: Thunder hard-excludes soft-deleted depts from this list (deleted_at IS NULL
+        // filter), so anything cached for this tenant but absent here was deleted upstream and
+        // never got an org.deleted webhook (Thunder doesn't emit one). Drop it here to match.
+        const { data: existing, error: listErr } = await db
+          .from("department_directory_cache")
+          .select("thundercore_department_id")
+          .eq("thundercore_tenant_id", tenantId);
+        if (listErr) throw listErr;
+        const staleIds = (existing ?? [])
+          .map((row) => row.thundercore_department_id)
+          .filter((id): id is string => !!id && !fetchedIds.has(id));
+        if (staleIds.length > 0) {
+          const { error: delErr } = await db
+            .from("department_directory_cache")
+            .delete()
+            .in("thundercore_department_id", staleIds);
+          if (delErr) throw delErr;
+        }
+      } catch (error) {
         // best-effort backfill — see comment above; never block the rest of the snapshot.
+        console.error("[directory-cache] org backfill failed", { tenantId, error });
       }
     }
   }
@@ -274,8 +280,10 @@ export type MembershipLiveness = { allow: boolean; roleCodes: string[] | null };
 // Per-request authorization state (ADR 0004). Single seam so the strategy (add TTL,
 // session_version, short-token) can change without touching proxy.ts.
 // Fail-open: cache disabled OR row absent → allow (the JWT already proved identity; the guard
-// falls back to the cookie's role). Only an explicit status !== 'active' blocks. This is what
-// keeps live sessions from bricking before the DB is plugged in / before cold-populate runs.
+// falls back to the cookie's role). This is what keeps live sessions from bricking before the
+// DB is plugged in / before cold-populate runs. A query *error* (DB reachable but the call
+// failed) is fail-closed instead — that means we genuinely don't know the state, which is a
+// different case from "no row yet" and shouldn't grant access.
 export async function checkMembershipLiveness(
   userId: string,
   tenantId: string,
@@ -288,10 +296,41 @@ export async function checkMembershipLiveness(
     .eq("thundercore_user_id", userId)
     .eq("thundercore_tenant_id", tenantId)
     .maybeSingle();
-  if (error || !data) return { allow: true, roleCodes: null };
+  if (error) {
+    console.error("[directory-cache] liveness check query failed — failing closed", { userId, tenantId, error });
+    return { allow: false, roleCodes: null };
+  }
+  if (!data) return { allow: true, roleCodes: null };
   return {
     allow: data.status === "active",
     roleCodes: Array.isArray(data.role_codes) ? data.role_codes : null,
+  };
+}
+
+export type DirectoryDisplayProfile = {
+  displayName: string | null;
+  avatarUrl: string | null;
+  tenantName: string | null;
+};
+
+// Phase 2 Part B: display data (name/avatar/tenant) now reads from the cache instead of
+// the (trimmed) session cookie. Cache miss must degrade gracefully — never block render.
+export async function getDirectoryDisplayProfile(
+  userId: string,
+  tenantId: string,
+): Promise<DirectoryDisplayProfile> {
+  const db = directoryDb();
+  if (!db) return { displayName: null, avatarUrl: null, tenantName: null };
+
+  const [{ data: user }, { data: tenant }] = await Promise.all([
+    db.from("user_directory_cache").select("display_name, avatar_url").eq("thundercore_user_id", userId).maybeSingle(),
+    db.from("tenant_directory_cache").select("name").eq("thundercore_tenant_id", tenantId).maybeSingle(),
+  ]);
+
+  return {
+    displayName: user?.display_name ?? null,
+    avatarUrl: user?.avatar_url ?? null,
+    tenantName: tenant?.name ?? null,
   };
 }
 

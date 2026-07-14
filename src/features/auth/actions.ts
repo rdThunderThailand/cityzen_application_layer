@@ -41,9 +41,9 @@ export async function loginAction(
   let memberships;
   try {
     profile = await getMe(session.access_token);
-    console.log(profile)
+    // console.log(profile)
     memberships = await getMyMemberships(session.access_token);
-    console.log(memberships)
+    // console.log(memberships)
   } catch {
     // Fail closed: no memberships → no role → /no-access below.
   }
