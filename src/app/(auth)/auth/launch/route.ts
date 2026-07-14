@@ -27,7 +27,7 @@ export async function GET(request: NextRequest) {
     return NextResponse.redirect(new URL("/login?error=invalid_launch", request.url));
   }
 
-  const tenantId = payload.tenant_id as string;
+  let tenantId = payload.tenant_id as string | undefined;
 
   let profile;
   let memberships;
@@ -37,9 +37,15 @@ export async function GET(request: NextRequest) {
   } catch {
     // Fail closed: no memberships → no role → /no-access below.
   }
+
+  if (!tenantId) {
+    // OAuth launch token has no tenant hint — pick primary membership (same rule as loginAction).
+    const primary = memberships?.find((m) => m.is_primary) ?? memberships?.[0];
+    tenantId = primary?.tenant_id;
+  }
   // RBAC from membership roles, NOT payload.role (that is Thunder's platform role).
-  const role = resolveCityzenRole(memberships, tenantId);
-  const isSuperAdmin = isThunderSuperAdmin(memberships, tenantId);
+  const role = resolveCityzenRole(memberships, tenantId as string);
+  const isSuperAdmin = isThunderSuperAdmin(memberships, tenantId as string);
   if (!role && !isSuperAdmin) {
     return NextResponse.redirect(new URL("/no-access", request.url));
   }
@@ -53,7 +59,7 @@ export async function GET(request: NextRequest) {
   const appSessionCookie = await signAppSession({
     sub: payload.sub as string,
     email: payload.email as string,
-    tenant_id: tenantId,
+    tenant_id: tenantId as string,
     role: role ?? "manager", // super_admin has no tenant role; isSuperAdmin bypasses the prefix guard anyway
     isSuperAdmin,
     app_name: payload.app_name as string | undefined,

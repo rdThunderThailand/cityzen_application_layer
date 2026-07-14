@@ -1,7 +1,7 @@
 # AUTHENTICATION_FLOW — Authentication & Authorization Flows ของ CityZen
 
-> **สถานะ:** ณ วันที่ 13 ก.ค. 2026 (branch `fix/webhook`)
-> **อ้างอิงโค้ด:** `src/proxy.ts`, `src/lib/app-session.ts`, `src/lib/roles.ts`, `src/lib/thunder.ts`, `src/lib/directory-cache.ts`, `src/features/auth/actions.ts`, `src/app/(auth)/auth/launch/route.ts`, `src/app/api/webhooks/thunder/route.ts`
+> **สถานะ:** ณ วันที่ 14 ก.ค. 2026 (branch `fix/webhook`) — social login/sign-up (§3.2) E2E ผ่านแล้ว
+> **อ้างอิงโค้ด:** `src/proxy.ts`, `src/lib/app-session.ts`, `src/lib/roles.ts`, `src/lib/thunder.ts`, `src/lib/directory-cache.ts`, `src/features/auth/actions.ts`, `src/app/(auth)/register/page.tsx`, `src/app/(auth)/auth/launch/route.ts`, `src/app/(auth)/auth/oauth/route.ts`, `src/app/api/webhooks/thunder/route.ts` · ฝั่ง Thunder (social login §3.2): `Thunder_Core/src/app/auth/oauth/start/route.ts`, `Thunder_Core/src/app/auth/callback/route.ts`, `Thunder_Core/src/lib/core/oauthReturnTo.ts`
 > **เอกสารอ้างอิง:** [`AUTH_CONTRACT.md`](AUTH_CONTRACT.md) = สัญญากลาง Thunder↔CityZen (role table / token schema / cookie security แบบ canonical) — ถ้าค่าในไฟล์นี้ขัดกัน ให้ยึดโค้ด แล้วแก้ทั้งสองไฟล์ใน PR เดียว
 
 ---
@@ -12,7 +12,7 @@ CityZen **ไม่ได้**ใช้ auth flow แบบ Supabase textbook �
 
 | Thunder Core                                   | Cityzen                                                                                     |
 | ---------------------------------------------- | ------------------------------------------------------------------------------------------- |
-| Sign-up / สมัครสมาชิก + email verification     | **ไม่มี** — identity เป็นของ Thunder Core ทั้งหมด (`RegisterCard` เป็น UI ค้าง ยังไม่ wire) |
+| Sign-up / สมัครสมาชิก + email verification     | **สมัครได้ แต่ไม่ได้สร้าง session** — `RegisterCard` → `registerAction` ยิงไป Thunder Core `/api/core/v1/auth/register` (สร้าง _identity_ อย่างเดียว ไม่ผูก tenant/membership) แล้วเด้งไป `/login` · membership admin เป็นคนให้ทีหลัง ดู §3.1 |
 | Supabase `signInWithPassword`                  | **ไม่ใช้** — login ตรงยิงไป Thunder Core `/api/core/v1/auth/login`                          |
 | Access token (15 นาที) + Refresh token (7 วัน) | **ไม่มี refresh token** — มีแค่ `cityzen_session` JWT อายุ 8 ชม. หมดแล้ว login ใหม่         |
 | Middleware คอย refresh access token            | **ไม่มี** — `proxy.ts` แค่ verify `cityzen_session`                                         |
@@ -125,6 +125,74 @@ sequenceDiagram
 
 > **การไม่ leak error:** ทุก error จาก Thunder/Supabase ถูก log ฝั่ง server แล้วส่งข้อความไทยกลาง ๆ ให้ client เท่านั้น (ตามกฎ CLAUDE.md) — ไม่มี raw error หลุดออก frontend
 
+### 3.1 Sign-up (`/register` → `registerAction`)
+
+`RegisterCard` (`src/app/(auth)/register/page.tsx`) wire เข้า `registerAction` (`src/features/auth/actions.ts`) ซึ่งยิงไป Thunder Core `/api/core/v1/auth/register` ผ่าน `registerWithPassword` (`src/lib/thunder.ts`, พก `x-api-key` แบบเดียวกับ login)
+
+```mermaid
+sequenceDiagram
+    participant B as Browser
+    participant A as registerAction (Server Action)
+    participant T as Thunder Core
+    B->>A: submit { name, email, password }
+    A->>A: zod validate (password ≥ 8, name split → first/last)
+    Note over A: invalid → return { error: "ข้อมูลไม่ถูกต้อง…" }
+    A->>T: registerWithPassword(...) → POST /api/core/v1/auth/register
+    Note over A: 400/409 (email ซ้ำ/ผิด) → return { error: "อีเมลนี้ถูกใช้งานแล้ว…" }
+    Note over A: Thunder พัง / app-key ผิด → log server-side, return { error: "…ลองใหม่ภายหลัง" }
+    A-->>B: redirect /login?registered=1
+```
+
+- **สร้าง _identity_ อย่างเดียว** — Thunder register สร้าง auth user + `public.users` แต่**ไม่ผูก tenant/membership** ⇒ account ใหม่ยังไม่มี role ⇒ ถ้า login ทันทีจะไปตกที่ `/no-access` จนกว่า admin ฝั่ง Thunder จะเพิ่ม membership ให้ (ตรงกับหลักการ identity เป็นของ Thunder — §1)
+- **ไม่ auto-login:** ไม่ mint `cityzen_session` ตอนสมัคร (ไม่มี membership = ไม่มีอะไรให้ authorize) → เด้งไป `/login`
+- **email verification:** Thunder สร้าง user ด้วย `email_confirm: false` — ยังไม่มีขั้น verify email ใน flow นี้
+- **Social sign-up (Google/Microsoft):** wire แล้ว — ดู §3.2 (ปุ่มใน `LoginCard`/`RegisterCard` redirect ไป Thunder ทำ OAuth)
+
+### 3.2 Social login/sign-up (Google / Microsoft) — OAuth รวมศูนย์ที่ Thunder
+
+OAuth เป็น **browser-redirect** จึง proxy ผ่าน Thunder API (แบบ password login) ไม่ได้ — CityZen เลยรวมศูนย์ OAuth ไว้ที่ **Thunder Core** (เจ้าของ identity) แล้วรับกลับด้วย **launch token** เข้า `/auth/launch` เดิม **CityZen ไม่รัน Supabase auth client เอง** ปุ่มแค่ redirect ออกไป Thunder → invariant "Thunder = gateway เดียว" ยังอยู่ครบ และ **app layer อื่นในอนาคตใช้ซ้ำได้ทันทีโดยไม่ต้องเขียน OAuth เพิ่ม**
+
+```mermaid
+sequenceDiagram
+    participant B as Browser
+    participant CO as /auth/oauth (CityZen)
+    participant TS as /auth/oauth/start (Thunder)
+    participant P as Google / Azure
+    participant TC as /auth/callback (Thunder)
+    participant L as /auth/launch (CityZen)
+    B->>CO: กดปุ่ม Google/Microsoft → GET ?provider=google|azure
+    CO->>CO: validate provider
+    Note over CO: ส่ง return_to = origin ของ CityZen เอง
+    CO-->>B: redirect Thunder /auth/oauth/start?provider=&return_to=
+    B->>TS: GET start
+    TS->>TS: validate provider + isAllowedReturnTo(return_to)
+    Note over TS: ไม่อยู่ allowlist / provider ผิด → /auth/auth-code-error
+    TS->>TS: signInWithOAuth({ skipBrowserRedirect })
+    TS-->>B: redirect provider (พก redirectTo=/auth/callback?return_to=)
+    B->>P: login กับ Google/Microsoft
+    P-->>B: redirect Thunder /auth/callback?code=&return_to=
+    B->>TC: GET callback
+    TC->>TC: exchangeCodeForSession(code)
+    TC->>TC: isAllowedReturnTo(return_to) + getUser()
+    TC->>TC: mint launch token { sub, email, aud } (HS256, SUPABASE_JWT_SECRET, 1m)
+    TC-->>B: redirect {return_to}/auth/launch?token=
+    B->>L: GET /auth/launch?token=
+    Note over L: จากนี้ = §2 ทุกอย่าง (verify → getMe/memberships → role → cityzen_session)
+    L-->>B: redirect "/" (+ Set-Cookie cityzen_session)
+```
+
+**จุดต่างจาก launch ปกติ (§2):** launch token จาก OAuth callback **ไม่มี `tenant_id`** (OAuth ไม่มี tenant context) → `/auth/launch` เลย fallback เลือก **primary membership** (`is_primary`, fallback ตัวแรก) แบบเดียวกับ `loginAction` (§3) ที่เหลือเหมือน launch flow เป๊ะ
+
+**ความปลอดภัยที่ต้องรู้:**
+
+- **`OAUTH_RETURN_TO_ALLOWLIST` (ฝั่ง Thunder) คือ security boundary** — `return_to` ที่ไม่อยู่ใน allowlist ถูกปฏิเสธทั้งที่ `start` และ `callback` (defense-in-depth) กัน **open-redirect → ขโมย launch token** ถ้าไม่ตั้ง env นี้ = ไม่มี origin ไหนผ่าน = social login ใช้ไม่ได้ (fail closed)
+- **Launch token มีแค่ `sub`/`email`/`aud`** — ไม่พก tenant/role/app permission ใด ๆ เป็นแค่ "ยืนยันว่า user นี้ผ่าน OAuth กับ Supabase project เดียวกับ Thunder แล้ว" สิทธิ์จริงไป resolve ที่ `/auth/launch` จาก membership เหมือนทุก flow
+- **Provider ที่รองรับ:** `google`, `azure` (= Microsoft) เท่านั้น — hardcode ทั้งสองฝั่ง
+- **สร้าง identity อย่างเดียวเหมือน password register:** trigger `on_auth_user_created` ของ Thunder สร้าง `public.users` ให้อัตโนมัติ แต่ยัง**ไม่ผูก membership** ⇒ user ใหม่ที่ login ด้วย Google ครั้งแรกจะไปตกที่ `/no-access` จนกว่า admin ผูก membership (ตรงหลัก identity เป็นของ Thunder — §1)
+- **ต้องตั้งค่านอกโค้ด 2 อย่าง (ไม่งั้น flow พัง):**
+  1. **Thunder env `OAUTH_RETURN_TO_ALLOWLIST`** = origin ของ CityZen (comma-separated, ไม่มี `/` ท้าย) — ไม่ตั้ง = fail closed
+  2. **Supabase dashboard → Authentication → URL Configuration → Redirect URLs** = callback ของ Thunder แบบ **wildcard** `https://<thunder>/auth/callback**` (ต้องมี `**` ให้ query `?return_to=` ผ่าน) · ⚠️ ถ้าใส่แค่ `/auth/callback` เฉย ๆ Supabase จะปฏิเสธ `redirectTo` แล้วเด้งไป **Site URL** แทน (อาการ: code ไปโผล่ root `/?code=…` ไม่ถึง callback)
+
 ---
 
 ## 4. Flow 3 — Guard ต่อทุก request (`proxy.ts`)
@@ -152,8 +220,8 @@ flowchart TD
     Prefix -->|yes| Next4[ผ่าน]
 ```
 
-**Public paths** (เข้าได้โดยไม่ต้องมี session): `/login`, `/auth/launch`, `/auth/login`, `/no-access`, `/api/webhooks/thunder`
-(webhook self-authenticate ด้วย `WEBHOOK_SECRET` — guard ห้าม redirect มันไป `/login`)
+**Public paths** (เข้าได้โดยไม่ต้องมี session): `/login`, `/register`, `/auth/launch`, `/auth/login`, `/auth/oauth`, `/no-access`, `/api/webhooks/thunder`
+(webhook self-authenticate ด้วย `WEBHOOK_SECRET` — guard ห้าม redirect มันไป `/login` · `/auth/oauth` = จุดเริ่ม social login §3.2 ต้องเข้าได้ก่อนมี session)
 
 **ลำดับการ secure:**
 
@@ -276,6 +344,13 @@ cookies().delete("cityzen_session") → redirect("/login")
 | `/auth/launch`, `loginAction` | ไม่มี role และไม่ใช่ super_admin            | redirect `/no-access`                                   |
 | `loginAction`                 | credential ผิด / validate fail              | `{ error: "อีเมลหรือรหัสผ่านไม่ถูกต้อง" }`              |
 | `loginAction`                 | Thunder พัง                                 | `{ error: "เข้าสู่ระบบไม่สำเร็จ กรุณาลองใหม่ภายหลัง" }` |
+| `registerAction`              | สมัครสำเร็จ                                 | redirect `/login?registered=1`                          |
+| `registerAction`              | email ซ้ำ / input ผิด (Thunder 400/409)     | `{ error: "อีเมลนี้ถูกใช้งานแล้ว หรือข้อมูลไม่ถูกต้อง" }` |
+| `registerAction`              | Thunder พัง / app-key ผิด                    | `{ error: "สมัครสมาชิกไม่สำเร็จ กรุณาลองใหม่ภายหลัง" }` |
+| `/auth/oauth` (CityZen)       | provider ไม่ใช่ google/azure                | redirect `/login?error=invalid_provider`               |
+| `/auth/oauth` (CityZen)       | ไม่ได้ตั้ง `THUNDER_CORE_API_URL`           | redirect `/login?error=oauth_unavailable`              |
+| `/auth/oauth/start` (Thunder) | provider ผิด / `return_to` นอก allowlist    | redirect Thunder `/auth/auth-code-error`               |
+| `/auth/callback` (Thunder)    | OAuth สำเร็จ + `return_to` ผ่าน allowlist   | mint launch token → redirect `{return_to}/auth/launch?token=` |
 | `/api/webhooks/thunder`       | ไม่มี bearer / signature ผิด                | **401**                                                 |
 | `/api/webhooks/thunder`       | `WEBHOOK_SECRET` ไม่ตั้ง / cache write พัง  | **500** (Thunder retry/redeliver)                       |
 | `/api/webhooks/thunder`       | สำเร็จ                                      | **200**                                                 |

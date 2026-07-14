@@ -32,7 +32,7 @@ Sub-app แรก: **Organic Intelligence** (POC สำหรับ BDI Hackatho
 src/
   app/                      ← routing เท่านั้น — page.tsx (import client จาก features)
     (auth)/login/           ← login ตรง (UI) → loginAction (Server Action ใน features/auth)
-    (auth)/register/        ← UI ค้าง ยังไม่ wire (identity เป็นของ Thunder — ไม่มี sign-up)
+    (auth)/register/        ← สมัคร (UI) → registerAction → Thunder /auth/register (สร้าง identity เท่านั้น ไม่ผูก membership) → /login
     (auth)/auth/launch/     ← แลก launch token จาก Thunder → cityzen_session
     (dashboard)/(platform)/overview/        ← CityZen hub (เลือก sub-app)
     (dashboard)/(workspace)/resource-intelligence/   ← sub-app: Organic Intelligence
