@@ -12,14 +12,8 @@ import {
   Gavel,
   HeartPulse,
   Landmark,
-  Map,
   Megaphone,
-  MessageSquareText,
   PackageCheck,
-  Radio,
-  Scale,
-  ShieldCheck,
-  Users,
   Workflow,
 } from "lucide-react";
 import type { ComponentType } from "react";
@@ -95,22 +89,20 @@ export const storyboardSteps: StoryboardStep[] = [
   },
   {
     id: "05",
-    title: "Understanding",
+    title: "Understanding & Legal Basis",
     time: "08:34",
     icon: HeartPulse,
     tone: "amber",
-    lines: ["แผนที่ความเสี่ยงและแนวโน้ม 7 วันข้างหน้า", "พื้นที่สีแดงต้องเฝ้าระวังทันที"],
+    lines: [
+      "แผนที่ความเสี่ยงและแนวโน้ม 7 วันข้างหน้า",
+      "พื้นที่สีแดงต้องเฝ้าระวังทันที",
+      "พ.ร.บ.สาธารณสุข พ.ศ. 2535",
+      "ระเบียบกระทรวงมหาดไทย",
+      "หนังสือสั่งการ มท 0808.2/ว 1234",
+    ],
   },
   {
     id: "06",
-    title: "Laws & Regulations",
-    time: "08:35",
-    icon: Scale,
-    tone: "blue",
-    lines: ["พ.ร.บ.สาธารณสุข พ.ศ. 2535", "ระเบียบกระทรวงมหาดไทย", "หนังสือสั่งการ มท 0808.2/ว 1234"],
-  },
-  {
-    id: "07",
     title: "Options for Consideration",
     time: "08:36",
     icon: BriefcaseBusiness,
@@ -118,7 +110,7 @@ export const storyboardSteps: StoryboardStep[] = [
     lines: ["Option A: เพิ่มจุดทิ้งชั่วคราว", "Option B: ขอสนับสนุนรถเก็บขน", "Option C: ประกาศมาตรการพื้นที่ควบคุม"],
   },
   {
-    id: "08",
+    id: "07",
     title: "Executive Judgment",
     time: "08:37",
     icon: Gavel,
@@ -126,7 +118,7 @@ export const storyboardSteps: StoryboardStep[] = [
     lines: ["ข้อมูลเพิ่มเติม", "เรียกประชุม War Room", "มอบหมายหน่วยงานประจำพื้นที่", "ร่างคำสั่ง"],
   },
   {
-    id: "09",
+    id: "08",
     title: "Draft Order Preview",
     time: "08:38",
     icon: FileText,
@@ -134,15 +126,7 @@ export const storyboardSteps: StoryboardStep[] = [
     lines: ["ลงนามคำสั่ง", "เอกสารพร้อมส่งต่อหน่วยปฏิบัติ"],
   },
   {
-    id: "10",
-    title: "War Room (Execution)",
-    time: "08:39",
-    icon: Radio,
-    tone: "blue",
-    lines: ["หน่วยงาน 18", "คำสั่งงาน 24", "Progress 67%"],
-  },
-  {
-    id: "11",
+    id: "09",
     title: "Public Communication",
     time: "08:40",
     icon: Megaphone,
@@ -150,7 +134,7 @@ export const storyboardSteps: StoryboardStep[] = [
     lines: ["ประกาศผ่าน Line OA, Website, Facebook", "ข้อความสั้นพร้อมส่งให้ประชาชน"],
   },
   {
-    id: "12",
+    id: "10",
     title: "Outcome & Prediction",
     time: "08:41",
     icon: BarChart3,
@@ -158,22 +142,13 @@ export const storyboardSteps: StoryboardStep[] = [
     lines: ["ปริมาณขยะ -18%", "เรื่องร้องเรียน -32%", "ความพึงพอใจ +24%"],
   },
   {
-    id: "13",
+    id: "11",
     title: "End of Morning Brief",
     time: "08:42",
     icon: Landmark,
     tone: "slate",
     lines: ["การสรุปข้อมูลประจำวันเสร็จสมบูรณ์", "พร้อมเข้าสู่ Executive Workspace"],
   },
-];
-
-export const workspaceModules = [
-  { label: "เรื่องเร่งด่วน", icon: ShieldCheck },
-  { label: "วิเคราะห์", icon: BarChart3 },
-  { label: "กฎหมาย", icon: Scale },
-  { label: "ประสานงาน", icon: Users },
-  { label: "ติดตาม", icon: Map },
-  { label: "รายงาน", icon: MessageSquareText },
 ];
 
 export const flowIcons = [Workflow, CheckCircle2, FileCheck2];

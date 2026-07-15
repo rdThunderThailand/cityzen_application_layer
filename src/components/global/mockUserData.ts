@@ -15,8 +15,8 @@ export const managerUser: UserProfile = {
 };
 
 export const executiveUser: UserProfile = {
-    displayName: "คุณวิชัย วงศ์เจริญ",
-    role: "ผู้ว่าราชการจังหวัดภูดก็ต",
+    displayName: "ผู้ว่าราชการจังหวัดภูเก็ต",
+    role: "ผู้ว่าราชการจังหวัดภูเก็ต",
     profileImg: "https://i.pinimg.com/736x/69/a5/60/69a5602fb6377d1fef9bb45e8db9e415.jpg",
     companyName: "Smart CityZen",
     companyLogo: "/logo.png",

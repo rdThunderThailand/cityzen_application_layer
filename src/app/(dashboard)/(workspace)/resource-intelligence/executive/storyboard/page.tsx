@@ -1,5 +1,5 @@
-import OwnerStoryboardClient from "@/features/organic/owner/storyboard/OwnerStoryboardClient";
+import { redirect } from "next/navigation";
 
 export default function StoryboardPage() {
-  return <OwnerStoryboardClient />;
+  redirect("/resource-intelligence/executive/storyboard/1");
 }
