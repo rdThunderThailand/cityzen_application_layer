@@ -13,10 +13,10 @@ export default function StoryboardLayout({ children }: { children: React.ReactNo
       <StoryboardStepNav />
 
       <Link
-        href="/resource-intelligence/executive/daily-brief"
+        href="/resource-intelligence/manager/daily-brief"
         className="absolute bottom-4 right-4 transform flex items-center gap-2 text-md font-bold text-blue-800 mt-2"
       >
-        เข้าสู่ Executive Workspace
+        เข้าสู่ Manager Workspace
         <ArrowRight className="h-6 w-6" />
       </Link>
     </main>

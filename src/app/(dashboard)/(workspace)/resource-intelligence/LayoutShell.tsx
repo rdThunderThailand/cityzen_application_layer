@@ -12,11 +12,12 @@ import type { FooterProps } from "@/components/global/Footer";
 import type { UserProfile } from "@/components/global/mockUserData";
 
 const FULL_CANVAS_PREFIX = "/resource-intelligence/executive/storyboard";
+const FULL_CANVAS_PREFIX2 = "/resource-intelligence/manager/storyboard";
 
 export default function LayoutShell({ children, user }: { children: React.ReactNode; user?: UserProfile }) {
     const pathname = usePathname();
 
-    if (pathname.startsWith(FULL_CANVAS_PREFIX)) {
+    if (pathname.startsWith(FULL_CANVAS_PREFIX) || pathname.startsWith(FULL_CANVAS_PREFIX2)) {
         return <>{children}</>;
     }
 
