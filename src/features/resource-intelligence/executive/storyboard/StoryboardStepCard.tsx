@@ -1,23 +1,27 @@
 import Image from "next/image";
 import Link from "next/link";
-import { Check, CheckCircle2, Edit3, Landmark, MessageSquare, MonitorUp, PanelTop, Pen, Search, Scale, UserPlus, UsersRound, Circle } from "lucide-react";
+import {
+  Check,
+  CheckCircle2,
+  Circle,
+  Edit3,
+  Landmark,
+  MessageSquare,
+  MonitorUp,
+  PanelTop,
+  Pen,
+  Search,
+  Scale,
+  UserPlus,
+} from "lucide-react";
 import { cn } from "@/utils/cn";
-import logo from "../../../../../../public/logo.png";
-import type { StoryboardStep, StoryboardStepTone } from "../mock";
+import logo from "../../../../../public/logo.png";
+import type { StoryboardStep, StoryboardStepTone } from "./mock";
 import { StoryboardTrendChart } from "./StoryboardTrendChart";
-
-const metricToneClasses: Record<StoryboardStepTone, string> = {
-  blue: "bg-blue-50 text-blue-700",
-  green: "bg-emerald-50 text-emerald-700",
-  amber: "bg-amber-50 text-amber-700",
-  red: "bg-rose-50 text-rose-700",
-  slate: "bg-slate-50 text-slate-700",
-};
 
 const cardShell = "relative flex h-full w-full flex-col overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-sm";
 
 export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
-  const Icon = step.icon;
 
   if (step.id === "01") {
     return (
@@ -298,7 +302,7 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
 
     return (
       <article className={cardShell}>
-        <div className="flex flex-1 flex-col items-center justify-center gap-12 overflow-hidden py-40 px-80">
+        <Link href="/resource-intelligence/executive/storyboard/7" className="flex flex-1 flex-col items-center justify-center gap-12 overflow-hidden py-40 px-80">
           {options.map((option) => (
             <div key={option.title} className="rounded-xl w-[60vw] bg-slate-100 px-6 py-5 hover:shadow-xl hover:-translate-y-2 transition-transform duration-150">
               <p className="whitespace-pre-line text-2xl font-extrabold leading-tight text-slate-900">{option.title}</p>
@@ -308,7 +312,7 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
               </div>
             </div>
           ))}
-        </div>
+        </Link>
       </article>
     );
   }
@@ -336,9 +340,9 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
                 );
               })}
             </div>
-            <div className="mt-4 rounded-xl bg-slate-200 px-8 py-5 text-center">
-              <p className="text-2xl font-extrabold text-slate-600">Executive Office พร้อมจัดเตรียมร่างคำสั่งให้ท่าน</p>
-            </div>
+            <Link href="/resource-intelligence/executive/storyboard/8" className="mt-4 rounded-xl bg-blue-600 px-8 py-5 text-center hover:bg-blue-800">
+              <p className="text-2xl font-extrabold text-white">Executive Office พร้อมจัดเตรียมร่างคำสั่งให้ท่าน</p>
+            </Link>
           </div>
         </div>
       </article>
@@ -467,34 +471,4 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
       </article>
     );
   }
-
-  return (
-    <article className={cardShell}>
-      <div className="flex flex-1 gap-6 overflow-hidden px-12 py-10">
-        <div className={cn("flex h-16 w-16 shrink-0 items-center justify-center rounded-xl", metricToneClasses[step.tone])}>
-          <Icon className="h-9 w-9" />
-        </div>
-        <div className="min-w-0 flex-1">
-          <div className="space-y-2">
-            {step.lines.map((line) => (
-              <p key={line} className="text-xl leading-8 text-slate-600">
-                {line}
-              </p>
-            ))}
-          </div>
-
-          {step.metrics && (
-            <div className="mt-6 grid grid-cols-3 gap-4">
-              {step.metrics.map((metric) => (
-                <div key={`${step.id}-${metric.label}`} className={cn("rounded-xl px-4 py-3", metricToneClasses[metric.tone ?? "slate"])}>
-                  <p className="text-base font-medium opacity-80">{metric.label}</p>
-                  <p className="text-2xl font-bold leading-8">{metric.value}</p>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-      </div>
-    </article>
-  );
-}
+};

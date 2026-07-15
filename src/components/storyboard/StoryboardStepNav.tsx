@@ -7,15 +7,21 @@ import { useEffect } from "react";
 import { cn } from "@/utils/cn";
 
 const FIRST_STEP = 1;
-const LAST_STEP = 11;
-const BASE_PATH = "/resource-intelligence/executive/storyboard";
 const AUTO_ADVANCE_MS = 4_000;
 const STORY_AUTO_ADVANCE_MS = 10_000;
 const STORY_AUTO_ADVANCE_STEPS = [3, 4];
 
+const APPS = [
+  { basePath: "/resource-intelligence/executive/storyboard", lastStep: 11 },
+  { basePath: "/resource-intelligence/manager/storyboard", lastStep: 12 },
+];
+
 export function StoryboardStepNav() {
   const pathname = usePathname();
   const router = useRouter();
+  const app = APPS.find((candidate) => pathname.startsWith(candidate.basePath)) ?? APPS[0];
+  const BASE_PATH = app.basePath;
+  const LAST_STEP = app.lastStep;
   const currentStep = Number(pathname.slice(BASE_PATH.length + 1));
   const isValidStep = Number.isInteger(currentStep) && currentStep >= FIRST_STEP && currentStep <= LAST_STEP;
 

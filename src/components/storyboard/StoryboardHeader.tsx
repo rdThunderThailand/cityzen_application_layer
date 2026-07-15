@@ -1,9 +1,25 @@
+"use client";
+
 import Image from "next/image";
-import logoFull from "../../../../../../public/logo-full.png";
-import { profile, trustPillars } from "../mock";
+import { usePathname } from "next/navigation";
+import logoFull from "../../../public/logo-full.png";
+import { profile as executiveProfile, trustPillars as executiveTrustPillars } from "../../features/resource-intelligence/executive/storyboard/mock";
+import { profile as managerProfile, trustPillars as managerTrustPillars } from "@/features/resource-intelligence/manager/storyboard/mock";
 import { LiveDateTime } from "./LiveDateTime";
 
+const MANAGER_PREFIX = "/resource-intelligence/manager/storyboard";
+
 export function StoryboardHeader() {
+  const pathname = usePathname();
+  const isManager = pathname.startsWith(MANAGER_PREFIX);
+
+  const profile = isManager ? managerProfile : executiveProfile;
+  const trustPillars = isManager ? managerTrustPillars : executiveTrustPillars;
+  const title = isManager ? "CityZen Manager Office Storyboard" : "CityZen Executive Office Storyboard";
+  const subtitle = isManager
+    ? "ผู้จัดการโรงแรม เพื่อการจัดการอย่างเป็นระบบ"
+    : "สำนักงานผู้บริหารจังหวัด เพื่อการตัดสินใจที่มีหลักฐาน โปร่งใส และตรวจสอบได้";
+
   return (
     <header className="flex items-center justify-between gap-5">
       <div className="flex min-w-0 items-center gap-6">
@@ -15,8 +31,8 @@ export function StoryboardHeader() {
           priority
         />
         <div className="min-w-0">
-          <h1 className="truncate text-2xl font-bold tracking-normal text-slate-900">CityZen Executive Office Storyboard</h1>
-          <p className="truncate text-sm text-slate-500">สำนักงานผู้บริหารจังหวัด เพื่อการตัดสินใจที่มีหลักฐาน โปร่งใส และตรวจสอบได้</p>
+          <h1 className="truncate text-2xl font-bold tracking-normal text-slate-900">{title}</h1>
+          <p className="truncate text-sm text-slate-500">{subtitle}</p>
         </div>
       </div>
 
