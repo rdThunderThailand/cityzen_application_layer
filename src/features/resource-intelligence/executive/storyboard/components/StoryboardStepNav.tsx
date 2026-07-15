@@ -10,7 +10,7 @@ const FIRST_STEP = 1;
 const LAST_STEP = 11;
 const BASE_PATH = "/resource-intelligence/executive/storyboard";
 const AUTO_ADVANCE_MS = 4_000;
-const STORY_AUTO_ADVANCE_MS = 12_000;
+const STORY_AUTO_ADVANCE_MS = 10_000;
 const STORY_AUTO_ADVANCE_STEPS = [3, 4];
 
 export function StoryboardStepNav() {

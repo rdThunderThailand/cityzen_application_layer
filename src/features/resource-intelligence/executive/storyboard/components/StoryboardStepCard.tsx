@@ -4,6 +4,7 @@ import { Check, CheckCircle2, Edit3, Landmark, MessageSquare, MonitorUp, PanelTo
 import { cn } from "@/utils/cn";
 import logo from "../../../../../../public/logo.png";
 import type { StoryboardStep, StoryboardStepTone } from "../mock";
+import { StoryboardTrendChart } from "./StoryboardTrendChart";
 
 const metricToneClasses: Record<StoryboardStepTone, string> = {
   blue: "bg-blue-50 text-blue-700",
@@ -142,7 +143,7 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
 
     return (
       <article className={cardShell}>
-        <div className="grid flex-1 grid-cols-[1.15fr_0.85fr] items-center gap-26 overflow-hidden px-90 py-40">
+        <div className="grid flex-1 grid-cols-[1.15fr_0.85fr] items-center gap-26 overflow-hidden px-90 py-20">
           <div className="min-w-0">
             <h4 className="text-4xl font-extrabold leading-tight text-slate-900">รวบรวมจาก</h4>
             <h4 className="flex text-4xl font-medium leading-tight text-slate-900 whitespace-nowrap"> <pre className="text-blue-700 font-bold" style={{ height: '10%' }}>14 </pre> หน่วยงาน  <pre className="text-blue-700 font-bold" style={{ height: '10%' }}> 112 </pre>  แหล่งข้อมูล</h4>
@@ -156,7 +157,7 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
             </div>
           </div>
 
-          <div className="flex min-w-0 flex-col items-center justify-start bg-slate-50 p-14 rounded-xl border border-slate-200 shadow-md hover:-translate-y-5 hover:shadow-xl transition-transform duration-150">
+          <div className="flex min-w-0 flex-col items-center justify-center bg-slate-50 p-14 rounded-xl border border-slate-200 shadow-md hover:-translate-y-5 hover:shadow-xl transition-transform duration-150">
             <div className="grid h-56 w-56 place-items-center rounded-full bg-[conic-gradient(#22b15f_0_96%,#dbeafe_96%_100%)]">
               <div className="grid h-40 w-40 place-items-center rounded-full bg-blue-50">
                 <span className="text-6xl font-extrabold text-blue-800">96%</span>
@@ -193,13 +194,13 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
     const trendLabels = ["2 พ.ค.", "3 พ.ค.", "4 พ.ค.", "5 พ.ค.", "6 พ.ค.", "7 พ.ค.", "8 พ.ค."];
     const trendGridLines = [60, 130, 200];
     const trendPoints = [
-      { x: 20, y: 170 },
-      { x: 130, y: 150 },
-      { x: 240, y: 155 },
-      { x: 350, y: 120 },
-      { x: 460, y: 140 },
-      { x: 570, y: 100 },
-      { x: 680, y: 70 },
+      { x: 20, y: 170, waste: 236 },
+      { x: 130, y: 150, waste: 248 },
+      { x: 240, y: 155, waste: 244 },
+      { x: 350, y: 120, waste: 262 },
+      { x: 460, y: 140, waste: 253 },
+      { x: 570, y: 100, waste: 272 },
+      { x: 680, y: 70, waste: 286.5 },
     ];
     const trendLinePath =
       "M20 170 C56.7 170 93.3 150 130 150 C166.7 150 203.3 155 240 155 C276.7 155 313.3 120 350 120 C386.7 120 423.3 140 460 140 C496.7 140 533.3 100 570 100 C606.7 100 643.3 70 680 70";
@@ -212,18 +213,18 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
 
     return (
       <article className={cardShell}>
-        <div className="flex flex-1 flex-col gap-6 overflow-hidden px-32 py-14">
-          <div className="grid grid-cols-[1fr_260px] gap-8">
+        <div className="flex flex-1 gap-20 overflow-hidden px-32 py-14">
+          <div className="flex flex-col gap-4">
             <div className="min-w-0">
-              <h4 className="text-xl font-extrabold leading-tight text-slate-950">แผนที่ความเสี่ยง (Risk Heatmap)</h4>
-              <div className="relative mt-3 h-36 overflow-hidden rounded-xl border border-sky-300 bg-sky-100">
-                <Image src="/mockmap-heatmap.png" alt="แผนที่ความเสี่ยงจังหวัด" fill className="object-cover" />
+              <h4 className="text-2xl font-extrabold leading-tight text-slate-950">แผนที่ความเสี่ยง (Risk Heatmap)</h4>
+              <div className="relative mt-3 w-[35vw] h-[65vh] overflow-hidden rounded-xl border border-sky-300 bg-sky-100">
+                <Image src="/mockmap.png" alt="แผนที่ความเสี่ยงจังหวัด" fill className="object-cover" />
               </div>
             </div>
 
-            <div className="min-w-0">
-              <h4 className="text-lg font-semibold leading-tight text-slate-700">ระดับความเสี่ยง</h4>
-              <div className="mt-3 space-y-2">
+            <div className="flex-1 flex items-center w-full gap-10">
+              <h4 className="text-lg font-medium leading-tight text-slate-700">ระดับความเสี่ยง</h4>
+              <div className="space-x-6 flex h-full">
                 {riskLevels.map((risk) => (
                   <div key={risk.label} className="flex items-center gap-3">
                     <span className={cn("h-3.5 w-3.5 rounded-full", risk.color)} />
@@ -234,20 +235,16 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
             </div>
           </div>
 
-          <div className="grid flex-1 grid-cols-[1.3fr_1fr] gap-8 overflow-hidden">
-            <div className="flex min-w-0 flex-col overflow-hidden">
-              <h4 className="text-xl font-extrabold leading-tight text-slate-950">แนวโน้ม 7 วันข้างหน้า (คาดการณ์)</h4>
+          <div className="flex flex-col justify-between flex-1 gap-8">
+            <div className="flex min-w-0 flex-col">
+              <h4 className="text-2xl font-extrabold leading-tight text-slate-950 mb-4">แนวโน้ม 7 วันข้างหน้า (คาดการณ์)</h4>
               <div className="relative mt-2 flex-1 rounded-xl border border-slate-100 bg-slate-50/60 px-4 pt-4">
-                <svg viewBox="0 0 700 200" preserveAspectRatio="none" className="h-full w-full" aria-hidden="true">
-                  {trendGridLines.map((y) => (
-                    <line key={y} x1="0" y1={y} x2="700" y2={y} stroke="#e2e8f0" strokeWidth="1.5" />
-                  ))}
-                  <path d={`${trendLinePath} L680 200 L20 200 Z`} fill="#ef4444" fillOpacity="0.1" stroke="none" />
-                  <path d={trendLinePath} fill="none" stroke="#ef4444" strokeWidth="3.5" strokeLinecap="round" strokeLinejoin="round" />
-                  {trendPoints.map((point) => (
-                    <circle key={point.x} cx={point.x} cy={point.y} r="7" fill="#ef4444" stroke="white" strokeWidth="3" />
-                  ))}
-                </svg>
+                <StoryboardTrendChart
+                  trendPoints={trendPoints}
+                  trendLabels={trendLabels}
+                  trendGridLines={trendGridLines}
+                  trendLinePath={trendLinePath}
+                />
                 <span className="absolute right-4 top-4 flex items-center gap-1.5 rounded-md bg-white px-2.5 py-1 text-sm font-extrabold text-slate-800 shadow-sm">
                   <span className="h-2 w-2 rounded-full bg-red-500" />
                   +24% ในสัปดาห์หน้า
@@ -260,17 +257,19 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
               </div>
             </div>
 
-            <div className="flex min-w-0 flex-col justify-center gap-3 overflow-hidden rounded-xl bg-slate-50 px-6 py-5">
-              <h4 className="text-lg font-extrabold leading-tight text-slate-900">ฐานอ้างอิงทางกฎหมาย</h4>
-              {laws.map((law) => (
-                <div key={law.title} className="flex min-w-0 items-start gap-3">
-                  <Scale className="mt-0.5 h-5 w-5 shrink-0 text-blue-500" />
-                  <div className="min-w-0">
-                    <p className="truncate text-sm font-extrabold leading-5 text-slate-900">{law.title}</p>
-                    <p className="truncate text-xs leading-4 text-slate-500">{law.subtitle}</p>
+            <div className="">
+              <h4 className="text-2xl font-extrabold leading-tight text-slate-900 mb-4">ฐานอ้างอิงทางกฎหมาย</h4>
+              <div className="flex min-w-0 flex-col justify-center gap-3 overflow-hidden rounded-xl bg-slate-50 px-6 py-5">
+                {laws.map((law) => (
+                  <div key={law.title} className="flex min-w-0 px-3 py-2 items-center gap-5 rounded-lg hover:bg-gray-200">
+                    <Scale className="mt-0.5 h-5 w-5 shrink-0 text-blue-500" />
+                    <div className="min-w-0">
+                      <p className="truncate text-md font-medium leading-5 text-slate-900">{law.title}</p>
+                      <p className="truncate text-sm leading-4 text-slate-500">{law.subtitle}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>
@@ -281,17 +280,17 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
   if (step.id === "06") {
     const options = [
       {
-        title: "Option A: เพิ่มจุดทิ้งขยะชั่วคราวพร้อมเพิ่มรอบเก็บขยะ",
+        title: "Option A : เพิ่มจุดทิ้งขยะชั่วคราวพร้อมเพิ่มรอบเก็บขยะ",
         budget: "งบ 2.45 ลบ.",
         timeline: "ดำเนินได้ทันที",
       },
       {
-        title: "Option B: ขอสนับสนุนรถเก็บขนจาก อปท. และ เอกชน",
+        title: "Option B : ขอสนับสนุนรถเก็บขนจาก อปท. และ เอกชน",
         budget: "งบ 1.80 ลบ.",
         timeline: "ภายใน 24 ชม.",
       },
       {
-        title: "Option\nประกาศมาตรการคัดแยกขยะและจำกัดเวลาทิ้งขยะในบางพื้นที่",
+        title: "Option C : ประกาศมาตรการคัดแยกขยะและจำกัดเวลาทิ้งขยะในบางพื้นที่",
         budget: "งบ 0.35 ลบ.",
         timeline: "ภายใน 3 วัน",
       },
@@ -299,9 +298,9 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
 
     return (
       <article className={cardShell}>
-        <div className="flex flex-1 flex-col justify-center gap-6 overflow-hidden p-40">
+        <div className="flex flex-1 flex-col items-center justify-center gap-12 overflow-hidden py-40 px-80">
           {options.map((option) => (
-            <div key={option.title} className="rounded-xl bg-slate-50 px-6 py-5">
+            <div key={option.title} className="rounded-xl w-[60vw] bg-slate-100 px-6 py-5 hover:shadow-xl hover:-translate-y-2 transition-transform duration-150">
               <p className="whitespace-pre-line text-2xl font-extrabold leading-tight text-slate-900">{option.title}</p>
               <div className="mt-3 flex items-center justify-between gap-4">
                 <span className="text-xl font-medium leading-7 text-blue-500">{option.budget}</span>
@@ -325,19 +324,21 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
     return (
       <article className={cardShell}>
         <div className="flex flex-1 flex-col overflow-hidden px-150 py-40">
-          <div className="flex flex-1 flex-col justify-center gap-6 bg-slate-50 px-16 py-8">
-            {actions.map((action) => {
-              const Icon = action.icon;
-              return (
-                <div key={action.label} className="flex items-center gap-5">
-                  <Icon className="h-7 w-7 shrink-0 text-blue-500" />
-                  <span className="text-2xl font-medium text-slate-900">{action.label}</span>
-                </div>
-              );
-            })}
-          </div>
-          <div className="mt-4 rounded-xl bg-slate-200 px-8 py-5 text-center">
-            <p className="text-2xl font-extrabold text-slate-600">Executive Office พร้อมจัดเตรียมร่างคำสั่งให้ท่าน</p>
+          <div className="bg-slate-100 p-10 rounded-xl h-full flex flex-col items-center justify-center">
+            <div className="flex flex-1 flex-col justify-center gap-6 px-16 py-8">
+              {actions.map((action) => {
+                const Icon = action.icon;
+                return (
+                  <div key={action.label} className="flex items-center gap-5">
+                    <Icon className="h-7 w-7 shrink-0 text-blue-500" />
+                    <span className="text-2xl font-medium text-slate-900">{action.label}</span>
+                  </div>
+                );
+              })}
+            </div>
+            <div className="mt-4 rounded-xl bg-slate-200 px-8 py-5 text-center">
+              <p className="text-2xl font-extrabold text-slate-600">Executive Office พร้อมจัดเตรียมร่างคำสั่งให้ท่าน</p>
+            </div>
           </div>
         </div>
       </article>
@@ -347,12 +348,13 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
   if (step.id === "08") {
     return (
       <article className={cardShell}>
-        <div className="flex flex-1 items-center justify-center p-40">
+        <div className="flex flex-col flex-1 gap-10 items-center justify-center px-40 py-20">
+          <Image src="/doc.png" alt="sign" width={500} height={500} />
           <button
             type="button"
-            className="flex h-28 w-full max-w-2xl items-center justify-center gap-4 rounded-xl bg-emerald-600 px-8 text-3xl font-extrabold text-white shadow-sm transition-colors duration-150 hover:bg-emerald-700"
+            className="flex h-12 w-fit px-20 items-center justify-center gap-4 rounded-xl bg-emerald-600 px-8 text-xl font-extrabold text-white shadow-sm transition-colors duration-150 hover:bg-emerald-700"
           >
-            <Pen className="h-10 w-10" />
+            <Pen className="h-6 w-6" />
             ลงนามคำสั่ง
           </button>
         </div>
@@ -412,33 +414,37 @@ export function StoryboardStepCard({ step }: { step: StoryboardStep }) {
 
     return (
       <article className={cardShell}>
-        <div className="flex flex-1 flex-col justify-center overflow-hidden px-80 py-40">
-          <h4 className="text-3xl font-extrabold leading-tight text-slate-800">คาดการณ์ผลลัพธ์ (หากดำเนินงานตามแผน)</h4>
-          <div className="mt-6 grid grid-cols-3 gap-6">
-            {outcomeMetrics.map((metric) => {
-              const isGreen = metric.tone === "green";
-              return (
-                <div key={metric.label} className="rounded-xl border border-slate-100 bg-white px-4 py-5 text-center shadow-sm">
-                  <p className="text-lg text-slate-500">{metric.label}</p>
-                  <div className="mt-2 flex items-baseline justify-center gap-2">
-                    <span className={cn("text-4xl font-extrabold leading-tight", isGreen ? "text-emerald-600" : "text-red-800")}>
-                      {metric.value}
-                    </span>
-                    <span className={cn("text-xl font-extrabold", isGreen ? "text-emerald-600" : "text-red-500")}>{metric.suffix}</span>
+        <div className="flex flex-1 flex-col gap-20 justify-center overflow-hidden px-80 py-40">
+          <div>
+            <h4 className="text-3xl font-extrabold leading-tight text-slate-800">คาดการณ์ผลลัพธ์ (หากดำเนินงานตามแผน)</h4>
+            <div className="mt-6 grid grid-cols-3 gap-6">
+              {outcomeMetrics.map((metric) => {
+                const isGreen = metric.tone === "green";
+                return (
+                  <div key={metric.label} className="rounded-xl border border-slate-100 bg-white px-4 py-5 text-center shadow-sm">
+                    <p className="text-lg text-slate-500">{metric.label}</p>
+                    <div className="mt-2 flex items-baseline justify-center gap-2">
+                      <span className={cn("text-4xl font-extrabold leading-tight", isGreen ? "text-emerald-600" : "text-red-800")}>
+                        {metric.value}
+                      </span>
+                      <span className={cn("text-xl font-extrabold", isGreen ? "text-emerald-600" : "text-red-500")}>{metric.suffix}</span>
+                    </div>
                   </div>
-                </div>
-              );
-            })}
+                );
+              })}
+            </div>
           </div>
 
-          <h4 className="mt-8 text-3xl font-extrabold leading-tight text-slate-800">ผลลัพธ์ที่คาดว่าจะเกิดขึ้น</h4>
-          <div className="mt-4 space-y-4">
-            {results.map((result) => (
-              <div key={result} className="flex items-center gap-3">
-                <Check className="h-6 w-6 shrink-0 stroke-[4] text-emerald-600" />
-                <span className="truncate text-xl text-slate-500">{result}</span>
-              </div>
-            ))}
+          <div>
+            <h4 className="mt-8 text-3xl font-extrabold leading-tight text-slate-800">ผลลัพธ์ที่คาดว่าจะเกิดขึ้น</h4>
+            <div className="mt-4 space-y-4">
+              {results.map((result) => (
+                <div key={result} className="flex items-center gap-3">
+                  <Check className="h-6 w-6 shrink-0 stroke-[4] text-emerald-600" />
+                  <span className="truncate text-xl text-slate-500">{result}</span>
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </article>
