@@ -1,6 +1,6 @@
-import { StoryboardHeader } from "./components/StoryboardHeader";
-import { StoryboardStepCard } from "./components/StoryboardStepCard";
-import { WorkspacePanel } from "./components/WorkspacePanel";
+import { StoryboardHeader } from "../../../../components/storyboard/StoryboardHeader";
+import { StoryboardStepCard } from "./StoryboardStepCard";
+// import { WorkspacePanel } from "./components/WorkspacePanel";
 import { storyboardSteps } from "./mock";
 import { ArrowRight } from "lucide-react";
 import Link from "next/link";
@@ -18,7 +18,7 @@ export default function OwnerStoryboardClient() {
             <StoryboardStepCard step={step} />
           </div>
         ))}
-        <WorkspacePanel />
+        {/* <WorkspacePanel /> */}
       </section>
       <Link href="/resource-intelligence/executive/daily-brief" className="absolute bottom-4 right-1 transform -translate-x-1/2 flex items-center gap-2 text-xl font-bold text-blue-800">
         เข้าสู่ Executive Workspace
