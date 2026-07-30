@@ -2,7 +2,7 @@ import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 import { signAppSession, setAppSessionCookie } from "@/lib/app-session";
 import { getMe, getMyMemberships } from "@/lib/thunder";
-import { resolveCityzenRole, isThunderSuperAdmin } from "@/lib/roles";
+import { resolveCityzenRole, resolveOperatorPersona, isThunderSuperAdmin } from "@/lib/roles";
 import { upsertDirectorySnapshot } from "@/lib/directory-cache";
 
 export async function GET(request: NextRequest) {
@@ -45,6 +45,7 @@ export async function GET(request: NextRequest) {
   }
   // RBAC from membership roles, NOT payload.role (that is Thunder's platform role).
   const role = resolveCityzenRole(memberships, tenantId as string);
+  const operatorPersona = resolveOperatorPersona(memberships, tenantId as string);
   const isSuperAdmin = isThunderSuperAdmin(memberships, tenantId as string);
   if (!role && !isSuperAdmin) {
     return NextResponse.redirect(new URL("/no-access", request.url));
@@ -62,6 +63,7 @@ export async function GET(request: NextRequest) {
     tenant_id: tenantId as string,
     role: role ?? "manager", // super_admin has no tenant role; isSuperAdmin bypasses the prefix guard anyway
     isSuperAdmin,
+    operatorPersona,
     app_name: payload.app_name as string | undefined,
   });
 

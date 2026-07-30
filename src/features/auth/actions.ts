@@ -4,7 +4,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
 import { loginWithPassword, registerWithPassword, getMe, getMyMemberships } from "@/lib/thunder";
-import { resolveCityzenRole, isThunderSuperAdmin } from "@/lib/roles";
+import { resolveCityzenRole, resolveOperatorPersona, isThunderSuperAdmin } from "@/lib/roles";
 import { signAppSession, setAppSessionCookie, APP_SESSION_COOKIE } from "@/lib/app-session";
 import { upsertDirectorySnapshot } from "@/lib/directory-cache";
 
@@ -95,6 +95,7 @@ export async function loginAction(
   const primary = memberships?.find((m) => m.is_primary) ?? memberships?.[0];
   const tenantId = primary?.tenant_id;
   const role = tenantId ? resolveCityzenRole(memberships, tenantId) : null;
+  const operatorPersona = tenantId ? resolveOperatorPersona(memberships, tenantId) : null;
   const isSuperAdmin = tenantId ? isThunderSuperAdmin(memberships, tenantId) : false;
 
   if (!tenantId || (!role && !isSuperAdmin)) {
@@ -113,6 +114,7 @@ export async function loginAction(
     tenant_id: tenantId,
     role: role ?? "manager", // super_admin has no tenant role; isSuperAdmin bypasses the prefix guard anyway
     isSuperAdmin,
+    operatorPersona,
   });
 
   const cookieStore = await cookies();

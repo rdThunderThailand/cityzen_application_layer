@@ -8,6 +8,9 @@ export type AppSessionClaims = {
   sub: string; email: string; tenant_id: string; role: CityzenRole; app_name?: string;
   // Thunder platform super_admin — bypasses the /resource-intelligence/<role> prefix guard (see proxy.ts).
   isSuperAdmin?: boolean;
+  // Raw operator persona code (e.g. "operator_procurement") — home-page routing only,
+  // never used for RBAC (role above already collapses these to "operator").
+  operatorPersona?: string | null;
   // Note: profile/memberships snapshot removed from the cookie (Phase 2) — never read by any
   // consumer; display data now lives in the Directory Cache (user_directory_cache).
 };
