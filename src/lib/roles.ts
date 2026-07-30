@@ -11,7 +11,9 @@ const PRIORITY: readonly CityzenRole[] = CITYZEN_ROLES;
 export const ROLE_HOME: Record<CityzenRole, string> = {
   manager: "/resource-intelligence/manager/daily-brief",
   executive_viewer: "/resource-intelligence/executive/daily-brief",
-  operator: "/resource-intelligence/operator/tasks",
+  // General operator info page — persona-specific pages (technician, supply-officer, …)
+  // are reached by branching out from here, not by a direct login redirect.
+  operator: "/asset-intelligence/operator/main",
 };
 
 // Maps Thunder role codes → CityZen roles.
@@ -62,8 +64,8 @@ export function resolveCityzenRole(
 // Operator personas with their own landing page — home-page routing only, NOT a separate
 // CityZen role: RBAC/proxy guard still treat all of these as the coarse "operator" role.
 export const OPERATOR_HOME: Record<string, string> = {
-  operator_procurement: "/resource-intelligence/operator/procurement",
-  operator_technician: "/resource-intelligence/operator/technician",
+  operator_procurement: "/asset-intelligence/operator/supply-officer",
+  operator_technician: "/asset-intelligence/operator/technician",
 };
 
 // Most specific operator persona from raw Thunder codes, for home-page routing only.
@@ -77,15 +79,6 @@ export function resolveOperatorPersona(
   tenantId: string
 ): string | null {
   return resolveOperatorPersonaFromCodes(membershipCodes(memberships, tenantId));
-}
-
-// Home page for a session: operator personas with their own landing page take priority
-// over the generic ROLE_HOME.operator.
-export function roleHome(role: CityzenRole, operatorPersona?: string | null): string {
-  if (role === "operator" && operatorPersona && operatorPersona in OPERATOR_HOME) {
-    return OPERATOR_HOME[operatorPersona];
-  }
-  return ROLE_HOME[role];
 }
 
 // Thunder platform super_admin — bypasses CityZen RBAC entirely (god mode),
