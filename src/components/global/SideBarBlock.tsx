@@ -24,7 +24,7 @@ import { logoutAction } from '@/features/auth/actions';
 
 export interface NavItem {
     label: string;
-    labelTh: string;
+    labelTh?: string;
     href: string;
     icon: ComponentType<{ className?: string }>;
     badge?: number; // Supports counters like notifications
@@ -57,7 +57,7 @@ export const SideBarBlock = ({
     brandLogo = <Image src={logo} alt="brand-logo" className="w-full h-full object-contain" />,
     brandFullLogo = <Image src={logoFull} alt="brand-logo" className="w-full h-full object-contain" />,
     navigationItems = executiveNavigationItems,
-    user ,
+    user,
     onLogout = () => logoutAction(),
     customStyles = {}
 }: SidebarProps) => {
@@ -108,17 +108,17 @@ export const SideBarBlock = ({
                     <div className="flex items-center justify-between mt-2">
                         <Link href="/" className={cn(
                             "flex items-center gap-2 transition-all duration-300 min-h-[40px] justify-center",
-                            isCollapsed ?  "" :  "ml-2"
+                            isCollapsed ? "" : "ml-2"
                         )}>
 
-                            {isCollapsed ? 
-                            <div className={`shrink-0 flex items-center justify-center h-10`}>
-                                {brandLogo}
-                            </div>
-                            : 
-                            <div className={`shrink-0 flex items-center justify-center h-10`}>
-                                {brandFullLogo}
-                            </div>
+                            {isCollapsed ?
+                                <div className={`shrink-0 flex items-center justify-center h-10`}>
+                                    {brandLogo}
+                                </div>
+                                :
+                                <div className={`shrink-0 flex items-center justify-center h-10`}>
+                                    {brandFullLogo}
+                                </div>
                             }
                         </Link>
 
@@ -175,7 +175,7 @@ export const SideBarBlock = ({
                                         <>
                                             <div className="flex flex-col min-w-0 leading-tight">
                                                 <span className="text-sm truncate select-none">{item.label}</span>
-                                                <span className="text-[10px] text-current opacity-60 truncate select-none">({item.labelTh})</span>
+                                                {item.labelTh && <span className="text-[10px] text-current opacity-60 truncate select-none">({item.labelTh})</span>}
                                             </div>
                                             {item.badge !== undefined && item.badge > 0 && (
                                                 <span className={cn(
