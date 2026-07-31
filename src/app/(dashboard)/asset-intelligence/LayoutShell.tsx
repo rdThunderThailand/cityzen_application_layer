@@ -37,6 +37,11 @@ export default function LayoutShell({ children, user }: { children: React.ReactN
     const pathname = usePathname();
     const router = useRouter();
     const navigationItems = getNavigationItems(pathname);
+    // const role = "operator_supply_officer"
+    const role = "operator_technician"
+    const SUB_ROLE = role === "operator_supply_officer" ? role.split('_')[1] + '-' + role.split('_')[2] : role.split('_')[1];
+    // console.log(SUB_ROLE);
+
 
     return (
         <div className="flex h-screen w-screen overflow-hidden">
@@ -47,7 +52,7 @@ export default function LayoutShell({ children, user }: { children: React.ReactN
                     footerTopSlot={(isCollapsed) =>
                         pathname.startsWith('/asset-intelligence/operator') && (
                             <button
-                                onClick={() => router.push('/asset-intelligence/operator/main')}
+                                onClick={() => router.push(`/asset-intelligence/operator/main/${SUB_ROLE}`)}
                                 className={cn(
                                     "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm w-full text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 shrink-0 cursor-pointer",
                                     isCollapsed ? "w-14 h-14 justify-center" : ""
