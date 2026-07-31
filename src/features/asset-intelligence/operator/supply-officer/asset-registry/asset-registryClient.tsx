@@ -1,8 +1,9 @@
 "use client"
 
 import { useMemo, useState } from "react"
-import { Box, CheckCircle2, FileText, PackageX, Wrench, type LucideIcon } from "lucide-react"
+import { Box, CheckCircle2, Download, FileText, PackageX, Plus, Upload, Wrench, type LucideIcon } from "lucide-react"
 
+import { Button } from "@/components/basic/Button"
 import { CardMetric } from "@/components/dashboard/CardMetric"
 
 import { AssetTable, type AssetSortColumn, type AssetSortDirection } from "./component/AssetTable"
@@ -72,8 +73,24 @@ export default function AssetRegistryClient() {
   }, [filters, sortColumn, sortDirection])
 
   return (
-    <div className="flex h-full flex-col gap-3 overflow-hidden bg-gray-50 p-4">
-      <p className="shrink-0 text-sm text-gray-500">แสดงข้อมูลครุภัณฑ์ทั้งหมดในระบบ</p>
+    <div className="flex h-full flex-col gap-3 overflow-hidden bg-white p-4">
+      <div className="flex shrink-0 items-center justify-between gap-2">
+        <p className="text-sm text-gray-500">แสดงข้อมูลครุภัณฑ์ทั้งหมดในระบบ</p>
+        <div className="flex items-center gap-2">
+          <Button className="w-auto rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+            <Upload className="h-4 w-4" />
+            นำเข้าข้อมูล
+          </Button>
+          <Button className="w-auto rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
+            <Download className="h-4 w-4" />
+            ส่งออกข้อมูล
+          </Button>
+          <Button className="w-auto rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700">
+            <Plus className="h-4 w-4" />
+            เพิ่มครุภัณฑ์
+          </Button>
+        </div>
+      </div>
 
       <div className="grid shrink-0 grid-cols-2 gap-10 sm:grid-cols-3 lg:grid-cols-5">
         {statsMock.map((stat) => (

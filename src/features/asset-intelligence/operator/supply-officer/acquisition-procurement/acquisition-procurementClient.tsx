@@ -85,7 +85,7 @@ export default function AcquisitionProcurementClient() {
   }
 
   return (
-    <div className="flex h-full flex-col gap-3 overflow-hidden bg-gray-50 p-4">
+    <div className="flex h-full flex-col gap-3 overflow-hidden bg-white p-4">
       <p className="shrink-0 text-sm text-gray-500">บันทึกข้อมูลการรับเข้าครุภัณฑ์จากใบสั่งซื้อ</p>
 
       <div className="shrink-0">

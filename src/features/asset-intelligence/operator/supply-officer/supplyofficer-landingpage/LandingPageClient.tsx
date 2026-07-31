@@ -65,7 +65,7 @@ const pendingTaskItems: CardDataItemProps[] = pendingTasksData.map((task) => ({
 
 export default function LandingPageClient() {
   return (
-    <div className="flex h-full flex-col gap-3 overflow-hidden bg-gray-50 p-4">
+    <div className="flex h-full flex-col gap-3 overflow-hidden bg-white p-4">
       <h1 className="shrink-0 text-lg font-bold text-gray-900">ภาพรวมงานพัสดุ</h1>
 
       <div className="flex shrink-0 grid-cols-2 gap-10 sm:grid-cols-3 lg:grid-cols-5 justify-around">

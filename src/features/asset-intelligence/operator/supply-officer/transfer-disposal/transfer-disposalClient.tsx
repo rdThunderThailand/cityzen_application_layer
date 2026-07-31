@@ -127,7 +127,7 @@ export default function TransferDisposalClient() {
   const continueLabel = currentStep === "confirm" ? `บันทึกข้อมูล${info.transactionType}` : CONTINUE_LABEL[currentStep]
 
   return (
-    <div className="flex h-full flex-col gap-3 overflow-hidden bg-gray-50 p-4">
+    <div className="flex h-full flex-col gap-3 overflow-hidden bg-white p-4">
       <div className="shrink-0">
         <p className="text-xs text-gray-400">โอนย้าย / จำหน่าย &gt; สร้างรายการ</p>
         <p className="mt-1 text-sm text-gray-500">บันทึกรายการโอนย้ายหรือจำหน่ายครุภัณฑ์</p>
