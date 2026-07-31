@@ -11,8 +11,11 @@ const PRIORITY: readonly CityzenRole[] = CITYZEN_ROLES;
 export const ROLE_HOME: Record<CityzenRole, string> = {
   manager: "/resource-intelligence/manager/daily-brief",
   executive_viewer: "/resource-intelligence/executive/daily-brief",
+<<<<<<< HEAD
   // General operator info page — persona-specific pages (technician, supply-officer, …)
   // are reached by branching out from here, not by a direct login redirect.
+=======
+>>>>>>> technician
   operator: "/asset-intelligence/operator/main",
 };
 

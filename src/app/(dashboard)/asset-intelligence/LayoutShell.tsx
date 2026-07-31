@@ -1,5 +1,7 @@
 "use client";
 
+import { Boxes } from "lucide-react";
+import { cn } from "@/utils/cn";
 import { Footer } from "@/components/global/Footer";
 import { Header } from "@/components/global/Header";
 import SideBarBlock from "@/components/global/SideBarBlock";
@@ -15,6 +17,7 @@ import {
     operatorGarbageCollectorNavigationItems,
     operatorNavigationItems,
 } from "./navitem";
+import { useRouter } from "next/navigation";
 
 const navigationItemsByPathPrefix: { prefix: string; items: NavItem[] }[] = [
     { prefix: "/asset-intelligence/company-admin", items: companyAdminNavigationItems },
@@ -32,12 +35,32 @@ function getNavigationItems(pathname: string): NavItem[] {
 
 export default function LayoutShell({ children, user }: { children: React.ReactNode; user?: UserProfile }) {
     const pathname = usePathname();
+    const router = useRouter();
     const navigationItems = getNavigationItems(pathname);
 
     return (
         <div className="flex h-screen w-screen overflow-hidden">
             <div className="shrink-0">
-                <SideBarBlock navigationItems={navigationItems} user={user} />
+                <SideBarBlock
+                    navigationItems={navigationItems}
+                    user={user}
+                    footerTopSlot={(isCollapsed) =>
+                        pathname.startsWith('/asset-intelligence/operator') && (
+                            <button
+                                onClick={() => router.push('/asset-intelligence/operator/main')}
+                                className={cn(
+                                    "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm w-full text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 shrink-0 cursor-pointer",
+                                    isCollapsed ? "w-14 h-14 justify-center" : ""
+                                )}
+                                title="สลับบทบาท"
+                                aria-label="Switch Role"
+                            >
+                                <Boxes className="w-5 h-5" />
+                                {!isCollapsed && <p>Asset Intelligence</p>}
+                            </button>
+                        )
+                    }
+                />
             </div>
             <div className="flex-1 min-w-0 flex flex-col h-full overflow-hidden">
                 <Header navigationText={navigationItems.find((item) => item.href === pathname)?.label} user={user} />

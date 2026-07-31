@@ -1,7 +1,5 @@
+import ScheduleClient from "@/features/asset-intelligence/operator/schedule/ScheduleClient";
+
 export default function Schedule() {
-    return (
-        <div>
-            <h1>Schedule</h1>
-        </div>
-    );
+    return <ScheduleClient />;
 }

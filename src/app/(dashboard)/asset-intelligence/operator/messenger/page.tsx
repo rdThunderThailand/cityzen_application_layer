@@ -1,7 +1,5 @@
+import MessengerClient from "@/features/asset-intelligence/operator/messenger/MessengerClient";
+
 export default function Messenger() {
-    return (
-        <div>
-            <h1>Messenger</h1>
-        </div>
-    );
+    return <MessengerClient />;
 }

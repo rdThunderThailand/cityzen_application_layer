@@ -20,6 +20,8 @@ export interface CardDataItemProps {
     title: string;
     subtitle?: string;
     icon?: ComponentType<{ className?: string }>;
+    /** Tailwind bg/text classes for the icon circle, e.g. "bg-amber-50 text-amber-500" (icon & time variants). Defaults to slate. */
+    iconClassName?: string;
     status?: CardDataStatusKey;
     description?: string;
     locations?: string[];
@@ -62,7 +64,7 @@ const IconItem = ({ item }: { item: CardDataItemProps }) => {
     return (
         <div className="flex items-center justify-between gap-3 py-1">
             <div className="flex items-center gap-3 min-w-0">
-                <div className="flex items-center justify-center w-9 h-9 bg-slate-50 text-slate-600 rounded-lg shrink-0">
+                <div className={cn("flex items-center justify-center w-9 h-9 rounded-lg shrink-0", item.iconClassName ?? "bg-slate-50 text-slate-600")}>
                     <IconComponent className="w-5 h-5" />
                 </div>
                 <div className="flex flex-col min-w-0">
