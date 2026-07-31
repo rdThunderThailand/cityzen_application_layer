@@ -164,7 +164,7 @@ export function InspectionSummaryPartsView({ detail, onTabChange, onBack, onNext
                   </tr>
                 </thead>
                 <tbody>
-                  {parts.map((item, idx) => (
+                  {parts.map((item) => (
                     <tr key={item.id} className="border-b border-slate-100 hover:bg-slate-50/50 transition-colors group">
                       <td className="py-4 px-5 text-[12px] font-bold text-slate-500">{item.id}</td>
                       <td className="py-4 px-5 text-[12px] font-bold text-slate-700">{item.code}</td>
@@ -350,6 +350,7 @@ function SummaryPartsSidebar({ detail }: { detail: TechnicianInspectionDetail })
 
         <div className="flex items-center gap-3 mb-5">
           <div className="w-12 h-12 rounded-full bg-slate-200 overflow-hidden border border-slate-200 shrink-0 shadow-sm">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent("สมชาย ช่างเทคนิค")}&background=random&color=fff`} alt="สมชาย ช่างเทคนิค" className="w-full h-full object-cover" />
           </div>
           <div className="flex flex-col">

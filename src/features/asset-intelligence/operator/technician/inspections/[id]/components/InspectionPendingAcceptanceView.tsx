@@ -259,21 +259,26 @@ export function InspectionPendingAcceptanceView({ detail, onBack, onReturnToHome
                   <div className="flex flex-col flex-1">
                     <div className="grid grid-cols-2 gap-2 mb-2">
                       <div className="w-full h-[100px] bg-slate-100 rounded-xl relative overflow-hidden group border border-slate-200">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=500&q=80" alt="Before 1" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                       </div>
                       <div className="w-full h-[100px] bg-slate-100 rounded-xl relative overflow-hidden group border border-slate-200">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=500&q=80" alt="Before 2" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                       </div>
                     </div>
 
                     <div className="grid grid-cols-3 gap-2 flex-1">
                       <div className="w-full h-[100px] bg-slate-100 rounded-xl relative overflow-hidden group border border-slate-200">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&q=80" alt="Detail 1" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                       </div>
                       <div className="w-full h-[100px] bg-slate-100 rounded-xl relative overflow-hidden group border border-slate-200">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&q=80" alt="Detail 2" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                       </div>
                       <div className="w-full h-[100px] bg-slate-100 rounded-xl relative overflow-hidden group border border-slate-200">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=500&q=80" alt="Detail 3" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                       </div>
                     </div>
@@ -320,6 +325,7 @@ export function InspectionPendingAcceptanceView({ detail, onBack, onReturnToHome
                     <span className="text-[12px] font-bold text-slate-900">ผู้ตรวจรับ</span>
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full bg-slate-200 overflow-hidden border border-slate-200 shrink-0 shadow-sm">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent("จิราภรณ์ วงศ์สุวรรณ")}&background=random&color=fff`} alt="จิราภรณ์ วงศ์สุวรรณ" className="w-full h-full object-cover" />
                       </div>
                       <div className="flex flex-col">

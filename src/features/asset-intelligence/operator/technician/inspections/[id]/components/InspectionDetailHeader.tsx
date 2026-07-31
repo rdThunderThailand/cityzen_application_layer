@@ -4,7 +4,8 @@ import { TechnicianInspectionDetail } from "@/features/asset-intelligence/operat
 import { ArrowLeft, ChevronRight, FileText } from "lucide-react";
 import Link from "next/link";
 
-export function InspectionDetailHeader({ detail, isNavigating }: { detail: TechnicianInspectionDetail, isNavigating?: boolean }) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+export function InspectionDetailHeader({ detail: _detail, isNavigating }: { detail: TechnicianInspectionDetail, isNavigating?: boolean }) {
   return (
     <div className="flex flex-col gap-5">
       {/* Breadcrumb */}

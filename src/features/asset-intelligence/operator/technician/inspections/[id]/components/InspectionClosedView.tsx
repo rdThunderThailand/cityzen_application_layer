@@ -271,28 +271,35 @@ export function InspectionClosedView({ detail, onBack }: InspectionClosedViewPro
                     <span className="text-[12px] font-black text-[#1e293b] text-center border-b border-slate-200 pb-2">หลังดำเนินการ</span>
 
                     <div className="w-full h-[100px] bg-slate-100 rounded-xl relative overflow-hidden border border-slate-200">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=500&q=80" alt="Before 1" className="w-full h-full object-cover" />
                     </div>
                     <div className="w-full h-[100px] bg-slate-100 rounded-xl relative overflow-hidden border border-slate-200">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=500&q=80" alt="After 1" className="w-full h-full object-cover" />
                     </div>
                   </div>
 
                   <div className="grid grid-cols-3 gap-2 flex-1">
                     <div className="w-full h-[80px] bg-slate-100 rounded-xl relative overflow-hidden border border-slate-200">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&q=80" alt="Detail 1" className="w-full h-full object-cover" />
                     </div>
                     <div className="w-full h-[80px] bg-slate-100 rounded-xl relative overflow-hidden border border-slate-200">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&q=80" alt="Detail 2" className="w-full h-full object-cover" />
                     </div>
                     <div className="w-full h-[80px] bg-slate-100 rounded-xl relative overflow-hidden border border-slate-200">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=500&q=80" alt="Detail 3" className="w-full h-full object-cover" />
                     </div>
 
                     <div className="w-full h-[80px] bg-slate-100 rounded-xl relative overflow-hidden border border-slate-200">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=500&q=80" alt="Detail 4" className="w-full h-full object-cover" />
                     </div>
                     <div className="w-full h-[80px] bg-slate-100 rounded-xl relative overflow-hidden border border-slate-200">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=500&q=80" alt="Detail 5" className="w-full h-full object-cover" />
                     </div>
                   </div>
@@ -325,6 +332,7 @@ export function InspectionClosedView({ detail, onBack }: InspectionClosedViewPro
                       <span className="text-[12px] font-bold text-slate-900">ผู้ตรวจรับ</span>
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-slate-200 overflow-hidden border border-slate-200 shrink-0 shadow-sm">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
                           <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent("จิราภรณ์ วงศ์สุวรรณ")}&background=random&color=fff`} alt="จิราภรณ์ วงศ์สุวรรณ" className="w-full h-full object-cover" />
                         </div>
                         <div className="flex flex-col">
@@ -538,6 +546,7 @@ export function InspectionClosedView({ detail, onBack }: InspectionClosedViewPro
                   ].map((img) => (
                     <div key={img.id} className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
                       <div className="relative h-[110px] w-full bg-slate-100 overflow-hidden border-b border-slate-100">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={img.url} alt={img.title} className={`w-full h-full object-cover ${img.grayscale ? 'grayscale opacity-80' : ''}`} />
                       </div>
                       <div className="p-3 flex flex-col items-center text-center gap-1 bg-white">

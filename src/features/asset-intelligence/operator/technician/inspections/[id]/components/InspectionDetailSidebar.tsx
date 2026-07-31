@@ -97,6 +97,7 @@ export function InspectionDetailSidebar({ detail }: { detail: TechnicianInspecti
 
         <div className="flex items-center gap-4">
           <div className="w-12 h-12 rounded-full bg-slate-200 shrink-0 overflow-hidden shadow-sm">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(detail.reporterName)}&background=random&color=fff`} alt={detail.reporterName} className="w-full h-full object-cover" />
           </div>
           <div>

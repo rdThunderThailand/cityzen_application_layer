@@ -27,6 +27,7 @@ export function TechnicianTasksToday({ tasks }: { tasks: TechnicianTaskItem[] })
               </div>
 
               <div className="w-12 h-12 rounded-lg overflow-hidden border border-slate-200 shrink-0">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img src={task.imgUrl} alt={task.title} className="w-full h-full object-cover" />
               </div>
 

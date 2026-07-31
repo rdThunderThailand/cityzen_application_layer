@@ -28,7 +28,7 @@ interface InspectionSummaryViewProps {
   onNext: () => void;
 }
 
-export function InspectionSummaryView({ detail, initialTab = 'summary', onTabChange, onBack, onNext }: InspectionSummaryViewProps) {
+export function InspectionSummaryView({ detail, initialTab = 'summary', onTabChange, onBack }: InspectionSummaryViewProps) {
   const isSidebarCollapsed = false; // TODO: wire to real layout sidebar state if needed
   const sidebarOffset = isSidebarCollapsed ? "lg:left-20" : "lg:left-64";
 
@@ -213,12 +213,14 @@ export function InspectionSummaryView({ detail, initialTab = 'summary', onTabCha
                 <div className="grid grid-cols-2 gap-4 flex-1">
                   {/* Row 1 */}
                   <div className="bg-slate-200 rounded-xl relative overflow-hidden group border border-slate-200 h-[100px]">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=300&auto=format&fit=crop" alt="Before" className="w-full h-full object-cover grayscale opacity-80" />
                     <button className="absolute top-1.5 right-1.5 w-5 h-5 bg-white/90 rounded-md flex items-center justify-center text-slate-600 hover:text-rose-600 shadow-sm opacity-100">
                       <X className="w-3.5 h-3.5" />
                     </button>
                   </div>
                   <div className="bg-slate-200 rounded-xl relative overflow-hidden group border border-slate-200 h-[100px]">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=300&auto=format&fit=crop" alt="After" className="w-full h-full object-cover" />
                     <button className="absolute top-1.5 right-1.5 w-5 h-5 bg-white/90 rounded-md flex items-center justify-center text-slate-600 hover:text-rose-600 shadow-sm opacity-100">
                       <X className="w-3.5 h-3.5" />
@@ -227,12 +229,14 @@ export function InspectionSummaryView({ detail, initialTab = 'summary', onTabCha
 
                   {/* Row 2 */}
                   <div className="bg-slate-200 rounded-xl relative overflow-hidden group border border-slate-200 h-[100px]">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src="https://images.unsplash.com/photo-1581092921461-7031e4bf0e5e?q=80&w=300&auto=format&fit=crop" alt="Before" className="w-full h-full object-cover grayscale opacity-80" />
                     <button className="absolute top-1.5 right-1.5 w-5 h-5 bg-white/90 rounded-md flex items-center justify-center text-slate-600 hover:text-rose-600 shadow-sm opacity-100">
                       <X className="w-3.5 h-3.5" />
                     </button>
                   </div>
                   <div className="bg-slate-200 rounded-xl relative overflow-hidden group border border-slate-200 h-[100px]">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src="https://images.unsplash.com/photo-1581092921461-7031e4bf0e5e?q=80&w=300&auto=format&fit=crop" alt="After" className="w-full h-full object-cover" />
                     <button className="absolute top-1.5 right-1.5 w-5 h-5 bg-white/90 rounded-md flex items-center justify-center text-slate-600 hover:text-rose-600 shadow-sm opacity-100">
                       <X className="w-3.5 h-3.5" />
@@ -241,6 +245,7 @@ export function InspectionSummaryView({ detail, initialTab = 'summary', onTabCha
 
                   {/* Row 3 */}
                   <div className="bg-slate-200 rounded-xl relative overflow-hidden group border border-slate-200 h-[100px]">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=300&auto=format&fit=crop" alt="Before Thermal" className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-red-500/20 mix-blend-overlay"></div>
                     <button className="absolute top-1.5 right-1.5 w-5 h-5 bg-white/90 rounded-md flex items-center justify-center text-slate-600 hover:text-rose-600 shadow-sm opacity-100">
@@ -248,6 +253,7 @@ export function InspectionSummaryView({ detail, initialTab = 'summary', onTabCha
                     </button>
                   </div>
                   <div className="bg-slate-200 rounded-xl relative overflow-hidden group border border-slate-200 h-[100px]">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=300&auto=format&fit=crop" alt="After Thermal" className="w-full h-full object-cover" />
                     <div className="absolute inset-0 bg-green-500/20 mix-blend-overlay"></div>
                     <button className="absolute top-1.5 right-1.5 w-5 h-5 bg-white/90 rounded-md flex items-center justify-center text-slate-600 hover:text-rose-600 shadow-sm opacity-100">
@@ -324,6 +330,7 @@ export function InspectionSummaryView({ detail, initialTab = 'summary', onTabCha
                   ].map((img) => (
                     <div key={img.id} className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col group">
                       <div className="relative h-[110px] w-full bg-slate-100 overflow-hidden border-b border-slate-100">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={img.url} alt={img.title} className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 ${img.grayscale ? 'grayscale opacity-80' : ''}`} />
                         <div className="absolute top-1.5 left-1.5 w-5 h-5 bg-black/40 backdrop-blur-sm rounded flex items-center justify-center text-[10px] font-black text-white">
                           {img.id}
@@ -604,6 +611,7 @@ function SummarySidebar({ detail }: { detail: TechnicianInspectionDetail }) {
 
         <div className="flex items-center gap-3 mb-5">
           <div className="w-12 h-12 rounded-full bg-slate-200 overflow-hidden border border-slate-200 shrink-0 shadow-sm">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent("สมชาย ช่างเทคนิค")}&background=random&color=fff`} alt="สมชาย ช่างเทคนิค" className="w-full h-full object-cover" />
           </div>
           <div className="flex flex-col">

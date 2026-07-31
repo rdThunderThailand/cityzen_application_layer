@@ -230,18 +230,21 @@ export function InspectionInProgressView({ detail, onBack, onContinue }: Inspect
 
                 <div className="grid grid-cols-2 gap-2 flex-1">
                   <div className="bg-slate-100 rounded-lg relative overflow-hidden group border border-slate-200 h-[80px]">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src="https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=300&auto=format&fit=crop" alt="AC Unit" className="w-full h-full object-cover" />
                     <button className="absolute top-1 right-1 w-4 h-4 bg-white/90 rounded flex items-center justify-center text-slate-600 hover:text-rose-600 shadow-sm">
                       <X className="w-3 h-3" />
                     </button>
                   </div>
                   <div className="bg-slate-100 rounded-lg relative overflow-hidden group border border-slate-200 h-[80px]">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src="https://images.unsplash.com/photo-1581092921461-7031e4bf0e5e?q=80&w=300&auto=format&fit=crop" alt="Specs" className="w-full h-full object-cover grayscale opacity-80" />
                     <button className="absolute top-1 right-1 w-4 h-4 bg-white/90 rounded flex items-center justify-center text-slate-600 hover:text-rose-600 shadow-sm">
                       <X className="w-3 h-3" />
                     </button>
                   </div>
                   <div className="bg-slate-100 rounded-lg relative overflow-hidden group border border-slate-200 h-[80px]">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=300&auto=format&fit=crop" alt="Internal" className="w-full h-full object-cover" />
                     <button className="absolute top-1 right-1 w-4 h-4 bg-white/90 rounded flex items-center justify-center text-slate-600 hover:text-rose-600 shadow-sm">
                       <X className="w-3 h-3" />
@@ -250,6 +253,7 @@ export function InspectionInProgressView({ detail, onBack, onContinue }: Inspect
                   <div className="bg-slate-100 rounded-lg relative overflow-hidden group border border-slate-200 h-[80px]">
                     {/* Mock thermal image */}
                     <div className="w-full h-full bg-gradient-to-r from-blue-600 via-purple-500 to-rose-500 opacity-80 mix-blend-multiply absolute inset-0"></div>
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src="https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=300&auto=format&fit=crop" alt="Thermal" className="w-full h-full object-cover mix-blend-overlay" />
                     <div className="absolute bottom-1 right-1 bg-black/60 px-1 py-0.5 rounded text-[8px] font-bold text-white">32.0°C</div>
                     <button className="absolute top-1 right-1 w-4 h-4 bg-white/90 rounded flex items-center justify-center text-slate-600 hover:text-rose-600 shadow-sm">
@@ -566,6 +570,7 @@ function InProgressSidebar({ detail }: { detail: TechnicianInspectionDetail }) {
 
         <div className="flex items-center gap-3 mb-5">
           <div className="w-12 h-12 rounded-full bg-slate-200 overflow-hidden border border-slate-200 shrink-0 shadow-sm">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(detail.reporterName)}&background=random&color=fff`} alt={detail.reporterName} className="w-full h-full object-cover" />
           </div>
           <div className="flex flex-col">

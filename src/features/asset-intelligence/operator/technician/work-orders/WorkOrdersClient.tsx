@@ -2,10 +2,12 @@
 
 import { TechnicianAllWOItem, TechnicianAllWOStats } from "@/features/asset-intelligence/operator/technician/types";
 import { useMemo, useState } from "react";
-import { WorkOrdersHeader } from "./components/WorkOrdersHeader";
+import { TechnicianPageLayout } from "../components/shared/TechnicianPageLayout";
+import { TechnicianPagination } from "../components/shared/TechnicianPagination";
+import { TechnicianFilterBar } from "../components/shared/TechnicianFilterBar";
 import { WorkOrdersStats } from "./components/WorkOrdersStats";
 import { WorkOrdersTable } from "./components/WorkOrdersTable";
-import { WorkOrdersToolbar } from "./components/WorkOrdersToolbar";
+import { Calendar, LayoutList, LayoutGrid, Download } from "lucide-react";
 
 interface WorkOrdersClientProps {
   stats: TechnicianAllWOStats;
@@ -76,24 +78,89 @@ export function WorkOrdersClient({ stats, initialWorkOrders }: WorkOrdersClientP
   };
 
   return (
-    <div className="min-h-full flex-1 bg-slate-50 w-full p-6 pb-40 space-y-6">
-      <WorkOrdersHeader />
+    <TechnicianPageLayout
+      title="ใบงานทั้งหมด"
+      description="จัดการและติดตามสถานะใบงานทั้งหมดในระบบ"
+    >
       <WorkOrdersStats stats={stats} />
 
-      <div className="bg-white rounded-2xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
-        <WorkOrdersToolbar
+      <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm overflow-hidden flex flex-col mt-6">
+        <TechnicianFilterBar
           searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          typeFilter={typeFilter}
-          onTypeFilterChange={setTypeFilter}
-          statusFilter={statusFilter}
-          onStatusFilterChange={setStatusFilter}
-          priorityFilter={priorityFilter}
-          onPriorityFilterChange={setPriorityFilter}
-          assigneeFilter={assigneeFilter}
-          onAssigneeFilterChange={setAssigneeFilter}
-          viewMode={viewMode}
-          onViewModeChange={setViewMode}
+          onSearchChange={(val) => {
+            setSearchQuery(val);
+            setCurrentPage(1);
+          }}
+          searchPlaceholder="ค้นหาเลขที่ใบงาน, ชื่อครุภัณฑ์, สถานที่, ผู้แจ้ง..."
+          filters={[
+            {
+              label: "ประเภทงาน",
+              value: typeFilter,
+              options: ["ทั้งหมด", "แจ้งซ่อม", "บำรุงรักษา (PM)", "ตรวจสอบ"],
+              onChange: (val) => {
+                setTypeFilter(val);
+                setCurrentPage(1);
+              },
+              minWidth: "120px"
+            },
+            {
+              label: "สถานะ",
+              value: statusFilter,
+              options: ["ทั้งหมด", "รอดำเนินการ", "กำลังดำเนินการ", "รออะไหล่", "รออนุมัติ", "เกินกำหนด", "เสร็จสิ้น", "ยกเลิก"],
+              onChange: (val) => {
+                setStatusFilter(val);
+                setCurrentPage(1);
+              },
+              minWidth: "120px"
+            },
+            {
+              label: "ผู้รับผิดชอบ",
+              value: assigneeFilter,
+              options: ["ทั้งหมด", "นายสมชาย (ฉัน)", "นายสมศักดิ์", "นายสมเกียรติ"],
+              onChange: (val) => {
+                setAssigneeFilter(val);
+                setCurrentPage(1);
+              },
+              minWidth: "120px"
+            }
+          ]}
+          onClearFilters={() => {
+            setSearchQuery("");
+            setTypeFilter("ทั้งหมด");
+            setStatusFilter("ทั้งหมด");
+            setPriorityFilter("ทั้งหมด");
+            setAssigneeFilter("ทั้งหมด");
+            setCurrentPage(1);
+          }}
+          actionButton={
+            <div className="flex items-center gap-3 shrink-0 flex-wrap mt-[18px]">
+              <div className="flex items-center gap-2 border border-slate-200 rounded-lg px-3 py-2 bg-white">
+                <Calendar className="w-4 h-4 text-slate-400" />
+                <span className="text-[12px] font-bold text-slate-700">20/05/2567 - 20/05/2567</span>
+                <Calendar className="w-4 h-4 text-slate-400 ml-2" />
+              </div>
+
+              <div className="flex items-center border border-slate-200 rounded-lg p-1 bg-white">
+                <button
+                  onClick={() => setViewMode("list")}
+                  className={`p-1.5 rounded-md transition-colors ${viewMode === "list" ? "bg-blue-50 text-blue-600" : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"}`}
+                >
+                  <LayoutList className="w-4 h-4" />
+                </button>
+                <button
+                  onClick={() => setViewMode("grid")}
+                  className={`p-1.5 rounded-md transition-colors ${viewMode === "grid" ? "bg-blue-50 text-blue-600" : "text-slate-400 hover:text-slate-600 hover:bg-slate-50"}`}
+                >
+                  <LayoutGrid className="w-4 h-4" />
+                </button>
+              </div>
+
+              <button className="flex items-center gap-2 px-4 py-2 bg-emerald-50 text-emerald-600 rounded-lg hover:bg-emerald-100 transition-colors border border-emerald-200">
+                <Download className="w-4 h-4" />
+                <span className="text-[12px] font-bold">ส่งออก (Excel)</span>
+              </button>
+            </div>
+          }
         />
 
         {viewMode === "list" ? (
@@ -110,56 +177,18 @@ export function WorkOrdersClient({ stats, initialWorkOrders }: WorkOrdersClientP
         )}
 
         {/* Footer & Pagination */}
-        <div className="p-4 border-t border-slate-200 flex flex-col sm:flex-row items-center justify-between gap-4 bg-slate-50">
-          <div className="flex items-center gap-2">
-            <span className="text-[12px] font-bold text-slate-600">แสดง</span>
-            <select
-              value={itemsPerPage}
-              onChange={(e) => {
-                setItemsPerPage(Number(e.target.value));
-                setCurrentPage(1);
-              }}
-              className="border border-slate-200 rounded-lg text-[12px] font-bold text-slate-700 px-2 py-1 outline-none focus:border-blue-500"
-            >
-              <option value={10}>10</option>
-              <option value={20}>20</option>
-              <option value={50}>50</option>
-            </select>
-            <span className="text-[12px] font-bold text-slate-600">รายการ</span>
-          </div>
-
-          <div className="flex items-center gap-1">
-            <button
-              onClick={() => setCurrentPage(p => Math.max(1, p - 1))}
-              disabled={currentPage === 1}
-              className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 disabled:opacity-50 transition-colors"
-            >
-              &lt;
-            </button>
-
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map(page => (
-              <button
-                key={page}
-                onClick={() => setCurrentPage(page)}
-                className={`w-8 h-8 flex items-center justify-center rounded-lg font-bold text-[13px] transition-colors ${currentPage === page
-                    ? "bg-blue-600 text-white"
-                    : "text-slate-600 hover:bg-slate-100"
-                  }`}
-              >
-                {page}
-              </button>
-            ))}
-
-            <button
-              onClick={() => setCurrentPage(p => Math.min(totalPages, p + 1))}
-              disabled={currentPage === totalPages || totalPages === 0}
-              className="w-8 h-8 flex items-center justify-center rounded-lg text-slate-400 hover:bg-slate-100 disabled:opacity-50 transition-colors"
-            >
-              &gt;
-            </button>
-          </div>
-        </div>
+        <TechnicianPagination
+          currentPage={currentPage}
+          totalPages={totalPages}
+          itemsPerPage={itemsPerPage}
+          totalItems={filteredWorkOrders.length}
+          onPageChange={setCurrentPage}
+          onItemsPerPageChange={(num) => {
+            setItemsPerPage(num);
+            setCurrentPage(1);
+          }}
+        />
       </div>
-    </div>
+    </TechnicianPageLayout>
   );
 }

@@ -83,6 +83,7 @@ export function InspectionNavigatingView({ detail, onCancelNavigation, onArrived
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full overflow-hidden bg-slate-200 border border-slate-200 shadow-sm">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(detail.reporterName)}&background=random&color=fff`} alt={detail.reporterName} className="w-full h-full object-cover" />
                 </div>
                 <div className="flex flex-col">
@@ -186,7 +187,8 @@ export function InspectionNavigatingView({ detail, onCancelNavigation, onArrived
 }
 
 // Map Component
-function NavigatingLiveMap({ detail }: { detail: TechnicianInspectionDetail }) {
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+function NavigatingLiveMap({ detail: _detail }: { detail: TechnicianInspectionDetail }) {
   // Same realistic route but focused differently
   const routeCoords = [
     [100.9365, 13.2798], // Start point (near Nong Mon)

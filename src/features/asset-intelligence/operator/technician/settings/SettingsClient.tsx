@@ -2,6 +2,7 @@
 
 import { TechnicianSettingsData } from "@/features/asset-intelligence/operator/technician/types";
 import { getTechnicianSettingsData } from "./mock";
+import { TechnicianPageLayout } from "../components/shared/TechnicianPageLayout";
 import {
   ArrowRight,
   Bell,
@@ -107,17 +108,10 @@ export default function SettingsClient() {
   ];
 
   return (
-    <div className="min-h-full flex-1 bg-[#F8FAFC] w-full p-6 pb-40 flex flex-col gap-6 animate-in fade-in duration-300">
-
-      {/* Header */}
-      <div className="flex flex-col mb-2">
-        <h1 className="text-[28px] font-black text-[#1e293b] tracking-tight leading-none mb-2">
-          ตั้งค่า
-        </h1>
-        <p className="text-[14px] font-medium text-slate-500">
-          จัดการการตั้งค่าระบบและข้อมูลพื้นฐาน
-        </p>
-      </div>
+    <TechnicianPageLayout
+      title="ตั้งค่า"
+      description="จัดการการตั้งค่าระบบและข้อมูลพื้นฐาน"
+    >
 
       {/* Top Section: Main Settings */}
       <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm flex flex-col">
@@ -409,7 +403,6 @@ export default function SettingsClient() {
         </div>
 
       </div>
-
-    </div>
+    </TechnicianPageLayout>
   );
 }
