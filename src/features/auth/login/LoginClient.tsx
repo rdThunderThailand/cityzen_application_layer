@@ -20,7 +20,12 @@ export default function LoginClient() {
 
   return (
     <div className="flex flex-col justify-center items-center min-h-screen gap-3">
-      <LoginCard onSwitchToRegister={() => router.push("/register")} onSubmit={handleSubmit} />
+      <LoginCard
+        onSwitchToRegister={() => router.push("/register")}
+        onSubmit={handleSubmit}
+        onGoogleSignIn={() => { window.location.href = "/auth/oauth?provider=google"; }}
+        onMicrosoftSignIn={() => { window.location.href = "/auth/oauth?provider=azure"; }}
+      />
       {/* LoginCard has no error slot yet — UX team wires this into the card later */}
       {error && <p className="text-sm text-red-600">{error}</p>}
     </div>

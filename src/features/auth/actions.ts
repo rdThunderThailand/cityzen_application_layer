@@ -3,8 +3,8 @@
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { loginWithPassword, getMe, getMyMemberships } from "@/lib/thunder";
-import { resolveCityzenRole, isThunderSuperAdmin } from "@/lib/roles";
+import { loginWithPassword, registerWithPassword, getMe, getMyMemberships } from "@/lib/thunder";
+import { resolveCityzenRole, resolveOperatorPersona, isThunderSuperAdmin } from "@/lib/roles";
 import { signAppSession, setAppSessionCookie, APP_SESSION_COOKIE } from "@/lib/app-session";
 import { upsertDirectorySnapshot } from "@/lib/directory-cache";
 
@@ -12,6 +12,49 @@ const loginSchema = z.object({
   email: z.string().email(),
   password: z.string().min(1),
 });
+
+const registerSchema = z.object({
+  name: z.string().trim().min(1),
+  email: z.string().email(),
+  password: z.string().min(8), // Thunder rejects < 8; validate here so the message stays in Thai
+});
+
+// Sign-up via Thunder (identity gateway). Creates the identity only — a tenant membership is
+// assigned separately by an admin, so the user still lands on /no-access until then. On success
+// we send them to /login rather than auto-minting a session (no membership = nothing to authorize).
+export async function registerAction(input: {
+  name: string;
+  email: string;
+  password: string;
+}): Promise<{ error: string } | undefined> {
+  const parsed = registerSchema.safeParse(input);
+  if (!parsed.success) {
+    return { error: "ข้อมูลไม่ถูกต้อง — รหัสผ่านต้องยาวอย่างน้อย 8 ตัวอักษร" };
+  }
+
+  // "Full name" → first/last on the first space (Thunder wants them split, both optional).
+  const [firstName, ...rest] = parsed.data.name.split(/\s+/);
+  const lastName = rest.join(" ") || undefined;
+
+  let result;
+  try {
+    result = await registerWithPassword({
+      email: parsed.data.email,
+      password: parsed.data.password,
+      first_name: firstName,
+      last_name: lastName,
+    });
+  } catch (e) {
+    // Thunder unreachable / app-key misconfig — log the real cause, never surface it.
+    console.error("[registerAction] thunder call failed:", e);
+    return { error: "สมัครสมาชิกไม่สำเร็จ กรุณาลองใหม่ภายหลัง" };
+  }
+  if (!result) {
+    return { error: "อีเมลนี้ถูกใช้งานแล้ว หรือข้อมูลไม่ถูกต้อง" };
+  }
+
+  redirect("/login?registered=1");
+}
 
 // Direct-login exchange: verify credentials via Thunder (identity gateway), resolve RBAC
 // once, mint cityzen_session. Converges with /auth/launch. Never leaks Thunder/Supabase errors.
@@ -52,6 +95,7 @@ export async function loginAction(
   const primary = memberships?.find((m) => m.is_primary) ?? memberships?.[0];
   const tenantId = primary?.tenant_id;
   const role = tenantId ? resolveCityzenRole(memberships, tenantId) : null;
+  const operatorPersona = tenantId ? resolveOperatorPersona(memberships, tenantId) : null;
   const isSuperAdmin = tenantId ? isThunderSuperAdmin(memberships, tenantId) : false;
 
   if (!tenantId || (!role && !isSuperAdmin)) {
@@ -70,6 +114,7 @@ export async function loginAction(
     tenant_id: tenantId,
     role: role ?? "manager", // super_admin has no tenant role; isSuperAdmin bypasses the prefix guard anyway
     isSuperAdmin,
+    operatorPersona,
   });
 
   const cookieStore = await cookies();

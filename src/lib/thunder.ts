@@ -54,6 +54,42 @@ export type ThunderLoginResult = {
 };
 // Verify credentials via Thunder (identity gateway). Returns null on bad credentials (401);
 // throws on any other failure (Thunder unreachable/misconfigured) — caller decides the message.
+export type ThunderRegisterResult = { user_id: string; email: string; global_user_code: string | null };
+// Create a Thunder identity (email/password). Thunder owns identity; this does NOT grant a
+// tenant membership — an admin assigns that separately, so a fresh account still hits /no-access
+// until then. Returns null on duplicate email / rejected input (400/409); throws on app-key
+// misconfig or Thunder being unreachable — caller decides the message.
+export async function registerWithPassword(input: {
+  email: string;
+  password: string;
+  first_name?: string;
+  last_name?: string;
+}): Promise<ThunderRegisterResult | null> {
+  if (!BASE) throw new Error("THUNDER_CORE_API_URL is not set");
+  const res = await fetch(`${BASE}/api/core/v1/auth/register`, {
+    method: "POST",
+    headers: appHeaders({ "Content-Type": "application/json" }),
+    body: JSON.stringify(input),
+    cache: "no-store",
+    redirect: "manual", // a redirect means we hit the wrong host, not the API
+  });
+  const body = await res.text();
+  if (res.status === 400 || res.status === 409) {
+    return null; // duplicate email / invalid input — surface a generic message to the user
+  }
+  if (res.status === 401) {
+    throw new Error("Thunder rejected the app API key — check THUNDER_APP_API_KEY");
+  }
+  if (!res.ok) {
+    throw new Error(`Thunder /auth/register → ${res.status} (is THUNDER_CORE_API_URL=${BASE} the Thunder Core port?)`);
+  }
+  try {
+    return JSON.parse(body).data as ThunderRegisterResult;
+  } catch {
+    throw new Error(`Thunder /auth/register returned non-JSON — THUNDER_CORE_API_URL=${BASE} is likely wrong`);
+  }
+}
+
 export async function loginWithPassword(email: string, password: string): Promise<ThunderLoginResult | null> {
   if (!BASE) throw new Error("THUNDER_CORE_API_URL is not set");
   const res = await fetch(`${BASE}/api/core/v1/auth/login`, {

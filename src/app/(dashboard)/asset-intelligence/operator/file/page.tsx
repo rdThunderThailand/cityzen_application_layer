@@ -1,7 +1,5 @@
+import FileClient from "@/features/asset-intelligence/operator/file/FileClient";
+
 export default function File() {
-    return (
-        <div>
-            <h1>File</h1>
-        </div>
-    );
+    return <FileClient />;
 }

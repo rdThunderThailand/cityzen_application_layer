@@ -11,7 +11,7 @@ const PRIORITY: readonly CityzenRole[] = CITYZEN_ROLES;
 export const ROLE_HOME: Record<CityzenRole, string> = {
   manager: "/resource-intelligence/manager/daily-brief",
   executive_viewer: "/resource-intelligence/executive/daily-brief",
-  operator: "/resource-intelligence/operator/tasks",
+  operator: "/asset-intelligence/operator/main",
 };
 
 // Maps Thunder role codes → CityZen roles.
@@ -35,6 +35,18 @@ export function resolveCityzenRoleFromCodes(codes: readonly string[]): CityzenRo
   return PRIORITY.find((r) => cityzenRoles.has(r)) ?? null;
 }
 
+// Raw role codes for a tenant's membership — shared by RBAC resolution and persona lookup.
+function membershipCodes(
+  memberships: ThunderMembership[] | undefined,
+  tenantId: string
+): string[] {
+  const membership = memberships?.find((m) => m.tenant_id === tenantId);
+  if (!membership) return [];
+  return membership.membership_roles
+    .map((mr) => mr.roles?.code)
+    .filter((c): c is string => !!c);
+}
+
 // RBAC source of truth = membership_roles[].roles.code for the launched tenant.
 // NEVER the launch token's platform `role` claim (that is Thunder's platform role).
 // Thunder's /me/memberships already filters status to invited|active, so no status check here.
@@ -42,12 +54,29 @@ export function resolveCityzenRole(
   memberships: ThunderMembership[] | undefined,
   tenantId: string
 ): CityzenRole | null {
-  const membership = memberships?.find((m) => m.tenant_id === tenantId);
-  if (!membership) return null;
-  const codes = membership.membership_roles
-    .map((mr) => mr.roles?.code)
-    .filter((c): c is string => !!c);
+  const codes = membershipCodes(memberships, tenantId);
+  if (codes.length === 0) return null;
   return resolveCityzenRoleFromCodes(codes);
+}
+
+// Operator personas with their own landing page — home-page routing only, NOT a separate
+// CityZen role: RBAC/proxy guard still treat all of these as the coarse "operator" role.
+export const OPERATOR_HOME: Record<string, string> = {
+  operator_procurement: "/asset-intelligence/operator/supply-officer",
+  operator_technician: "/asset-intelligence/operator/technician",
+};
+
+// Most specific operator persona from raw Thunder codes, for home-page routing only.
+// Null when none of the codes match a known persona (falls back to ROLE_HOME.operator).
+export function resolveOperatorPersonaFromCodes(codes: readonly string[]): string | null {
+  return codes.find((c) => c in OPERATOR_HOME) ?? null;
+}
+
+export function resolveOperatorPersona(
+  memberships: ThunderMembership[] | undefined,
+  tenantId: string
+): string | null {
+  return resolveOperatorPersonaFromCodes(membershipCodes(memberships, tenantId));
 }
 
 // Thunder platform super_admin — bypasses CityZen RBAC entirely (god mode),

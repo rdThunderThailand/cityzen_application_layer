@@ -1,7 +1,5 @@
+import KnowledgeCenterClient from "@/features/asset-intelligence/operator/knowledge-center/KnowledgeCenterClient";
+
 export default function KnowledgeCenter() {
-    return (
-        <div>
-            <h1>Knowledge Center</h1>
-        </div>
-    );
+    return <KnowledgeCenterClient />;
 }
