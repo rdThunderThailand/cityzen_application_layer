@@ -1,7 +1,5 @@
-export default function SupplyOfficerPage() {
-    return (
-        <div>
-            <h1>Supply Officer</h1>
-        </div>
-    )
+import LandingPageClient from "@/features/asset-intelligence/operator/supply-officer/supplyofficer-landingpage/LandingPageClient"
+
+export default function SupplyOfficerRootPage() {
+  return <LandingPageClient />
 }
