@@ -59,13 +59,13 @@ export const operatorTechnicianNavigationItems: NavItem[] = [
 
 export const operatorSupplyOfficerNavigationItems: NavItem[] = [
     { label: "หน้าหลัก", href: "/asset-intelligence/operator/main/supply-officer", icon: HouseIcon },
-    { label: "ทะเบียนครุภัณฑ์", href: "/asset-intelligence/operator/main/supply-officer/#register", icon: FolderKanban },
-    { label: "รับเข้า / จัดหา", href: "/asset-intelligence/operator/main/supply-officer/#receive", icon: RefreshCcwDot },
-    { label: "โอนย้าย / จำหน่าย", href: "/asset-intelligence/operator/main/supply-officer/#transfer", icon: Repeat },
-    { label: "ตรวจนับครุภัณฑ์", href: "/asset-intelligence/operator/main/supply-officer/#inspection", icon: SquareKanban },
-    { label: "เอกสาร / สัญญา", href: "/asset-intelligence/operator/main/supply-officer/#documents", icon: FolderOpen },
-    { label: "ผู้จำหน่าย / คู่ค้า", href: "/asset-intelligence/operator/main/supply-officer/#vendor", icon: UsersRound },
-    { label: "รายงาน", href: "/asset-intelligence/operator/main/supply-officer/#report", icon: FileText },
+    { label: "ทะเบียนครุภัณฑ์", href: "/asset-intelligence/operator/main/supply-officer/asset-registry", icon: FolderKanban },
+    { label: "รับเข้า / จัดหา", href: "/asset-intelligence/operator/main/supply-officer/acquisition-procurement", icon: RefreshCcwDot },
+    { label: "โอนย้าย / จำหน่าย", href: "/asset-intelligence/operator/main/supply-officer/transfer-disposal", icon: Repeat },
+    { label: "ตรวจนับครุภัณฑ์", href: "/asset-intelligence/operator/main/supply-officer/asset-inventory-verification", icon: SquareKanban },
+    { label: "เอกสาร / สัญญา", href: "/asset-intelligence/operator/main/supply-officer/documents-contracts", icon: FolderOpen },
+    { label: "ผู้จำหน่าย / คู่ค้า", href: "/asset-intelligence/operator/main/supply-officer/vendors-suppliers", icon: UsersRound },
+    { label: "รายงาน", href: "/asset-intelligence/operator/main/supply-officer/reports", icon: FileText },
 ];
 
 export const operatorGarbageCollectorNavigationItems: NavItem[] = [
