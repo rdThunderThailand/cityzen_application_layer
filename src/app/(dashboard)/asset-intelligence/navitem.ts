@@ -45,16 +45,16 @@ export const operatorNavigationItems: NavItem[] = [
 
 export const operatorTechnicianNavigationItems: NavItem[] = [
     { label: "หน้าหลัก", href: "/asset-intelligence/operator/main/technician-officer", icon: HouseIcon },
-    { label: "งานของฉัน", href: "/asset-intelligence/operator/main/technician-officer/#my-work", icon: FolderKanban },
-    { label: "ใบงานทั้งหมด", href: "/asset-intelligence/operator/main/technician-officer/#all-work", icon: FolderKanban },
-    { label: "แผนบำรุงรักษา (PM)", href: "/asset-intelligence/operator/main/technician-officer/#pm", icon: FolderKanban },
-    { label: "แจ้งซ่อม / คำขอ", href: "/asset-intelligence/operator/main/technician-officer/#request", icon: RefreshCcwDot },
-    { label: "ตรวจสอบหน้างาน", href: "/asset-intelligence/operator/main/technician-officer/#inspection", icon: BellDot },
-    { label: "อะไหล่ / คลัง", href: "/asset-intelligence/operator/main/technician-officer/#inventory", icon: Repeat },
-    { label: "เครื่องมือของฉัน", href: "/asset-intelligence/operator/main/technician-officer/#vendor", icon: UsersRound },
-    { label: "ประวัติการซ่อม", href: "/asset-intelligence/operator/main/technician-officer/#vendor", icon: Wrench },
-    { label: "เอกสาร / คู่มือ", href: "/asset-intelligence/operator/main/technician-officer/#documents", icon: FolderOpen },
-    { label: "รายงาน", href: "/asset-intelligence/operator/main/technician-officer/#report", icon: FileText },
+    { label: "งานของฉัน", href: "/asset-intelligence/operator/main/technician-officer/my-tasks", icon: FolderKanban },
+    { label: "ใบงานทั้งหมด", href: "/asset-intelligence/operator/main/technician-officer/work-orders", icon: FolderKanban },
+    { label: "แผนบำรุงรักษา (PM)", href: "/asset-intelligence/operator/main/technician-officer/pm-plan", icon: FolderKanban },
+    { label: "แจ้งซ่อม / คำขอ", href: "/asset-intelligence/operator/main/technician-officer/requests", icon: RefreshCcwDot },
+    { label: "ตรวจสอบหน้างาน", href: "/asset-intelligence/operator/main/technician-officer/inspections", icon: BellDot },
+    { label: "อะไหล่ / คลัง", href: "/asset-intelligence/operator/main/technician-officer/inventory", icon: Repeat },
+    { label: "เครื่องมือของฉัน", href: "/asset-intelligence/operator/main/technician-officer/tools", icon: UsersRound },
+    { label: "ประวัติการซ่อม", href: "/asset-intelligence/operator/main/technician-officer/history", icon: Wrench },
+    { label: "เอกสาร / คู่มือ", href: "/asset-intelligence/operator/main/technician-officer/documents", icon: FolderOpen },
+    { label: "รายงาน", href: "/asset-intelligence/operator/main/technician-officer/reports", icon: FileText },
 ];
 
 export const operatorSupplyOfficerNavigationItems: NavItem[] = [

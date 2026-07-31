@@ -1,7 +1,7 @@
-export default function Technician() {
-    return (
-        <div>
-            <h1>Technician</h1>
-        </div>
-    );
+import { AssetsOfficerTechnicianClient } from '@/features/asset-intelligence/operator/technician/AssetsOfficerTechnicianClient'
+
+export const dynamic = 'force-dynamic'
+
+export default async function TechnicianOfficerHomePage(props: any) {
+    return <AssetsOfficerTechnicianClient {...props} />
 }

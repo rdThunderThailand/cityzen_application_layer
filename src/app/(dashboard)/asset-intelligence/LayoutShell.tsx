@@ -41,7 +41,7 @@ export default function LayoutShell({ children, user }: { children: React.ReactN
             </div>
             <div className="flex-1 min-w-0 flex flex-col h-full overflow-hidden">
                 <Header navigationText={navigationItems.find((item) => item.href === pathname)?.label} user={user} />
-                <div className="flex-1 min-h-0 flex flex-col overflow-y-auto">
+                <div className="flex-1 min-h-0 flex flex-col overflow-y-auto ">
                     {children}
                 </div>
                 {/* <Footer className="w-full h-[6vh] shadow-[0_-4px_12px_rgba(0,0,0,0.05)] px-4 flex items-center shrink-0 bg-white border-t border-gray-100" content={currentFooterContent} /> */}
