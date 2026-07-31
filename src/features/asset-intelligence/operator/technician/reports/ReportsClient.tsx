@@ -4,7 +4,6 @@ import { TechnicianReportData } from "@/features/asset-intelligence/operator/tec
 import { getTechnicianReportData } from "./mock";
 import {
   AlertTriangle,
-  ArrowDown,
   ArrowUp,
   Banknote,
   CalendarDays,
@@ -19,6 +18,8 @@ import {
   FileText,
   Search
 } from "lucide-react";
+import { TechnicianPageLayout } from "../components/shared/TechnicianPageLayout";
+import { TechnicianMetricCard } from "../components/shared/TechnicianMetricCard";
 import { useEffect, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Cell, Line, LineChart, Pie, PieChart, Tooltip as RechartsTooltip, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import CostReportView from "./CostReportView";
@@ -63,19 +64,11 @@ export default function ReportsClient() {
   const { metrics, workOrdersChart, jobTypeChart, costChart, topEquipment, topLocations, costsByJobType, popularReports, recentDownloads } = data;
 
   return (
-    <div className="min-h-full flex-1 bg-[#F8FAFC] w-full p-6 pb-40 flex flex-col gap-6">
-
-      {/* Header */}
-      <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-2">
-        <div className="flex flex-col">
-          <h1 className="text-[28px] font-black text-[#1e293b] tracking-tight leading-none mb-2">
-            รายงาน
-          </h1>
-          <p className="text-[14px] font-medium text-slate-500">
-            สรุปข้อมูลและวิเคราะห์ภาพรวมการทำงาน
-          </p>
-        </div>
-
+    <TechnicianPageLayout
+      title="รายงาน"
+      description="สรุปข้อมูลและวิเคราะห์ภาพรวมการทำงาน"
+      breadcrumbs={[{ label: "หน้าหลัก", href: "#" }, { label: "รายงาน" }]}
+      headerActions={
         <div className="flex items-center gap-4">
           <div className="relative hidden md:block w-72">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
@@ -89,125 +82,64 @@ export default function ReportsClient() {
             <CalendarDays className="w-4 h-4" /> ปรับช่วงข้อมูล
           </button>
         </div>
-      </div>
-
+      }
+    >
       {/* Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-
-        {/* Total Work Orders */}
-        <div className="bg-white rounded-[16px] p-5 flex flex-col border border-slate-200 shadow-sm relative overflow-hidden">
-          <div className="flex items-start gap-4 mb-2">
-            <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
-              <FileText className="w-6 h-6 text-blue-600" />
+        <TechnicianMetricCard
+          title="ใบงานทั้งหมด"
+          value={metrics.totalWorkOrders}
+          subtitle="ใบงาน"
+          icon={<FileText className="w-6 h-6 text-blue-600" />}
+          trend={{ value: "12% จากเดือนที่แล้ว", isPositive: true, label: "เพิ่มขึ้น" }}
+        />
+        <TechnicianMetricCard
+          title="ซ่อมสำเร็จ"
+          value={metrics.completed}
+          subtitle="ใบงาน"
+          icon={<CheckCircle2 className="w-6 h-6 text-emerald-600" />}
+          iconBgColor="bg-emerald-50"
+          customFooter={
+            <div className="w-full flex justify-end">
+              <span className="text-[11px] font-bold text-emerald-600">{metrics.completedPercent}</span>
             </div>
-            <div className="flex flex-col">
-              <span className="text-[12px] font-bold text-slate-600 mb-0.5">ใบงานทั้งหมด</span>
-              <div className="flex items-baseline gap-1">
-                <span className="text-[28px] font-black text-slate-900 leading-none tracking-tight">{metrics.totalWorkOrders}</span>
+          }
+        />
+        <TechnicianMetricCard
+          title="กำลังดำเนินการ"
+          value={metrics.inProgress}
+          subtitle="ใบงาน"
+          icon={<Clock className="w-6 h-6 text-orange-500" />}
+          iconBgColor="bg-orange-50"
+          trend={{ value: "20% จากเดือนที่แล้ว", isPositive: true, label: "ลดลง" }}
+        />
+        <TechnicianMetricCard
+          title="ล่าช้า"
+          value={metrics.delayed}
+          subtitle="ใบงาน"
+          icon={<AlertTriangle className="w-6 h-6 text-rose-500" />}
+          iconBgColor="bg-rose-50"
+          customFooter={
+            <div className="w-full flex justify-end">
+              <div className="flex items-center gap-1 text-rose-600">
+                <span className="text-[11px] font-bold">เพิ่มขึ้น 2 ใบงาน</span>
+                <ArrowUp className="w-3 h-3" />
               </div>
-              <span className="text-[11px] font-medium text-slate-500 mt-1">ใบงาน</span>
             </div>
-          </div>
-          <div className="mt-auto pt-4 border-t border-slate-50">
-            <div className="flex items-center gap-1 text-emerald-600">
-              <span className="text-[11px] font-medium text-slate-500 mr-1">เพิ่มขึ้น</span>
-              <span className="text-[11px] font-bold">12% จากเดือนที่แล้ว</span>
-              <ArrowUp className="w-3 h-3 ml-auto" />
-            </div>
-          </div>
-        </div>
-
-        {/* Completed */}
-        <div className="bg-white rounded-[16px] p-5 flex flex-col border border-slate-200 shadow-sm relative overflow-hidden">
-          <div className="flex items-start gap-4 mb-2">
-            <div className="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center shrink-0">
-              <CheckCircle2 className="w-6 h-6 text-emerald-600" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[12px] font-bold text-slate-600 mb-0.5">ซ่อมสำเร็จ</span>
-              <div className="flex items-baseline gap-1">
-                <span className="text-[28px] font-black text-slate-900 leading-none tracking-tight">{metrics.completed}</span>
-              </div>
-              <span className="text-[11px] font-medium text-slate-500 mt-1">ใบงาน</span>
-            </div>
-          </div>
-          <div className="mt-auto pt-4 border-t border-slate-50 flex justify-end">
-            <span className="text-[11px] font-bold text-emerald-600">{metrics.completedPercent}</span>
-          </div>
-        </div>
-
-        {/* In Progress */}
-        <div className="bg-white rounded-[16px] p-5 flex flex-col border border-slate-200 shadow-sm relative overflow-hidden">
-          <div className="flex items-start gap-4 mb-2">
-            <div className="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center shrink-0">
-              <Clock className="w-6 h-6 text-orange-500" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[12px] font-bold text-slate-600 mb-0.5">กำลังดำเนินการ</span>
-              <div className="flex items-baseline gap-1">
-                <span className="text-[28px] font-black text-slate-900 leading-none tracking-tight">{metrics.inProgress}</span>
-              </div>
-              <span className="text-[11px] font-medium text-slate-500 mt-1">ใบงาน</span>
-            </div>
-          </div>
-          <div className="mt-auto pt-4 border-t border-slate-50">
-            <div className="flex items-center gap-1 text-emerald-600">
-              <span className="text-[11px] font-medium text-slate-500 mr-1">ลดลง</span>
-              <span className="text-[11px] font-bold">20% จากเดือนที่แล้ว</span>
-              <ArrowDown className="w-3 h-3 ml-auto" />
-            </div>
-          </div>
-        </div>
-
-        {/* Delayed */}
-        <div className="bg-white rounded-[16px] p-5 flex flex-col border border-slate-200 shadow-sm relative overflow-hidden">
-          <div className="flex items-start gap-4 mb-2">
-            <div className="w-12 h-12 rounded-full bg-rose-50 flex items-center justify-center shrink-0">
-              <AlertTriangle className="w-6 h-6 text-rose-500" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[12px] font-bold text-slate-600 mb-0.5">ล่าช้า</span>
-              <div className="flex items-baseline gap-1">
-                <span className="text-[28px] font-black text-slate-900 leading-none tracking-tight">{metrics.delayed}</span>
-              </div>
-              <span className="text-[11px] font-medium text-slate-500 mt-1">ใบงาน</span>
-            </div>
-          </div>
-          <div className="mt-auto pt-4 border-t border-slate-50 flex justify-end">
-            <div className="flex items-center gap-1 text-rose-600">
-              <span className="text-[11px] font-bold">เพิ่มขึ้น 2 ใบงาน</span>
-              <ArrowUp className="w-3 h-3" />
-            </div>
-          </div>
-        </div>
-
-        {/* Total Cost */}
-        <div className="bg-white rounded-[16px] p-5 flex flex-col border border-slate-200 shadow-sm relative overflow-hidden">
-          <div className="flex items-start gap-4 mb-2">
-            <div className="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center shrink-0">
-              <Banknote className="w-6 h-6 text-purple-600" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[12px] font-bold text-slate-600 mb-0.5">ค่าใช้จ่ายรวม</span>
-              <div className="flex items-baseline gap-1">
-                <span className="text-[28px] font-black text-slate-900 leading-none tracking-tight">85,450.00</span>
-              </div>
-              <span className="text-[11px] font-medium text-slate-500 mt-1">บาท</span>
-            </div>
-          </div>
-          <div className="mt-auto pt-4 border-t border-slate-50 flex justify-end">
-            <div className="flex items-center gap-1 text-emerald-600">
-              <span className="text-[11px] font-medium text-slate-500 mr-1">ลดลง</span>
-              <span className="text-[11px] font-bold">8% จากเดือนที่แล้ว</span>
-              <ArrowDown className="w-3 h-3 ml-auto" />
-            </div>
-          </div>
-        </div>
-
+          }
+        />
+        <TechnicianMetricCard
+          title="ค่าใช้จ่ายรวม"
+          value="85,450.00"
+          subtitle="บาท"
+          icon={<Banknote className="w-6 h-6 text-purple-600" />}
+          iconBgColor="bg-purple-50"
+          trend={{ value: "8% จากเดือนที่แล้ว", isPositive: true, label: "ลดลง" }}
+        />
       </div>
 
       {/* Tabs and Filters */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-2">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-2 mt-2">
         <div className="flex items-center gap-6 overflow-x-auto no-scrollbar">
           {(['ภาพรวม', 'การซ่อมบำรุง', 'ค่าใช้จ่าย', 'อะไหล่', 'เครื่องมือ', 'ผู้ปฏิบัติงาน'] as const).map(tab => (
             <button
@@ -381,7 +313,7 @@ export default function ReportsClient() {
                 <RechartsTooltip
                   cursor={{ fill: 'transparent' }}
                   contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                  formatter={(value: any) => [`${Number(value || 0).toLocaleString()} บาท`, 'ค่าใช้จ่าย']}
+                  formatter={(value: number | string) => [`${Number(value || 0).toLocaleString()} บาท`, 'ค่าใช้จ่าย']}
                 />
                 <Bar dataKey="cost" radius={[4, 4, 0, 0]} maxBarSize={40}>
                   {costChart.map((entry, index) => (
@@ -411,6 +343,7 @@ export default function ReportsClient() {
             {topEquipment.map((item, idx) => (
               <div key={item.id} className="flex items-center gap-3">
                 <div className="w-6 h-6 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-[10px] font-bold shrink-0">{idx + 1}</div>
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 {item.image && <img src={item.image} alt={item.name} className="w-8 h-8 rounded border border-slate-200 object-cover shrink-0" />}
                 <span className="text-[12px] font-bold text-slate-700 truncate flex-1">{item.name}</span>
                 <span className="text-[12px] font-bold text-blue-600 shrink-0">{item.count} ใบงาน</span>
@@ -525,6 +458,6 @@ export default function ReportsClient() {
 
       </div>
 
-    </div>
+    </TechnicianPageLayout>
   );
 }

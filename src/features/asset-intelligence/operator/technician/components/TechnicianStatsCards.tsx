@@ -2,46 +2,45 @@
 
 import { TechnicianSummaryStats } from "@/features/asset-intelligence/operator/technician/types";
 import { CheckCircle2, Clock, FileText, History } from "lucide-react";
-import { SharedTechnicianStatCard } from "./shared/SharedTechnicianStatCard";
+import { TechnicianMetricCard } from "./shared/TechnicianMetricCard";
 
 export function TechnicianStatsCards({ stats }: { stats: TechnicianSummaryStats }) {
   return (
     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-      <SharedTechnicianStatCard
+      <TechnicianMetricCard
         title="งานของฉันวันนี้"
         value={stats.tasksToday}
         subtitle="รายการ"
-        icon={FileText}
-        colorScheme="blue"
+        icon={<FileText className="w-6 h-6 text-blue-600" />}
         actionLabel="ดูทั้งหมด"
-        layout="left"
+        onActionClick={() => {}}
       />
-      <SharedTechnicianStatCard
+      <TechnicianMetricCard
         title="งานเร่งด่วน"
         value={stats.urgentTasks}
         subtitle="รายการ"
-        icon={Clock}
-        colorScheme="amber"
+        icon={<Clock className="w-6 h-6 text-amber-600" />}
+        iconBgColor="bg-amber-50"
         actionLabel="ดูทั้งหมด"
-        layout="left"
+        onActionClick={() => {}}
       />
-      <SharedTechnicianStatCard
+      <TechnicianMetricCard
         title="งานค้างเกินกำหนด"
         value={stats.overdueTasks}
         subtitle="รายการ"
-        icon={History}
-        colorScheme="purple"
+        icon={<History className="w-6 h-6 text-purple-600" />}
+        iconBgColor="bg-purple-50"
         actionLabel="ดูทั้งหมด"
-        layout="left"
+        onActionClick={() => {}}
       />
-      <SharedTechnicianStatCard
+      <TechnicianMetricCard
         title="งานเสร็จสิ้น (สัปดาห์นี้)"
         value={stats.completedThisWeek}
         subtitle="รายการ"
-        icon={CheckCircle2}
-        colorScheme="emerald"
+        icon={<CheckCircle2 className="w-6 h-6 text-emerald-600" />}
+        iconBgColor="bg-emerald-50"
         actionLabel="ดูสรุปผลงาน"
-        layout="left"
+        onActionClick={() => {}}
       />
 
       {/* Hours Worked */}

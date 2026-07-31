@@ -2,51 +2,50 @@
 
 import { TechnicianMyTaskStats } from "@/features/asset-intelligence/operator/technician/types";
 import { Box, CheckCircle2, ClipboardList, Clock, Wrench } from "lucide-react";
-import { SharedTechnicianStatCard } from "../../components/shared/SharedTechnicianStatCard";
+import { TechnicianMetricCard } from "../../components/shared/TechnicianMetricCard";
 
 export function MyTasksStats({ stats }: { stats: TechnicianMyTaskStats }) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
-      <SharedTechnicianStatCard
+      <TechnicianMetricCard
         title="งานทั้งหมด"
         value={stats.all}
-        icon={ClipboardList}
-        colorScheme="blue"
+        icon={<ClipboardList className="w-6 h-6 text-blue-600" />}
         subtitle="รายการ"
       />
-      <SharedTechnicianStatCard
+      <TechnicianMetricCard
         title="รอดำเนินการ"
         value={stats.pending}
-        icon={Clock}
-        colorScheme="orange"
+        icon={<Clock className="w-6 h-6 text-orange-500" />}
+        iconBgColor="bg-orange-50"
         subtitle="รายการ"
       />
-      <SharedTechnicianStatCard
+      <TechnicianMetricCard
         title="กำลังดำเนินการ"
         value={stats.inProgress}
-        icon={Wrench}
-        colorScheme="purple"
+        icon={<Wrench className="w-6 h-6 text-purple-600" />}
+        iconBgColor="bg-purple-50"
         subtitle="รายการ"
       />
-      <SharedTechnicianStatCard
+      <TechnicianMetricCard
         title="รออะไหล่ / รออนุมัติ"
         value={stats.waiting}
-        icon={Box}
-        colorScheme="emerald"
+        icon={<Box className="w-6 h-6 text-emerald-600" />}
+        iconBgColor="bg-emerald-50"
         subtitle="รายการ"
       />
-      <SharedTechnicianStatCard
+      <TechnicianMetricCard
         title="งานเกินกำหนด"
         value={stats.overdue}
-        icon={Clock}
-        colorScheme="rose"
+        icon={<Clock className="w-6 h-6 text-rose-500" />}
+        iconBgColor="bg-rose-50"
         subtitle="รายการ"
       />
-      <SharedTechnicianStatCard
+      <TechnicianMetricCard
         title="งานเสร็จสิ้น (วันนี้)"
         value={stats.completedToday}
-        icon={CheckCircle2}
-        colorScheme="slate"
+        icon={<CheckCircle2 className="w-6 h-6 text-slate-500" />}
+        iconBgColor="bg-slate-100"
         subtitle="รายการ"
       />
     </div>

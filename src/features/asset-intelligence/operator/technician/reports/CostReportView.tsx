@@ -3,26 +3,22 @@
 import { TechnicianCostReportData } from "@/features/asset-intelligence/operator/technician/types";
 import { getTechnicianCostReportData } from "./mock";
 import {
-  ArrowDown,
-  ArrowUp,
   ChevronDown,
   ChevronLeft,
-  ChevronLeft as ChevronLeftIcon,
   ChevronRight,
-  ChevronRight as ChevronRightIcon,
   Download,
   FileText,
-  Filter,
-  MoreHorizontal,
   MoreVertical,
   Receipt,
-  RefreshCw,
   Save,
-  Search,
   ShoppingCart,
   Wallet,
   Wrench
 } from "lucide-react";
+import { TechnicianMetricCard } from "../components/shared/TechnicianMetricCard";
+import { TechnicianFilterBar } from "../components/shared/TechnicianFilterBar";
+import { TechnicianTable } from "../components/shared/TechnicianTable";
+import { TechnicianPagination } from "../components/shared/TechnicianPagination";
 import { useEffect, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Cell, Line, LineChart, Pie, PieChart, Tooltip as RechartsTooltip, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 
@@ -121,210 +117,91 @@ export default function CostReportView({ onBack }: { onBack: () => void }) {
 
       {/* Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-
-        {/* Total Cost */}
-        <div className="bg-white rounded-[16px] p-5 flex flex-col border border-slate-200 shadow-sm relative overflow-hidden">
-          <div className="flex items-start gap-4 mb-2">
-            <div className="w-12 h-12 rounded-full bg-blue-50 flex items-center justify-center shrink-0">
-              <Wallet className="w-6 h-6 text-blue-600" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[12px] font-bold text-slate-600 mb-0.5">ค่าใช้จ่ายรวม</span>
-              <div className="flex items-baseline gap-1">
-                <span className="text-[28px] font-black text-slate-900 leading-none tracking-tight">{metrics.totalCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
-              </div>
-              <span className="text-[11px] font-medium text-slate-500 mt-1">บาท</span>
-            </div>
-          </div>
-          <div className="mt-auto pt-4 border-t border-slate-50">
-            <div className="flex items-center gap-1 text-emerald-600">
-              <span className="text-[11px] font-bold">{metrics.totalCostTrend}</span>
-              <ArrowDown className="w-3 h-3 ml-auto" />
-            </div>
-          </div>
-        </div>
-
-        {/* Maintenance Cost */}
-        <div className="bg-white rounded-[16px] p-5 flex flex-col border border-slate-200 shadow-sm relative overflow-hidden">
-          <div className="flex items-start gap-4 mb-2">
-            <div className="w-12 h-12 rounded-full bg-emerald-50 flex items-center justify-center shrink-0">
-              <Wrench className="w-6 h-6 text-emerald-600" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[12px] font-bold text-slate-600 mb-0.5">ค่าซ่อมบำรุง</span>
-              <div className="flex items-baseline gap-1">
-                <span className="text-[28px] font-black text-slate-900 leading-none tracking-tight">{metrics.maintenanceCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
-              </div>
-              <span className="text-[11px] font-medium text-slate-500 mt-1">บาท</span>
-            </div>
-          </div>
-          <div className="mt-auto pt-4 border-t border-slate-50">
-            <div className="flex items-center gap-1 text-emerald-600">
-              <span className="text-[11px] font-bold">{metrics.maintenanceCostTrend}</span>
-              <ArrowDown className="w-3 h-3 ml-auto" />
-            </div>
-          </div>
-        </div>
-
-        {/* Parts Cost */}
-        <div className="bg-white rounded-[16px] p-5 flex flex-col border border-slate-200 shadow-sm relative overflow-hidden">
-          <div className="flex items-start gap-4 mb-2">
-            <div className="w-12 h-12 rounded-full bg-orange-50 flex items-center justify-center shrink-0">
-              <ShoppingCart className="w-6 h-6 text-orange-500" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[12px] font-bold text-slate-600 mb-0.5">ค่าอะไหล่</span>
-              <div className="flex items-baseline gap-1">
-                <span className="text-[28px] font-black text-slate-900 leading-none tracking-tight">{metrics.partsCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
-              </div>
-              <span className="text-[11px] font-medium text-slate-500 mt-1">บาท</span>
-            </div>
-          </div>
-          <div className="mt-auto pt-4 border-t border-slate-50">
-            <div className="flex items-center gap-1 text-rose-600">
-              <span className="text-[11px] font-bold">{metrics.partsCostTrend}</span>
-              <ArrowUp className="w-3 h-3 ml-auto" />
-            </div>
-          </div>
-        </div>
-
-        {/* Other Cost */}
-        <div className="bg-white rounded-[16px] p-5 flex flex-col border border-slate-200 shadow-sm relative overflow-hidden">
-          <div className="flex items-start gap-4 mb-2">
-            <div className="w-12 h-12 rounded-full bg-purple-50 flex items-center justify-center shrink-0">
-              <FileText className="w-6 h-6 text-purple-600" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[12px] font-bold text-slate-600 mb-0.5">ค่าใช้จ่ายอื่นๆ</span>
-              <div className="flex items-baseline gap-1">
-                <span className="text-[28px] font-black text-slate-900 leading-none tracking-tight">{metrics.otherCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
-              </div>
-              <span className="text-[11px] font-medium text-slate-500 mt-1">บาท</span>
-            </div>
-          </div>
-          <div className="mt-auto pt-4 border-t border-slate-50">
-            <div className="flex items-center gap-1 text-emerald-600">
-              <span className="text-[11px] font-bold">{metrics.otherCostTrend}</span>
-              <ArrowDown className="w-3 h-3 ml-auto" />
-            </div>
-          </div>
-        </div>
-
-        {/* Daily Average */}
-        <div className="bg-white rounded-[16px] p-5 flex flex-col border border-slate-200 shadow-sm relative overflow-hidden">
-          <div className="flex items-start gap-4 mb-2">
-            <div className="w-12 h-12 rounded-full bg-rose-50 flex items-center justify-center shrink-0">
-              <Receipt className="w-6 h-6 text-rose-500" />
-            </div>
-            <div className="flex flex-col">
-              <span className="text-[12px] font-bold text-slate-600 mb-0.5">ค่าใช้จ่ายเฉลี่ยต่อวัน</span>
-              <div className="flex items-baseline gap-1">
-                <span className="text-[28px] font-black text-slate-900 leading-none tracking-tight">{metrics.dailyAverage.toLocaleString('en-US', { minimumFractionDigits: 2 })}</span>
-              </div>
-              <span className="text-[11px] font-medium text-slate-500 mt-1">บาท/วัน</span>
-            </div>
-          </div>
-          <div className="mt-auto pt-4 border-t border-slate-50">
-            <div className="flex items-center gap-1 text-emerald-600">
-              <span className="text-[11px] font-bold">{metrics.dailyAverageTrend}</span>
-              <ArrowDown className="w-3 h-3 ml-auto" />
-            </div>
-          </div>
-        </div>
-
+        <TechnicianMetricCard
+          title="ค่าใช้จ่ายรวม"
+          value={metrics.totalCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+          subtitle="บาท"
+          icon={<Wallet className="w-6 h-6 text-blue-600" />}
+          trend={{ value: metrics.totalCostTrend, isPositive: false, label: "" }}
+        />
+        <TechnicianMetricCard
+          title="ค่าซ่อมบำรุง"
+          value={metrics.maintenanceCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+          subtitle="บาท"
+          icon={<Wrench className="w-6 h-6 text-emerald-600" />}
+          iconBgColor="bg-emerald-50"
+          trend={{ value: metrics.maintenanceCostTrend, isPositive: false, label: "" }}
+        />
+        <TechnicianMetricCard
+          title="ค่าอะไหล่"
+          value={metrics.partsCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+          subtitle="บาท"
+          icon={<ShoppingCart className="w-6 h-6 text-orange-500" />}
+          iconBgColor="bg-orange-50"
+          trend={{ value: metrics.partsCostTrend, isPositive: true, label: "" }}
+        />
+        <TechnicianMetricCard
+          title="ค่าใช้จ่ายอื่นๆ"
+          value={metrics.otherCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+          subtitle="บาท"
+          icon={<FileText className="w-6 h-6 text-purple-600" />}
+          iconBgColor="bg-purple-50"
+          trend={{ value: metrics.otherCostTrend, isPositive: false, label: "" }}
+        />
+        <TechnicianMetricCard
+          title="ค่าใช้จ่ายเฉลี่ยต่อวัน"
+          value={metrics.dailyAverage.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+          subtitle="บาท/วัน"
+          icon={<Receipt className="w-6 h-6 text-rose-500" />}
+          iconBgColor="bg-rose-50"
+          trend={{ value: metrics.dailyAverageTrend, isPositive: false, label: "" }}
+        />
       </div>
 
       {/* Filter Bar */}
-      <div className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex flex-col xl:flex-row xl:items-center justify-between gap-4">
-        <div className="flex items-center gap-4 flex-wrap w-full">
-
-          <div className="flex flex-col gap-1 w-full md:w-auto md:flex-1 max-w-[160px]">
-            <span className="text-[10px] font-bold text-slate-500 ml-1">ประเภทค่าใช้จ่าย</span>
-            <div className="relative">
-              <select
-                value={costTypeFilter}
-                onChange={(e) => setCostTypeFilter(e.target.value)}
-                className="w-full appearance-none bg-white border border-slate-200 text-[13px] font-bold text-slate-700 rounded-lg pl-4 pr-10 py-2.5 focus:outline-none focus:border-blue-500 cursor-pointer"
-              >
-                <option>ทั้งหมด</option>
-                <option>ค่าซ่อมบำรุง</option>
-                <option>ค่าอะไหล่</option>
-              </select>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-1 w-full md:w-auto md:flex-1 max-w-[160px]">
-            <span className="text-[10px] font-bold text-slate-500 ml-1">หมวดหมู่</span>
-            <div className="relative">
-              <select
-                value={categoryFilter}
-                onChange={(e) => setCategoryFilter(e.target.value)}
-                className="w-full appearance-none bg-white border border-slate-200 text-[13px] font-bold text-slate-700 rounded-lg pl-4 pr-10 py-2.5 focus:outline-none focus:border-blue-500 cursor-pointer"
-              >
-                <option>ทั้งหมด</option>
-                <option>ซ่อมแซม</option>
-                <option>อะไหล่แอร์</option>
-              </select>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-1 w-full md:w-auto md:flex-1 max-w-[160px]">
-            <span className="text-[10px] font-bold text-slate-500 ml-1">สถานะการอนุมัติ</span>
-            <div className="relative">
-              <select
-                value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className="w-full appearance-none bg-white border border-slate-200 text-[13px] font-bold text-slate-700 rounded-lg pl-4 pr-10 py-2.5 focus:outline-none focus:border-blue-500 cursor-pointer"
-              >
-                <option>ทั้งหมด</option>
-                <option>อนุมัติแล้ว</option>
-                <option>รออนุมัติ</option>
-              </select>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-1 w-full md:w-auto md:flex-1 max-w-[160px]">
-            <span className="text-[10px] font-bold text-slate-500 ml-1">สถานที่</span>
-            <div className="relative">
-              <select
-                value={locationFilter}
-                onChange={(e) => setLocationFilter(e.target.value)}
-                className="w-full appearance-none bg-white border border-slate-200 text-[13px] font-bold text-slate-700 rounded-lg pl-4 pr-10 py-2.5 focus:outline-none focus:border-blue-500 cursor-pointer"
-              >
-                <option>ทั้งหมด</option>
-                <option>อาคารสำนักงาน</option>
-              </select>
-              <ChevronDown className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
-            </div>
-          </div>
-
-          <div className="flex flex-col gap-1 w-full md:w-auto flex-1 min-w-[200px] max-w-[300px]">
-            <span className="text-[10px] font-bold text-slate-500 ml-1 opacity-0 hidden md:block">ค้นหา</span>
-            <div className="relative">
-              <Search className="absolute right-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400 pointer-events-none" />
-              <input
-                type="text"
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="ค้นหาเลขที่ใบเสร็จ, ผู้จำหน่าย..."
-                className="w-full bg-white border border-slate-200 text-[13px] font-medium text-slate-700 rounded-lg pl-4 pr-10 py-2.5 focus:outline-none focus:border-blue-500 transition-colors"
-              />
-            </div>
-          </div>
-
-          <div className="flex items-end h-[60px] md:hidden xl:flex">
-            <button className="px-5 py-2.5 rounded-lg border border-blue-200 bg-white text-blue-600 font-bold text-[13px] flex items-center gap-2 hover:bg-blue-50 transition-colors shadow-sm">
-              <Filter className="w-4 h-4" /> ตัวกรอง
-            </button>
-          </div>
-        </div>
-
-        <button className="px-4 py-2.5 text-[12px] font-bold text-slate-500 hover:text-slate-800 flex items-center gap-1.5 transition-colors whitespace-nowrap shrink-0 mt-2 xl:mt-5">
-          <RefreshCw className="w-3.5 h-3.5" /> ล้างตัวกรอง
-        </button>
+      <div className="rounded-xl border border-slate-200 shadow-sm overflow-hidden">
+        <TechnicianFilterBar
+          searchQuery={searchQuery}
+          onSearchChange={setSearchQuery}
+          searchPlaceholder="ค้นหาเลขที่ใบเสร็จ, ผู้จำหน่าย..."
+          filters={[
+            {
+              label: "ประเภทค่าใช้จ่าย",
+              value: costTypeFilter,
+              options: ["ทั้งหมด", "ค่าซ่อมบำรุง", "ค่าอะไหล่"],
+              onChange: setCostTypeFilter,
+              minWidth: "160px"
+            },
+            {
+              label: "หมวดหมู่",
+              value: categoryFilter,
+              options: ["ทั้งหมด", "ซ่อมแซม", "อะไหล่แอร์"],
+              onChange: setCategoryFilter,
+              minWidth: "160px"
+            },
+            {
+              label: "สถานะการอนุมัติ",
+              value: statusFilter,
+              options: ["ทั้งหมด", "อนุมัติแล้ว", "รออนุมัติ"],
+              onChange: setStatusFilter,
+              minWidth: "160px"
+            },
+            {
+              label: "สถานที่",
+              value: locationFilter,
+              options: ["ทั้งหมด", "อาคารสำนักงาน"],
+              onChange: setLocationFilter,
+              minWidth: "160px"
+            }
+          ]}
+          onClearFilters={() => {
+            setCostTypeFilter("ทั้งหมด");
+            setCategoryFilter("ทั้งหมด");
+            setStatusFilter("ทั้งหมด");
+            setLocationFilter("ทั้งหมด");
+            setSearchQuery("");
+          }}
+        />
       </div>
 
       {/* Charts Row */}
@@ -358,7 +235,7 @@ export default function CostReportView({ onBack }: { onBack: () => void }) {
                   contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                   itemStyle={{ fontSize: '12px', fontWeight: 'bold' }}
                   labelStyle={{ fontSize: '12px', color: '#64748b', marginBottom: '4px' }}
-                  formatter={(value: any) => [`${(Number(value) || 0).toLocaleString()} บาท`, 'ค่าใช้จ่าย']}
+                  formatter={(value: number | string) => [`${(Number(value) || 0).toLocaleString()} บาท`, 'ค่าใช้จ่าย']}
                 />
                 <Line type="monotone" dataKey="cost" name="ค่าใช้จ่ายรวม" stroke="#2563eb" strokeWidth={3}
                   dot={(props: { cx?: number; cy?: number; payload?: { month: string; cost: number; active?: boolean } }) => {
@@ -412,7 +289,7 @@ export default function CostReportView({ onBack }: { onBack: () => void }) {
                   <RechartsTooltip
                     contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                     itemStyle={{ fontSize: '12px', fontWeight: 'bold' }}
-                    formatter={(value: any) => [`${(Number(value) || 0).toLocaleString()} บาท`, '']}
+                    formatter={(value: number | string) => [`${(Number(value) || 0).toLocaleString()} บาท`, '']}
                   />
                 </PieChart>
               </ResponsiveContainer>
@@ -480,7 +357,7 @@ export default function CostReportView({ onBack }: { onBack: () => void }) {
                 <RechartsTooltip
                   cursor={{ fill: 'transparent' }}
                   contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                  formatter={(value: any) => [`${(Number(value) || 0).toLocaleString()} บาท`, 'ค่าใช้จ่าย']}
+                  formatter={(value: number | string) => [`${(Number(value) || 0).toLocaleString()} บาท`, 'ค่าใช้จ่าย']}
                 />
                 <Bar dataKey="prevMonth" fill="#93c5fd" radius={[4, 4, 0, 0]} maxBarSize={20} name="เม.ย. 2567" />
                 <Bar dataKey="currMonth" fill="#2563eb" radius={[4, 4, 0, 0]} maxBarSize={20} name="พ.ค. 2567" />
@@ -500,130 +377,80 @@ export default function CostReportView({ onBack }: { onBack: () => void }) {
             <h3 className="text-[14px] font-bold text-slate-800">รายการค่าใช้จ่าย</h3>
           </div>
 
-          <div className="overflow-x-auto">
-            <table className="w-full min-w-[1000px]">
-              <thead>
-                <tr className="border-b border-slate-100">
-                  <th className="text-left text-[11px] font-bold text-slate-500 pb-3 whitespace-nowrap">เลขที่เอกสาร</th>
-                  <th className="text-left text-[11px] font-bold text-slate-500 pb-3 whitespace-nowrap">วันที่เอกสาร</th>
-                  <th className="text-left text-[11px] font-bold text-slate-500 pb-3 whitespace-nowrap">ประเภทค่าใช้จ่าย</th>
-                  <th className="text-left text-[11px] font-bold text-slate-500 pb-3 whitespace-nowrap">หมวดหมู่</th>
-                  <th className="text-left text-[11px] font-bold text-slate-500 pb-3 whitespace-nowrap">รายละเอียด</th>
-                  <th className="text-left text-[11px] font-bold text-slate-500 pb-3 whitespace-nowrap">สถานที่</th>
-                  <th className="text-left text-[11px] font-bold text-slate-500 pb-3 whitespace-nowrap">ผู้จำหน่าย</th>
-                  <th className="text-right text-[11px] font-bold text-slate-500 pb-3 whitespace-nowrap">จำนวนเงิน (บาท)</th>
-                  <th className="text-center text-[11px] font-bold text-slate-500 pb-3 whitespace-nowrap">สถานะการอนุมัติ</th>
-                  <th className="text-center text-[11px] font-bold text-slate-500 pb-3 whitespace-nowrap">การดำเนินการ</th>
-                </tr>
-              </thead>
-              <tbody>
-                {paginatedList.map((item, idx) => (
-                  <tr key={idx} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors group">
-                    <td className="py-3 pr-4">
-                      <div className="flex items-center gap-2">
-                        <FileText className="w-3.5 h-3.5 text-blue-600" />
-                        <span className="text-[12px] font-bold text-slate-800">{item.id}</span>
-                      </div>
-                    </td>
-                    <td className="py-3 pr-4">
-                      <span className="text-[12px] font-bold text-slate-800">{item.date}</span>
-                    </td>
-                    <td className="py-3 pr-4">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold inline-flex items-center justify-center whitespace-nowrap ${getCostTypeBadgeStyle(item.costType)}`}>
-                        {item.costType}
-                      </span>
-                    </td>
-                    <td className="py-3 pr-4">
-                      <span className="text-[12px] font-medium text-slate-600">{item.category}</span>
-                    </td>
-                    <td className="py-3 pr-4">
-                      <span className="text-[12px] font-bold text-slate-800">{item.details}</span>
-                    </td>
-                    <td className="py-3 pr-4">
-                      <span className="text-[12px] font-medium text-slate-600">{item.location}</span>
-                    </td>
-                    <td className="py-3 pr-4">
-                      <span className="text-[12px] font-medium text-slate-600">{item.vendor}</span>
-                    </td>
-                    <td className="py-3 pr-4 text-right">
-                      <span className="text-[12px] font-bold text-slate-800">
-                        {item.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
-                      </span>
-                    </td>
-                    <td className="py-3 pr-4 text-center">
-                      <span className={`px-2 py-0.5 rounded text-[10px] font-bold inline-flex items-center justify-center whitespace-nowrap ${getStatusBadgeStyle(item.status)}`}>
-                        {item.status}
-                      </span>
-                    </td>
-                    <td className="py-3 text-center">
-                      <div className="flex items-center justify-center gap-1">
-                        <button className="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-800 hover:bg-slate-50 flex items-center justify-center transition-colors">
-                          <MoreVertical className="w-4 h-4" />
-                        </button>
-                      </div>
-                    </td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
-          </div>
+          <TechnicianTable
+            minWidth="1000px"
+            loading={false}
+            columns={[
+              { header: "เลขที่เอกสาร" },
+              { header: "วันที่เอกสาร" },
+              { header: "ประเภทค่าใช้จ่าย" },
+              { header: "หมวดหมู่" },
+              { header: "รายละเอียด" },
+              { header: "สถานที่" },
+              { header: "ผู้จำหน่าย" },
+              { header: "จำนวนเงิน (บาท)", align: "right" },
+              { header: "สถานะการอนุมัติ", align: "center" },
+              { header: "การดำเนินการ", align: "center" }
+            ]}
+          >
+            {paginatedList.map((item, idx) => (
+              <tr key={idx} className="border-b border-slate-50 hover:bg-slate-50/50 transition-colors group">
+                <td className="px-4 py-3">
+                  <div className="flex items-center gap-2">
+                    <FileText className="w-3.5 h-3.5 text-blue-600" />
+                    <span className="text-[12px] font-bold text-slate-800">{item.id}</span>
+                  </div>
+                </td>
+                <td className="px-4 py-3">
+                  <span className="text-[12px] font-bold text-slate-800">{item.date}</span>
+                </td>
+                <td className="px-4 py-3">
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold inline-flex items-center justify-center whitespace-nowrap ${getCostTypeBadgeStyle(item.costType)}`}>
+                    {item.costType}
+                  </span>
+                </td>
+                <td className="px-4 py-3">
+                  <span className="text-[12px] font-medium text-slate-600">{item.category}</span>
+                </td>
+                <td className="px-4 py-3">
+                  <span className="text-[12px] font-bold text-slate-800">{item.details}</span>
+                </td>
+                <td className="px-4 py-3">
+                  <span className="text-[12px] font-medium text-slate-600">{item.location}</span>
+                </td>
+                <td className="px-4 py-3">
+                  <span className="text-[12px] font-medium text-slate-600">{item.vendor}</span>
+                </td>
+                <td className="px-4 py-3 text-right">
+                  <span className="text-[12px] font-bold text-slate-800">
+                    {item.amount.toLocaleString('en-US', { minimumFractionDigits: 2 })}
+                  </span>
+                </td>
+                <td className="px-4 py-3 text-center">
+                  <span className={`px-2 py-0.5 rounded text-[10px] font-bold inline-flex items-center justify-center whitespace-nowrap ${getStatusBadgeStyle(item.status)}`}>
+                    {item.status}
+                  </span>
+                </td>
+                <td className="px-4 py-3 text-center">
+                  <div className="flex items-center justify-center gap-1">
+                    <button className="w-8 h-8 rounded-lg text-slate-400 hover:text-slate-800 hover:bg-slate-50 flex items-center justify-center transition-colors">
+                      <MoreVertical className="w-4 h-4" />
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+          </TechnicianTable>
 
           {/* Pagination */}
-          <div className="mt-auto pt-6 flex flex-col md:flex-row md:items-center justify-between gap-4 border-t border-slate-100">
-            <span className="text-[12px] font-medium text-slate-500">
-              แสดง {(currentPage - 1) * itemsPerPage + 1} - {Math.min(currentPage * itemsPerPage, totalItems)} จาก {totalItems} รายการ
-            </span>
-            <div className="flex items-center gap-2">
-              <div className="relative hidden md:block mr-2">
-                <select className="appearance-none bg-white border border-slate-200 text-[12px] font-bold text-slate-600 rounded-lg pl-3 pr-8 py-1.5 focus:outline-none focus:border-blue-500 cursor-pointer">
-                  <option>6 / หน้า</option>
-                  <option>10 / หน้า</option>
-                  <option>20 / หน้า</option>
-                </select>
-                <ChevronDown className="absolute right-2 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-slate-400 pointer-events-none" />
-              </div>
-              <button
-                onClick={() => handlePageChange(currentPage - 1)}
-                disabled={currentPage === 1}
-                className="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <ChevronLeftIcon className="w-4 h-4" />
-              </button>
-
-              <div className="flex items-center gap-1">
-                {[...Array(totalPages)].map((_, i) => {
-                  const page = i + 1;
-                  // Show max 5 page buttons
-                  if (page === 1 || page === totalPages || (page >= currentPage - 1 && page <= currentPage + 1)) {
-                    return (
-                      <button
-                        key={page}
-                        onClick={() => handlePageChange(page)}
-                        className={`w-8 h-8 flex items-center justify-center rounded-lg text-[12px] font-bold transition-colors ${currentPage === page
-                          ? 'bg-blue-600 text-white'
-                          : 'text-slate-600 hover:bg-slate-100'
-                          }`}
-                      >
-                        {page}
-                      </button>
-                    );
-                  }
-                  if (page === currentPage - 2 || page === currentPage + 2) {
-                    return <MoreHorizontal key={page} className="w-4 h-4 text-slate-400 mx-1" />;
-                  }
-                  return null;
-                })}
-              </div>
-
-              <button
-                onClick={() => handlePageChange(currentPage + 1)}
-                disabled={currentPage === totalPages}
-                className="w-8 h-8 flex items-center justify-center rounded-lg border border-slate-200 text-slate-400 hover:text-slate-700 hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <ChevronRightIcon className="w-4 h-4" />
-              </button>
-            </div>
-          </div>
+          <TechnicianPagination
+            currentPage={currentPage}
+            totalPages={totalPages}
+            itemsPerPage={itemsPerPage}
+            totalItems={totalItems}
+            onPageChange={handlePageChange}
+            onItemsPerPageChange={() => {}}
+          />
 
         </div>
 
@@ -679,7 +506,7 @@ export default function CostReportView({ onBack }: { onBack: () => void }) {
                   <RechartsTooltip
                     contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                     itemStyle={{ fontSize: '12px', fontWeight: 'bold' }}
-                    formatter={(value: any) => [`${(Number(value) || 0).toLocaleString()} บาท`, '']}
+                    formatter={(value: number | string) => [`${(Number(value) || 0).toLocaleString()} บาท`, '']}
                   />
                 </PieChart>
               </ResponsiveContainer>

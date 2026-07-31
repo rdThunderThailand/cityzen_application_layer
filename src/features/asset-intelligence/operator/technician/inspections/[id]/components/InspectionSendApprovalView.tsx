@@ -234,6 +234,7 @@ export function InspectionSendApprovalView({ detail, onBack, onSubmit }: Inspect
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full bg-white border border-slate-200 overflow-hidden shrink-0">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent("สมชาย ช่างเทคนิค")}&background=random&color=fff`} alt="สมชาย ช่างเทคนิค" className="w-full h-full object-cover" />
                       </div>
                       <div className="flex flex-col">
@@ -262,6 +263,7 @@ export function InspectionSendApprovalView({ detail, onBack, onSubmit }: Inspect
                 <div className="grid grid-cols-2 gap-3 mb-3">
                   <div className="flex flex-col gap-1.5">
                     <div className="w-full h-[80px] bg-slate-100 rounded-xl relative overflow-hidden group cursor-pointer border border-slate-200">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=500&q=80" alt="Before" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                       <div className="absolute top-1.5 right-1.5 w-6 h-6 bg-white/90 backdrop-blur-sm rounded-lg flex items-center justify-center shadow-sm text-blue-600">
                         <Check className="w-3.5 h-3.5" />
@@ -271,6 +273,7 @@ export function InspectionSendApprovalView({ detail, onBack, onSubmit }: Inspect
                   </div>
                   <div className="flex flex-col gap-1.5">
                     <div className="w-full h-[80px] bg-slate-100 rounded-xl relative overflow-hidden group cursor-pointer border border-slate-200">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=500&q=80" alt="After" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                       <div className="absolute top-1.5 right-1.5 w-6 h-6 bg-white/90 backdrop-blur-sm rounded-lg flex items-center justify-center shadow-sm text-blue-600">
                         <Check className="w-3.5 h-3.5" />
@@ -283,18 +286,21 @@ export function InspectionSendApprovalView({ detail, onBack, onSubmit }: Inspect
                 <div className="grid grid-cols-3 gap-2">
                   <div className="flex flex-col gap-1">
                     <div className="w-full aspect-square bg-slate-100 rounded-lg relative overflow-hidden group cursor-pointer border border-slate-200">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&q=80" alt="Detail 1" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                     </div>
                     <span className="text-[9px] font-bold text-slate-500 text-center line-clamp-1">ค่ากระแสไฟฟ้า</span>
                   </div>
                   <div className="flex flex-col gap-1">
                     <div className="w-full aspect-square bg-slate-100 rounded-lg relative overflow-hidden group cursor-pointer border border-slate-200">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&q=80" alt="Detail 2" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                     </div>
                     <span className="text-[9px] font-bold text-slate-500 text-center line-clamp-1">อุณหภูมิห้องลม</span>
                   </div>
                   <div className="flex flex-col gap-1">
                     <div className="w-full aspect-square bg-slate-100 rounded-lg relative overflow-hidden group cursor-pointer border border-slate-200">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=500&q=80" alt="Detail 3" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
                     </div>
                     <span className="text-[9px] font-bold text-slate-500 text-center line-clamp-1">สภาพหน้างานหลังดำเนินการ</span>
@@ -369,7 +375,7 @@ export function InspectionSendApprovalView({ detail, onBack, onSubmit }: Inspect
             <div className="flex flex-col gap-1">
               <span className="text-[13px] font-black text-blue-900">การส่งตรวจรับ</span>
               <span className="text-[13px] font-medium text-blue-700 leading-relaxed">
-                เมื่อกดปุ่ม "ส่งตรวจรับ" ระบบจะส่งข้อมูลทั้งหมดไปยังเจ้าหน้าที่ผู้ตรวจรับ เพื่อตรวจสอบและอนุมัติการปิดงาน
+                เมื่อกดปุ่ม &quot;ส่งตรวจรับ&quot; ระบบจะส่งข้อมูลทั้งหมดไปยังเจ้าหน้าที่ผู้ตรวจรับ เพื่อตรวจสอบและอนุมัติการปิดงาน
               </span>
             </div>
           </div>
@@ -504,6 +510,7 @@ function SendApprovalSidebar({ detail }: { detail: TechnicianInspectionDetail })
 
         <div className="flex items-center gap-3 mb-5">
           <div className="w-12 h-12 rounded-full bg-slate-200 overflow-hidden border border-slate-200 shrink-0 shadow-sm">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent("จิราภรณ์ วงศ์สุวรรณ")}&background=random&color=fff`} alt="จิราภรณ์ วงศ์สุวรรณ" className="w-full h-full object-cover" />
           </div>
           <div className="flex flex-col">
