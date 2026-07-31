@@ -127,13 +127,13 @@ export default function TransferDisposalClient() {
   const continueLabel = currentStep === "confirm" ? `บันทึกข้อมูล${info.transactionType}` : CONTINUE_LABEL[currentStep]
 
   return (
-    <main className="min-h-screen bg-gray-50 p-6">
-      <div>
+    <div className="flex h-full flex-col gap-3 overflow-hidden bg-gray-50 p-4">
+      <div className="shrink-0">
         <p className="text-xs text-gray-400">โอนย้าย / จำหน่าย &gt; สร้างรายการ</p>
         <p className="mt-1 text-sm text-gray-500">บันทึกรายการโอนย้ายหรือจำหน่ายครุภัณฑ์</p>
       </div>
 
-      <div className="mt-6">
+      <div className="shrink-0">
         <WizardStepTabs
           steps={STEPS}
           currentStep={currentStep}
@@ -142,8 +142,8 @@ export default function TransferDisposalClient() {
         />
       </div>
 
-      <div className="mt-6 flex flex-col gap-6 lg:flex-row">
-        <div className="flex-1 space-y-6">
+      <div className="flex min-h-0 flex-1 flex-col gap-3 lg:flex-row">
+        <div className="min-h-0 flex-1 overflow-auto">
           {currentStep === "document-info" && (
             <DocumentInfoForm
               info={info}
@@ -187,21 +187,23 @@ export default function TransferDisposalClient() {
         </div>
 
         {!isConfirmed && (
-          <WizardSummarySidebar
-            info={info}
-            itemCount={items.length}
-            totalAssessedValue={totalAssessedValue}
-            onBack={handleBack}
-            onContinue={handleContinue}
-            onSaveDraft={handleSaveDraft}
-            continueLabel={continueLabel}
-            isBackDisabled={currentStep === STEPS[0].key}
-            tipText={TIP_TEXT[currentStep]}
-          />
+          <div className="shrink-0 overflow-auto">
+            <WizardSummarySidebar
+              info={info}
+              itemCount={items.length}
+              totalAssessedValue={totalAssessedValue}
+              onBack={handleBack}
+              onContinue={handleContinue}
+              onSaveDraft={handleSaveDraft}
+              continueLabel={continueLabel}
+              isBackDisabled={currentStep === STEPS[0].key}
+              tipText={TIP_TEXT[currentStep]}
+            />
+          </div>
         )}
       </div>
 
       <AddAssetModal isOpen={isAddAssetOpen} onClose={() => setIsAddAssetOpen(false)} onAdd={handleAddAsset} />
-    </main>
+    </div>
   )
 }

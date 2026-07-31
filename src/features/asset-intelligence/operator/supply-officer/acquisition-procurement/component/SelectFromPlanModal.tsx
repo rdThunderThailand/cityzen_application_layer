@@ -3,6 +3,8 @@
 import { X } from "lucide-react"
 import { useState } from "react"
 
+import { Button } from "@/components/basic/Button"
+
 import { procurementPlanMock } from "../mock/procurementPlan.mock"
 import type { ReceivingItem } from "../mock/types"
 
@@ -99,14 +101,13 @@ export function SelectFromPlanModal({ isOpen, onClose, onAddItems }: SelectFromP
             เลือกแล้ว {selectedItems.length} รายการ ·{" "}
             <span className="font-semibold text-gray-900">{selectedTotal.toLocaleString("th-TH")} บาท</span>
           </p>
-          <button
-            type="button"
+          <Button
             onClick={handleConfirm}
             disabled={selectedItems.length === 0}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-40"
+            className="w-auto rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700 disabled:cursor-not-allowed disabled:opacity-40"
           >
             เพิ่มรายการที่เลือก
-          </button>
+          </Button>
         </div>
       </div>
     </div>

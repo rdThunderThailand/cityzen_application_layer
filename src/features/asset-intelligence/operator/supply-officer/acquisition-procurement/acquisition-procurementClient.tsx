@@ -85,12 +85,10 @@ export default function AcquisitionProcurementClient() {
   }
 
   return (
-    <main className="min-h-screen bg-gray-50 p-6">
-      <div>
-        <p className="mt-1 text-sm text-gray-500">บันทึกข้อมูลการรับเข้าครุภัณฑ์จากใบสั่งซื้อ</p>
-      </div>
+    <div className="flex h-full flex-col gap-3 overflow-hidden bg-gray-50 p-4">
+      <p className="shrink-0 text-sm text-gray-500">บันทึกข้อมูลการรับเข้าครุภัณฑ์จากใบสั่งซื้อ</p>
 
-      <div className="mt-6">
+      <div className="shrink-0">
         <WizardStepTabs
           steps={STEPS}
           currentStep={currentStep}
@@ -99,8 +97,8 @@ export default function AcquisitionProcurementClient() {
         />
       </div>
 
-      <div className="mt-6 flex flex-col gap-6 lg:flex-row">
-        <div className="flex-1 space-y-6">
+      <div className="flex min-h-0 flex-1 flex-col gap-3 lg:flex-row">
+        <div className="min-h-0 flex-1 overflow-auto">
           {currentStep === "receiving-info" && <ReceivingInfoForm info={receivingInfoMock} totalValue={totalValue} />}
 
           {currentStep === "asset-items" && (
@@ -129,18 +127,20 @@ export default function AcquisitionProcurementClient() {
         </div>
 
         {currentStep !== "confirm" && (
-          <WizardSummarySidebar
-            documentNo={receivingInfoMock.documentNo}
-            poNumber={receivingInfoMock.poNumber}
-            budget={receivingInfoMock.budget}
-            totalValue={totalValue}
-            steps={STEPS}
-            currentStep={currentStep}
-            completedSteps={completedSteps}
-            onBack={handleBack}
-            onContinue={handleContinue}
-            isBackDisabled={currentStep === STEPS[0].key}
-          />
+          <div className="shrink-0 overflow-auto">
+            <WizardSummarySidebar
+              documentNo={receivingInfoMock.documentNo}
+              poNumber={receivingInfoMock.poNumber}
+              budget={receivingInfoMock.budget}
+              totalValue={totalValue}
+              steps={STEPS}
+              currentStep={currentStep}
+              completedSteps={completedSteps}
+              onBack={handleBack}
+              onContinue={handleContinue}
+              isBackDisabled={currentStep === STEPS[0].key}
+            />
+          </div>
         )}
       </div>
 
@@ -155,6 +155,6 @@ export default function AcquisitionProcurementClient() {
         onClose={() => setIsSelectPlanOpen(false)}
         onAddItems={handleAddItemsFromPlan}
       />
-    </main>
+    </div>
   )
 }

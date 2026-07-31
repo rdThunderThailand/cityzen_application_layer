@@ -2,6 +2,8 @@
 
 import { ArrowRight, Check, Circle } from "lucide-react"
 
+import { Button } from "@/components/basic/Button"
+
 import type { WizardStepKey } from "../mock/types"
 import type { WizardStepConfig } from "./WizardStepTabs"
 
@@ -80,22 +82,20 @@ export function WizardSummarySidebar({
       </ul>
 
       <div className="flex flex-col gap-2">
-        <button
-          type="button"
+        <Button
           onClick={onContinue}
-          className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700"
+          className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700"
         >
           {continueLabel}
           <ArrowRight className="h-4 w-4" />
-        </button>
-        <button
-          type="button"
+        </Button>
+        <Button
           onClick={onBack}
           disabled={isBackDisabled}
-          className="rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+          className="w-full rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
         >
           ย้อนกลับ
-        </button>
+        </Button>
       </div>
     </aside>
   )

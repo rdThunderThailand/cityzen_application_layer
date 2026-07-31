@@ -3,6 +3,10 @@
 import { X } from "lucide-react"
 import { useState } from "react"
 
+import { Button } from "@/components/basic/Button"
+import { Dropdown } from "@/components/basic/Dropdown"
+import { Input } from "@/components/basic/Input"
+
 import type { AssetCondition, TransferAsset } from "../mock/types"
 
 interface AddAssetModalProps {
@@ -11,8 +15,12 @@ interface AddAssetModalProps {
   onAdd: (asset: TransferAsset) => void
 }
 
-const inputClassName =
-  "w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:border-blue-400 focus:outline-none"
+const inputClassName = "mb-0 w-full rounded-lg border-gray-200 px-3 py-2 text-sm text-gray-700 focus:border-blue-400 focus:ring-blue-400"
+
+const conditionOptions = [
+  { value: "สภาพดี", label: "สภาพดี" },
+  { value: "ชำรุด", label: "ชำรุด" },
+]
 
 export function AddAssetModal({ isOpen, onClose, onAdd }: AddAssetModalProps) {
   const [assetCode, setAssetCode] = useState("")
@@ -72,7 +80,7 @@ export function AddAssetModal({ isOpen, onClose, onAdd }: AddAssetModalProps) {
         <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
           <label className="flex flex-col gap-1 md:col-span-2">
             <span className="text-xs text-gray-500">รหัสครุภัณฑ์</span>
-            <input
+            <Input
               value={assetCode}
               onChange={(event) => setAssetCode(event.target.value)}
               className={inputClassName}
@@ -81,26 +89,24 @@ export function AddAssetModal({ isOpen, onClose, onAdd }: AddAssetModalProps) {
           </label>
           <label className="flex flex-col gap-1 md:col-span-2">
             <span className="text-xs text-gray-500">ชื่อครุภัณฑ์</span>
-            <input value={name} onChange={(event) => setName(event.target.value)} className={inputClassName} />
+            <Input value={name} onChange={(event) => setName(event.target.value)} className={inputClassName} />
           </label>
           <label className="flex flex-col gap-1">
             <span className="text-xs text-gray-500">หน่วยนับ</span>
-            <input value={unit} onChange={(event) => setUnit(event.target.value)} className={inputClassName} />
+            <Input value={unit} onChange={(event) => setUnit(event.target.value)} className={inputClassName} />
           </label>
           <label className="flex flex-col gap-1">
             <span className="text-xs text-gray-500">สภาพ</span>
-            <select
-              value={condition}
-              onChange={(event) => setCondition(event.target.value as AssetCondition)}
-              className={inputClassName}
-            >
-              <option value="สภาพดี">สภาพดี</option>
-              <option value="ชำรุด">ชำรุด</option>
-            </select>
+            <Dropdown
+              options={conditionOptions}
+              selectedValue={condition}
+              onChange={(value) => setCondition(value as AssetCondition)}
+              className="w-full"
+            />
           </label>
           <label className="flex flex-col gap-1">
             <span className="text-xs text-gray-500">มูลค่าตั้งต้น (บาท)</span>
-            <input
+            <Input
               type="number"
               min={0}
               value={originalValue}
@@ -110,7 +116,7 @@ export function AddAssetModal({ isOpen, onClose, onAdd }: AddAssetModalProps) {
           </label>
           <label className="flex flex-col gap-1">
             <span className="text-xs text-gray-500">มูลค่าประเมิน (บาท)</span>
-            <input
+            <Input
               type="number"
               min={0}
               value={assessedValue}
@@ -121,13 +127,12 @@ export function AddAssetModal({ isOpen, onClose, onAdd }: AddAssetModalProps) {
         </div>
 
         <div className="mt-5 flex justify-end">
-          <button
-            type="button"
+          <Button
             onClick={handleSubmit}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+            className="w-auto rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
           >
             เพิ่มรายการ
-          </button>
+          </Button>
         </div>
       </div>
     </div>

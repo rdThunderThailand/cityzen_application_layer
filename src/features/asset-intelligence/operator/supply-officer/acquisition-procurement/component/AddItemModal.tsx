@@ -3,6 +3,10 @@
 import { Upload, X } from "lucide-react"
 import { useState } from "react"
 
+import { Button } from "@/components/basic/Button"
+import { Dropdown } from "@/components/basic/Dropdown"
+import { Input } from "@/components/basic/Input"
+
 import type { ReceivingItem } from "../mock/types"
 
 interface AddItemModalProps {
@@ -11,8 +15,14 @@ interface AddItemModalProps {
   onAdd: (item: ReceivingItem) => void
 }
 
-const inputClassName =
-  "w-full rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:border-blue-400 focus:outline-none"
+const inputClassName = "mb-0 w-full rounded-lg border-gray-200 px-3 py-2 text-sm text-gray-700 focus:border-blue-400 focus:ring-blue-400"
+
+const categoryOptions = [
+  { value: "ครุภัณฑ์สำนักงาน", label: "ครุภัณฑ์สำนักงาน" },
+  { value: "ครุภัณฑ์คอมพิวเตอร์", label: "ครุภัณฑ์คอมพิวเตอร์" },
+  { value: "ครุภัณฑ์ไฟฟ้า", label: "ครุภัณฑ์ไฟฟ้า" },
+  { value: "ยานพาหนะ", label: "ยานพาหนะ" },
+]
 
 export function AddItemModal({ isOpen, onClose, onAdd }: AddItemModalProps) {
   const [name, setName] = useState("")
@@ -67,28 +77,28 @@ export function AddItemModal({ isOpen, onClose, onAdd }: AddItemModalProps) {
         <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
           <label className="flex flex-col gap-1">
             <span className="text-xs text-gray-500">ชื่อครุภัณฑ์</span>
-            <input value={name} onChange={(event) => setName(event.target.value)} className={inputClassName} />
+            <Input value={name} onChange={(event) => setName(event.target.value)} className={inputClassName} />
           </label>
           <label className="flex flex-col gap-1">
             <span className="text-xs text-gray-500">หมวดหมู่ / ประเภท</span>
-            <select value={category} onChange={(event) => setCategory(event.target.value)} className={inputClassName}>
-              <option>ครุภัณฑ์สำนักงาน</option>
-              <option>ครุภัณฑ์คอมพิวเตอร์</option>
-              <option>ครุภัณฑ์ไฟฟ้า</option>
-              <option>ยานพาหนะ</option>
-            </select>
+            <Dropdown
+              options={categoryOptions}
+              selectedValue={category}
+              onChange={(value) => setCategory(String(value))}
+              className="w-full"
+            />
           </label>
           <label className="flex flex-col gap-1">
             <span className="text-xs text-gray-500">ยี่ห้อ / รุ่น</span>
-            <input className={inputClassName} placeholder="เช่น Lenovo AIO 3" />
+            <Input className={inputClassName} placeholder="เช่น Lenovo AIO 3" />
           </label>
           <label className="flex flex-col gap-1">
             <span className="text-xs text-gray-500">เลขที่ PO / สัญญา</span>
-            <input className={inputClassName} placeholder="PO-6705-0021" />
+            <Input className={inputClassName} placeholder="PO-6705-0021" />
           </label>
           <label className="flex flex-col gap-1">
             <span className="text-xs text-gray-500">จำนวน</span>
-            <input
+            <Input
               type="number"
               min={1}
               value={quantity}
@@ -98,11 +108,11 @@ export function AddItemModal({ isOpen, onClose, onAdd }: AddItemModalProps) {
           </label>
           <label className="flex flex-col gap-1">
             <span className="text-xs text-gray-500">หน่วยนับ</span>
-            <input className={inputClassName} placeholder="ชิ้น / เครื่อง" />
+            <Input className={inputClassName} placeholder="ชิ้น / เครื่อง" />
           </label>
           <label className="flex flex-col gap-1">
             <span className="text-xs text-gray-500">ราคาต่อหน่วย (บาท)</span>
-            <input
+            <Input
               type="number"
               min={0}
               value={unitPrice}
@@ -112,15 +122,15 @@ export function AddItemModal({ isOpen, onClose, onAdd }: AddItemModalProps) {
           </label>
           <label className="flex flex-col gap-1">
             <span className="text-xs text-gray-500">ปีงบประมาณ</span>
-            <input className={inputClassName} placeholder="2567" />
+            <Input className={inputClassName} placeholder="2567" />
           </label>
           <label className="flex flex-col gap-1">
             <span className="text-xs text-gray-500">กลุ่มงาน</span>
-            <input className={inputClassName} placeholder="สำนักปลัดเทศบาล" />
+            <Input className={inputClassName} placeholder="สำนักปลัดเทศบาล" />
           </label>
           <label className="flex flex-col gap-1">
             <span className="text-xs text-gray-500">สถานที่จัดเก็บ</span>
-            <input className={inputClassName} placeholder="คลังพัสดุ อาคาร A" />
+            <Input className={inputClassName} placeholder="คลังพัสดุ อาคาร A" />
           </label>
         </div>
 
@@ -139,13 +149,12 @@ export function AddItemModal({ isOpen, onClose, onAdd }: AddItemModalProps) {
           <p className="text-sm text-gray-500">
             ราคารวม: <span className="font-semibold text-gray-900">{totalPrice.toLocaleString("th-TH")} บาท</span>
           </p>
-          <button
-            type="button"
+          <Button
             onClick={handleSubmit}
-            className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+            className="w-auto rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
           >
             เพิ่มรายการ
-          </button>
+          </Button>
         </div>
       </div>
     </div>

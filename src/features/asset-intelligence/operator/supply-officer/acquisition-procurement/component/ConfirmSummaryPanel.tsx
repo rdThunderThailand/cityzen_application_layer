@@ -2,6 +2,8 @@
 
 import { CheckCircle2, FileCheck2 } from "lucide-react"
 
+import { Button } from "@/components/basic/Button"
+
 import type { ReceivingInfo, ReceivingItem, SupportingDocument } from "../mock/types"
 
 interface ConfirmSummaryPanelProps {
@@ -56,14 +58,13 @@ export function ConfirmSummaryPanel({ info, items, documents, isConfirmed, onCon
       </div>
 
       <div className="mt-5 flex justify-end">
-        <button
-          type="button"
+        <Button
           onClick={onConfirm}
-          className="flex items-center gap-2 rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-green-700"
+          className="w-auto rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-green-700"
         >
           <CheckCircle2 className="h-4 w-4" />
           ยืนยันการรับเข้า
-        </button>
+        </Button>
       </div>
     </div>
   )

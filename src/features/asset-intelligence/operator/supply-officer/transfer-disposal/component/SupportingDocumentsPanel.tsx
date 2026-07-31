@@ -2,6 +2,8 @@
 
 import { CheckCircle2, Circle, Download, Plus, Trash2, Upload } from "lucide-react"
 
+import { Button } from "@/components/basic/Button"
+
 import type { RequiredDocumentSlot, UploadedDocument } from "../mock/types"
 
 interface SupportingDocumentsPanelProps {
@@ -26,14 +28,13 @@ export function SupportingDocumentsPanel({
 
       <div className="mt-3 flex flex-wrap items-center justify-between gap-2 rounded-lg bg-gray-50 px-3 py-2 text-xs text-gray-500">
         <span>อัปโหลดไฟล์เอกสาร PDF, JPG, PNG ขนาดไม่เกิน 20 MB ต่อไฟล์</span>
-        <button
-          type="button"
+        <Button
           onClick={() => onUpload(requiredSlots.find((slot) => !findDocument(slot.id))?.id ?? "")}
-          className="flex items-center gap-1 rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-700"
+          className="w-auto rounded-lg bg-blue-600 px-3 py-1.5 text-xs font-semibold text-white hover:bg-blue-700"
         >
           <Plus className="h-3.5 w-3.5" />
           เพิ่มเอกสาร
-        </button>
+        </Button>
       </div>
 
       <div className="mt-4 overflow-x-auto">

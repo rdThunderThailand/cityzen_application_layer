@@ -2,6 +2,8 @@
 
 import { CheckCircle2, Coins, TrendingDown, Wallet } from "lucide-react"
 
+import { Button } from "@/components/basic/Button"
+
 import type { TransferAsset, TransferDisposalInfo, UploadedDocument } from "../mock/types"
 import { ConditionBadge } from "./ConditionBadge"
 
@@ -160,14 +162,13 @@ export function ConfirmReviewPanel({ info, items, uploadedDocuments, isConfirmed
       </div>
 
       <div className="flex justify-end border-t border-gray-100 pt-5">
-        <button
-          type="button"
+        <Button
           onClick={onConfirm}
-          className="flex items-center gap-2 rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-green-700"
+          className="w-auto rounded-lg bg-green-600 px-5 py-2.5 text-sm font-semibold text-white hover:bg-green-700"
         >
           <CheckCircle2 className="h-4 w-4" />
           บันทึกข้อมูล{info.transactionType}
-        </button>
+        </Button>
       </div>
     </div>
   )

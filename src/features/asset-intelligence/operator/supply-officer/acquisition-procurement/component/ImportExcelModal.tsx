@@ -3,6 +3,8 @@
 import { CheckCircle2, FileSpreadsheet, X } from "lucide-react"
 import { useState } from "react"
 
+import { Button } from "@/components/basic/Button"
+
 import type { ReceivingItem } from "../mock/types"
 
 interface ImportExcelModalProps {
@@ -69,13 +71,12 @@ export function ImportExcelModal({ isOpen, onClose, onComplete }: ImportExcelMod
             <div className="flex flex-col items-center justify-center gap-3 rounded-xl border-2 border-dashed border-gray-200 p-10 text-center">
               <FileSpreadsheet className="h-10 w-10 text-green-600" />
               <p className="text-sm text-gray-500">ลากไฟล์ Excel มาวางที่นี่ หรือ</p>
-              <button
-                type="button"
+              <Button
                 onClick={() => setStage("matching")}
-                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+                className="w-auto rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
               >
                 เลือกไฟล์ Excel
-              </button>
+              </Button>
             </div>
             <p className="mt-2 text-xs text-gray-400">รองรับไฟล์ .xlsx, .xls ขนาดไม่เกิน 10 MB</p>
           </div>
@@ -110,13 +111,12 @@ export function ImportExcelModal({ isOpen, onClose, onComplete }: ImportExcelMod
               </table>
             </div>
             <div className="flex justify-end">
-              <button
-                type="button"
+              <Button
                 onClick={() => setStage("verify")}
-                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+                className="w-auto rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
               >
                 ดำเนินการต่อ
-              </button>
+              </Button>
             </div>
           </div>
         )}
@@ -128,20 +128,18 @@ export function ImportExcelModal({ isOpen, onClose, onComplete }: ImportExcelMod
               ตรวจสอบข้อมูลเรียบร้อย พร้อมเพิ่มเข้ารายการครุภัณฑ์
             </div>
             <div className="flex justify-end gap-2">
-              <button
-                type="button"
+              <Button
                 onClick={handleClose}
-                className="rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+                className="w-auto rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
               >
                 ยกเลิก
-              </button>
-              <button
-                type="button"
+              </Button>
+              <Button
                 onClick={handleConfirm}
-                className="rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
+                className="w-auto rounded-lg bg-blue-600 px-4 py-2 text-sm font-semibold text-white hover:bg-blue-700"
               >
                 ยืนยันและเพิ่มรายการ
-              </button>
+              </Button>
             </div>
           </div>
         )}

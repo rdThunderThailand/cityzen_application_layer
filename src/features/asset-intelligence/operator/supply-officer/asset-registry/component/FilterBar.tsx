@@ -3,6 +3,12 @@
 import { useState } from "react"
 import { RotateCcw, Search, SlidersHorizontal } from "lucide-react"
 
+import { Button } from "@/components/basic/Button"
+import { Dropdown } from "@/components/basic/Dropdown"
+import { Input } from "@/components/basic/Input"
+
+import type { FilterFieldConfig } from "../mock/filterOptions.mock"
+
 export interface AssetFilterValues {
   search: string
   type: string
@@ -13,6 +19,7 @@ export interface AssetFilterValues {
 }
 
 interface FilterBarProps {
+  filterFields: FilterFieldConfig[]
   onFilterChange: (filters: AssetFilterValues) => void
   onReset: () => void
 }
@@ -26,15 +33,7 @@ const DEFAULT_FILTERS: AssetFilterValues = {
   fiscalYear: "ทั้งหมด",
 }
 
-const selectFieldConfig: Array<{ key: keyof Omit<AssetFilterValues, "search">; label: string }> = [
-  { key: "type", label: "ประเภทครุภัณฑ์" },
-  { key: "status", label: "สถานะ" },
-  { key: "department", label: "หน่วยงาน" },
-  { key: "location", label: "สถานที่" },
-  { key: "fiscalYear", label: "ปีงบประมาณจัดซื้อ" },
-]
-
-export function FilterBar({ onFilterChange, onReset }: FilterBarProps) {
+export function FilterBar({ filterFields, onFilterChange, onReset }: FilterBarProps) {
   const [filters, setFilters] = useState<AssetFilterValues>(DEFAULT_FILTERS)
 
   const updateFilters = (next: AssetFilterValues) => {
@@ -48,47 +47,42 @@ export function FilterBar({ onFilterChange, onReset }: FilterBarProps) {
   }
 
   return (
-    <div className="rounded-xl border border-gray-100 bg-white p-4 shadow-sm">
-      <div className="flex flex-wrap items-end gap-3">
+    <div className="rounded-xl border border-gray-100 bg-white p-3 shadow-sm">
+      <div className="flex flex-wrap items-end gap-2">
         <div className="relative min-w-[220px] flex-1">
-          <Search className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-gray-400" />
-          <input
+          <Search className="pointer-events-none absolute left-3 top-1/2 z-10 h-4 w-4 -translate-y-1/2 text-gray-400" />
+          <Input
             type="text"
             value={filters.search}
             onChange={(event) => updateFilters({ ...filters, search: event.target.value })}
             placeholder="ค้นหาครุภัณฑ์"
-            className="w-full rounded-lg border border-gray-200 py-2 pl-9 pr-3 text-sm text-gray-700 placeholder:text-gray-400 focus:border-blue-400 focus:outline-none"
+            className="mb-0 w-full rounded-lg border-gray-200 py-2 pl-9 pr-3 text-sm text-gray-700 focus:border-blue-400 focus:ring-blue-400"
           />
         </div>
 
-        {selectFieldConfig.map((field) => (
+        {filterFields.map((field) => (
           <div key={field.key} className="flex flex-col gap-1">
             <span className="text-xs text-gray-500">{field.label}</span>
-            <select
-              value={filters[field.key]}
-              onChange={(event) => updateFilters({ ...filters, [field.key]: event.target.value })}
-              className="rounded-lg border border-gray-200 px-3 py-2 text-sm text-gray-700 focus:border-blue-400 focus:outline-none"
-            >
-              <option value="ทั้งหมด">ทั้งหมด</option>
-            </select>
+            <Dropdown
+              options={field.options}
+              selectedValue={filters[field.key]}
+              onChange={(value) => updateFilters({ ...filters, [field.key]: String(value) })}
+              className="w-44"
+            />
           </div>
         ))}
 
-        <button
-          type="button"
-          className="flex items-center gap-2 rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-        >
+        <Button className="w-auto rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
           <SlidersHorizontal className="h-4 w-4" />
           ตัวกรองเพิ่มเติม
-        </button>
-        <button
-          type="button"
+        </Button>
+        <Button
           onClick={handleReset}
-          className="flex items-center gap-2 rounded-lg border border-gray-200 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+          className="w-auto rounded-lg border border-gray-200 bg-white px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
         >
           <RotateCcw className="h-4 w-4" />
           รีเซ็ต
-        </button>
+        </Button>
       </div>
     </div>
   )

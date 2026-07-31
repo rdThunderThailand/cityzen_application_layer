@@ -2,6 +2,8 @@
 
 import { ArrowRight, Lightbulb } from "lucide-react"
 
+import { Button } from "@/components/basic/Button"
+
 import type { TransferDisposalInfo } from "../mock/types"
 
 interface WizardSummarySidebarProps {
@@ -77,30 +79,27 @@ export function WizardSummarySidebar({
       </div>
 
       <div className="flex flex-col gap-2">
-        <button
-          type="button"
+        <Button
           onClick={onContinue}
-          className="flex items-center justify-center gap-2 rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700"
+          className="w-full rounded-lg bg-blue-600 px-4 py-2.5 text-sm font-semibold text-white hover:bg-blue-700"
         >
           {continueLabel}
           <ArrowRight className="h-4 w-4" />
-        </button>
+        </Button>
         <div className="flex gap-2">
-          <button
-            type="button"
+          <Button
             onClick={onBack}
             disabled={isBackDisabled}
-            className="flex-1 rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
+            className="w-full flex-1 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50 disabled:cursor-not-allowed disabled:opacity-40"
           >
             ย้อนกลับ
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
             onClick={onSaveDraft}
-            className="flex-1 rounded-lg border border-gray-200 px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50"
+            className="w-full flex-1 rounded-lg border border-gray-200 bg-white px-4 py-2.5 text-sm font-medium text-gray-600 hover:bg-gray-50"
           >
             บันทึกร่าง
-          </button>
+          </Button>
         </div>
       </div>
     </aside>

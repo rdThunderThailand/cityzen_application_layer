@@ -47,7 +47,7 @@ export const CardMetric = ({
     return (
         <div
             className={cn(
-                "relative flex flex-row items-center gap-3 sm:gap-3 md:gap-4 p-3 border border-slate-100 rounded-xl shadow-sm w-full min-w-[160px] font-sans max-h-[140px]",
+                "relative flex flex-row items-center gap-3 sm:gap-3 md:gap-4 p-3 bg-white border border-slate-100 rounded-xl shadow-sm w-full min-w-[160px] font-sans max-h-[140px]",
                 showChevron && "pr-8",
                 className
             )}

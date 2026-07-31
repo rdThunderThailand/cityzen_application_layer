@@ -2,6 +2,8 @@
 
 import { FileInput, Plus, ScanLine, Trash2 } from "lucide-react"
 
+import { Button } from "@/components/basic/Button"
+
 import type { TransferAsset } from "../mock/types"
 import { ConditionBadge } from "./ConditionBadge"
 
@@ -34,37 +36,29 @@ export function AssetItemsPanel({
           <p className="text-xs text-gray-400">เลือกครุภัณฑ์ที่ต้องการบันทึกรายการ</p>
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
+          <Button
             onClick={onOpenAddAsset}
-            className="flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700"
+            className="w-auto rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700"
           >
             <Plus className="h-4 w-4" />
             เพิ่มรายการ
-          </button>
-          <button
-            type="button"
-            className="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
+          </Button>
+          <Button className="w-auto rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
             <FileInput className="h-4 w-4" />
             นำเข้าจากไฟล์เอกสาร
-          </button>
-          <button
-            type="button"
-            className="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
-          >
+          </Button>
+          <Button className="w-auto rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50">
             <ScanLine className="h-4 w-4" />
             สแกน Barcode / QR
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
             onClick={onRemoveSelected}
             disabled={selectedIds.length === 0}
-            className="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-40"
+            className="w-auto rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-red-600 hover:bg-red-50 disabled:cursor-not-allowed disabled:opacity-40"
           >
             <Trash2 className="h-4 w-4" />
             ลบรายการที่เลือก
-          </button>
+          </Button>
         </div>
       </div>
 

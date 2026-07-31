@@ -1,5 +1,7 @@
 "use client"
 
+import { Input } from "@/components/basic/Input"
+
 import type { ReceivingInfo } from "../mock/types"
 
 interface ReceivingInfoFormProps {
@@ -8,7 +10,7 @@ interface ReceivingInfoFormProps {
 }
 
 const fieldClassName =
-  "w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700 focus:outline-none"
+  "mb-0 w-full rounded-lg border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700 focus:border-gray-200 focus:ring-0"
 
 export function ReceivingInfoForm({ info, totalValue }: ReceivingInfoFormProps) {
   const remaining = info.budget - totalValue
@@ -21,35 +23,35 @@ export function ReceivingInfoForm({ info, totalValue }: ReceivingInfoFormProps) 
       <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
         <label className="flex flex-col gap-1">
           <span className="text-xs text-gray-500">เลขที่เอกสาร</span>
-          <input readOnly value={info.documentNo} className={fieldClassName} />
+          <Input readOnly value={info.documentNo} className={fieldClassName} />
         </label>
         <label className="flex flex-col gap-1">
           <span className="text-xs text-gray-500">ผู้จัดหา / ผู้ขาย</span>
-          <input readOnly value={info.vendor} className={fieldClassName} />
+          <Input readOnly value={info.vendor} className={fieldClassName} />
         </label>
         <label className="flex flex-col gap-1">
           <span className="text-xs text-gray-500">วันที่รับเข้า</span>
-          <input readOnly value={info.receivedDate} className={fieldClassName} />
+          <Input readOnly value={info.receivedDate} className={fieldClassName} />
         </label>
         <label className="flex flex-col gap-1">
           <span className="text-xs text-gray-500">สถานะ</span>
-          <input readOnly value={info.status} className={fieldClassName} />
+          <Input readOnly value={info.status} className={fieldClassName} />
         </label>
         <label className="flex flex-col gap-1">
           <span className="text-xs text-gray-500">เลขที่ PO / สัญญา</span>
-          <input readOnly value={info.poNumber} className={fieldClassName} />
+          <Input readOnly value={info.poNumber} className={fieldClassName} />
         </label>
         <label className="flex flex-col gap-1">
           <span className="text-xs text-gray-500">ผู้รับผิดชอบ</span>
-          <input readOnly value={info.responsible} className={fieldClassName} />
+          <Input readOnly value={info.responsible} className={fieldClassName} />
         </label>
         <label className="flex flex-col gap-1">
           <span className="text-xs text-gray-500">หน่วยงาน / แผนก</span>
-          <input readOnly value={info.department} className={fieldClassName} />
+          <Input readOnly value={info.department} className={fieldClassName} />
         </label>
         <label className="flex flex-col gap-1">
           <span className="text-xs text-gray-500">เลขที่ใบสั่งซื้อ</span>
-          <input readOnly value={info.contractNumber} className={fieldClassName} />
+          <Input readOnly value={info.contractNumber} className={fieldClassName} />
         </label>
       </div>
 

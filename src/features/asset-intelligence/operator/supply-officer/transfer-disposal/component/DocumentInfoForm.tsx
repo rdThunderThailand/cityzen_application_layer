@@ -1,5 +1,8 @@
 "use client"
 
+import { Button } from "@/components/basic/Button"
+import { Input } from "@/components/basic/Input"
+
 import type { AvailableAsset, TransactionType, TransferDisposalInfo } from "../mock/types"
 
 interface DocumentInfoFormProps {
@@ -12,7 +15,7 @@ interface DocumentInfoFormProps {
 }
 
 const fieldClassName =
-  "w-full rounded-lg border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700 focus:outline-none"
+  "mb-0 w-full rounded-lg border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-700 focus:border-gray-200 focus:ring-0"
 
 export function DocumentInfoForm({
   info,
@@ -32,16 +35,17 @@ export function DocumentInfoForm({
         <span className="text-xs text-gray-500">ประเภทรายการ *</span>
         <div className="mt-1 inline-flex rounded-lg border border-gray-200 p-1">
           {(["โอนย้าย", "จำหน่าย"] as TransactionType[]).map((type) => (
-            <button
+            <Button
               key={type}
-              type="button"
               onClick={() => onChangeTransactionType(type)}
-              className={`rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
-                info.transactionType === type ? "bg-blue-600 text-white" : "text-gray-500 hover:bg-gray-50"
+              className={`w-auto rounded-md px-4 py-1.5 text-sm font-medium transition-colors ${
+                info.transactionType === type
+                  ? "bg-blue-600 text-white"
+                  : "bg-transparent text-gray-500 hover:bg-gray-50"
               }`}
             >
               {type}
-            </button>
+            </Button>
           ))}
         </div>
       </div>
@@ -49,11 +53,11 @@ export function DocumentInfoForm({
       <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
         <label className="flex flex-col gap-1">
           <span className="text-xs text-gray-500">เลขที่เอกสาร</span>
-          <input readOnly value={info.documentNo} className={fieldClassName} />
+          <Input readOnly value={info.documentNo} className={fieldClassName} />
         </label>
         <label className="flex flex-col gap-1">
           <span className="text-xs text-gray-500">{isDisposal ? "วิธีจำหน่าย *" : "หน่วยงานปลายทาง *"}</span>
-          <input
+          <Input
             readOnly
             value={isDisposal ? info.disposalMethod : info.destinationDepartment}
             className={fieldClassName}
@@ -61,23 +65,23 @@ export function DocumentInfoForm({
         </label>
         <label className="flex flex-col gap-1">
           <span className="text-xs text-gray-500">วันที่ดำเนินการ</span>
-          <input readOnly value={info.actionDate} className={fieldClassName} />
+          <Input readOnly value={info.actionDate} className={fieldClassName} />
         </label>
         <label className="flex flex-col gap-1">
           <span className="text-xs text-gray-500">ผู้รับผิดชอบ</span>
-          <input readOnly value={info.responsiblePerson} className={fieldClassName} />
+          <Input readOnly value={info.responsiblePerson} className={fieldClassName} />
         </label>
         <label className="flex flex-col gap-1">
           <span className="text-xs text-gray-500">หน่วยงานต้นทาง</span>
-          <input readOnly value={info.sourceDepartment} className={fieldClassName} />
+          <Input readOnly value={info.sourceDepartment} className={fieldClassName} />
         </label>
         <label className="flex flex-col gap-1">
           <span className="text-xs text-gray-500">ผู้อนุมัติ</span>
-          <input readOnly value={info.approver} className={fieldClassName} />
+          <Input readOnly value={info.approver} className={fieldClassName} />
         </label>
         <label className="flex flex-col gap-1 md:col-span-2">
           <span className="text-xs text-gray-500">เหตุผล</span>
-          <input readOnly value={info.reason} className={fieldClassName} />
+          <Input readOnly value={info.reason} className={fieldClassName} />
         </label>
       </div>
 

@@ -2,6 +2,8 @@
 
 import { FileSpreadsheet, ListChecks, Pencil, Plus, Trash2 } from "lucide-react"
 
+import { Button } from "@/components/basic/Button"
+
 import type { ReceivingItem } from "../mock/types"
 
 interface ReceivingItemsPanelProps {
@@ -26,30 +28,27 @@ export function ReceivingItemsPanel({
       <div className="flex flex-wrap items-center justify-between gap-3">
         <h2 className="text-base font-semibold text-gray-900">รายการครุภัณฑ์</h2>
         <div className="flex flex-wrap items-center gap-2">
-          <button
-            type="button"
+          <Button
             onClick={onOpenImportExcel}
-            className="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="w-auto rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
           >
             <FileSpreadsheet className="h-4 w-4" />
             นำเข้าจาก Excel
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
             onClick={onOpenSelectFromPlan}
-            className="flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
+            className="w-auto rounded-lg border border-gray-200 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50"
           >
             <ListChecks className="h-4 w-4" />
             เลือกจากแผนจัดซื้อ
-          </button>
-          <button
-            type="button"
+          </Button>
+          <Button
             onClick={onOpenAddItem}
-            className="flex items-center gap-2 rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700"
+            className="w-auto rounded-lg bg-blue-600 px-3 py-2 text-sm font-medium text-white hover:bg-blue-700"
           >
             <Plus className="h-4 w-4" />
             เพิ่มรายการ
-          </button>
+          </Button>
         </div>
       </div>
 
