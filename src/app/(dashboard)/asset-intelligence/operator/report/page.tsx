@@ -1,7 +1,5 @@
+import ReportClient from "@/features/asset-intelligence/operator/report/ReportClient";
+
 export default function Report() {
-    return (
-        <div>
-            <h1>Report</h1>
-        </div>
-    );
+    return <ReportClient />;
 }

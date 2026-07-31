@@ -1,7 +1,5 @@
+import WorkOrderClient from "@/features/asset-intelligence/operator/work-order/WorkOrderClient";
+
 export default function WorkOrder() {
-    return (
-        <div>
-            <h1>Work Order</h1>
-        </div>
-    );
+    return <WorkOrderClient />;
 }

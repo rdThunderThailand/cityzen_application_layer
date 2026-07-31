@@ -11,7 +11,7 @@ const PRIORITY: readonly CityzenRole[] = CITYZEN_ROLES;
 export const ROLE_HOME: Record<CityzenRole, string> = {
   manager: "/resource-intelligence/manager/daily-brief",
   executive_viewer: "/resource-intelligence/executive/daily-brief",
-  operator: "/resource-intelligence/operator/tasks",
+  operator: "/asset-intelligence/operator/main",
 };
 
 // Maps Thunder role codes → CityZen roles.

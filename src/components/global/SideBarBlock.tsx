@@ -48,6 +48,9 @@ export interface SidebarProps {
     user?: UserProfile;
     onLogout?: () => void;
 
+    /** Extra content rendered in the footer, above the ตั้งค่า/ข้อมูล/ออกจากระบบ buttons (e.g. a role switcher). Receives the sidebar's collapsed state so it can adapt (icon-only, etc). */
+    footerTopSlot?: (isCollapsed: boolean) => React.ReactNode;
+
     // Custom Style Overrides Object
     customStyles?: SidebarStyleOverrides;
 }
@@ -59,6 +62,7 @@ export const SideBarBlock = ({
     navigationItems = executiveNavigationItems,
     user,
     onLogout = () => logoutAction(),
+    footerTopSlot,
     customStyles = {}
 }: SidebarProps) => {
     const pathname = usePathname();
@@ -199,12 +203,19 @@ export const SideBarBlock = ({
                     isCollapsed ? "items-center" : ""
                 )}>
 
+                    {footerTopSlot && (
+                        <div className={cn("w-full mb-20", isCollapsed ? "flex justify-center" : "")}>
+                            <p className='text-xs text-slate-500'>{isCollapsed ? "" : "แอปพลิเคชั่น"}</p>
+                            {footerTopSlot(isCollapsed)}
+                        </div>
+                    )}
+
                     <div className="mb-12">
                         <button
                             onClick={() => console.log("Settings clicked")}
                             className={cn(
                                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm w-full text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 shrink-0 cursor-pointer",
-                                isCollapsed ? "w-9 h-9 justify-center" : ""
+                                isCollapsed ? "w-14 h-14 justify-center" : ""
                             )}
                             title="ตั้งค่า"
                             aria-label="Settings"
@@ -217,7 +228,7 @@ export const SideBarBlock = ({
                             onClick={() => console.log("Information clicked")}
                             className={cn(
                                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm w-full text-slate-500 hover:bg-slate-50 hover:text-slate-900 transition-all duration-200 shrink-0 cursor-pointer",
-                                isCollapsed ? "w-9 h-9 justify-center" : ""
+                                isCollapsed ? "w-14 h-14 justify-center -my-2.5" : ""
                             )}
                             title="ข้อมูล"
                             aria-label="Information"
@@ -230,7 +241,7 @@ export const SideBarBlock = ({
                             onClick={onLogout}
                             className={cn(
                                 "flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm w-full text-slate-500 hover:bg-red-50 hover:text-red-500 transition-all duration-200 shrink-0 cursor-pointer",
-                                isCollapsed ? "w-9 h-9 justify-center" : ""
+                                isCollapsed ? "w-14 h-14 justify-center" : ""
                             )}
                             title="ออกจากระบบ"
                             aria-label="Logout"
