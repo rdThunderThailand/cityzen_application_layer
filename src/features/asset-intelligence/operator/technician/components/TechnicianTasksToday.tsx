@@ -5,17 +5,17 @@ import { ArrowRight, ChevronRight } from "lucide-react";
 
 export function TechnicianTasksToday({ tasks }: { tasks: TechnicianTaskItem[] }) {
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col h-[500px]">
+    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col h-[350px]">
       <div className="p-6 border-b border-slate-100 flex items-center justify-between shrink-0">
         <h2 className="text-[15px] font-bold text-slate-800">งานของฉันวันนี้ ({tasks.length})</h2>
-        <button className="text-[12px] font-bold text-blue-600 hover:underline flex items-center gap-1">
+        {/* <button className="text-[12px] font-bold text-blue-600 hover:underline flex items-center gap-1">
           ดูทั้งหมด <ArrowRight className="w-3.5 h-3.5" />
-        </button>
+        </button> */}
       </div>
 
       <div className="flex-1 overflow-y-auto p-2 custom-scrollbar">
         <div className="flex flex-col gap-1">
-          {tasks.map((task) => (
+          {tasks.map((task) => ( 
             <div key={task.id} className="flex items-center gap-4 p-4 rounded-xl hover:bg-slate-50 transition-colors group cursor-pointer border border-transparent hover:border-slate-100">
               <div className="w-12 shrink-0 flex flex-col items-center">
                 <span className={`text-[13px] font-bold ${task.isUrgent ? "text-rose-600" : "text-slate-800"}`}>

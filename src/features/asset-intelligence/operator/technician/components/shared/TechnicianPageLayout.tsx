@@ -23,7 +23,7 @@ export function TechnicianPageLayout({
   children,
 }: TechnicianPageLayoutProps) {
   return (
-    <div className="min-h-full flex-1 bg-[#F8FAFC] w-full p-6 pb-40 flex flex-col gap-6">
+    <div className="min-h-full flex-1 w-full p-6 pb-40 flex flex-col">
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-start justify-between gap-4 mb-2">
         <div className="flex flex-col">
@@ -46,9 +46,6 @@ export function TechnicianPageLayout({
             </div>
           )}
 
-          <h1 className="text-[28px] font-black text-[#1e293b] tracking-tight leading-none mb-2">
-            {title}
-          </h1>
           {description && (
             <p className="text-[14px] font-medium text-slate-500 max-w-3xl">
               {description}
@@ -62,7 +59,6 @@ export function TechnicianPageLayout({
           </div>
         )}
       </div>
-
       {children}
     </div>
   );

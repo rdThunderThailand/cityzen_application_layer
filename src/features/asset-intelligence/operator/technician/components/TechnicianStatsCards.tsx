@@ -1,65 +1,83 @@
 "use client";
 
 import { TechnicianSummaryStats } from "@/features/asset-intelligence/operator/technician/types";
-import { CheckCircle2, Clock, FileText, History } from "lucide-react";
-import { TechnicianMetricCard } from "./shared/TechnicianMetricCard";
+import { CheckCircle2, ChevronRight, Clock, FileText, History, Timer } from "lucide-react";
+import { CardMetric } from "@/components/dashboard/CardMetric";
 
 export function TechnicianStatsCards({ stats }: { stats: TechnicianSummaryStats }) {
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
-      <TechnicianMetricCard
+    <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6 items-start">
+      <CardMetric
         title="งานของฉันวันนี้"
         value={stats.tasksToday}
         subtitle="รายการ"
-        icon={<FileText className="w-6 h-6 text-blue-600" />}
-        actionLabel="ดูทั้งหมด"
-        onActionClick={() => {}}
+        icon={FileText}
+        classNameForIcon="bg-blue-50 text-blue-600"
+        className="max-h-180 gap-2 p-5 items-start"
+        action={
+          <div className="w-full">
+          <button className="flex items-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-800 transition-colors">
+            ดูทั้งหมด <ChevronRight className="w-3 h-3" />
+          </button>
+          </div>
+        }
       />
-      <TechnicianMetricCard
+      <CardMetric
         title="งานเร่งด่วน"
         value={stats.urgentTasks}
         subtitle="รายการ"
-        icon={<Clock className="w-6 h-6 text-amber-600" />}
-        iconBgColor="bg-amber-50"
-        actionLabel="ดูทั้งหมด"
-        onActionClick={() => {}}
+        icon={Clock}
+        classNameForIcon="bg-amber-50 text-amber-600"
+        className="max-h-180 gap-2 p-5 items-start"
+        action={
+          <button className="flex items-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-800 transition-colors">
+            ดูทั้งหมด <ChevronRight className="w-3 h-3" />
+          </button>
+        }
       />
-      <TechnicianMetricCard
+      <CardMetric
         title="งานค้างเกินกำหนด"
         value={stats.overdueTasks}
         subtitle="รายการ"
-        icon={<History className="w-6 h-6 text-purple-600" />}
-        iconBgColor="bg-purple-50"
-        actionLabel="ดูทั้งหมด"
-        onActionClick={() => {}}
+        icon={History}
+        classNameForIcon="bg-purple-50 text-purple-600"
+        className="max-h-180 gap-2 p-5 items-start"
+        action={
+          <button className="flex items-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-800 transition-colors">
+            ดูทั้งหมด <ChevronRight className="w-3 h-3" />
+          </button>
+        }
       />
-      <TechnicianMetricCard
+      <CardMetric
         title="งานเสร็จสิ้น (สัปดาห์นี้)"
         value={stats.completedThisWeek}
         subtitle="รายการ"
-        icon={<CheckCircle2 className="w-6 h-6 text-emerald-600" />}
-        iconBgColor="bg-emerald-50"
-        actionLabel="ดูสรุปผลงาน"
-        onActionClick={() => {}}
+        icon={CheckCircle2}
+        classNameForIcon="bg-emerald-50 text-emerald-600"
+        className="max-h-180 gap-2 p-5 items-start"
+        action={
+          <button className="flex items-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-800 transition-colors">
+            ดูสรุปผลงาน <ChevronRight className="w-3 h-3" />
+          </button>
+        }
       />
 
       {/* Hours Worked */}
-      <div className="bg-white rounded-2xl p-5 border border-slate-200 flex flex-col justify-between relative overflow-hidden">
-        <div>
-          <p className="text-[12px] font-bold text-slate-600 mb-2">ชั่วโมงทำงานวันนี้</p>
-          <div className="flex items-end gap-2">
-            <span className="text-3xl font-bold text-slate-800 leading-none">{stats.hoursWorked}</span>
-            <span className="text-[13px] font-bold text-slate-500 mb-1">ชม.</span>
+      <CardMetric
+        title="ชั่วโมงทำงานวันนี้"
+        value={stats.hoursWorked}
+        unit="ชม."
+        subtitle={`จาก ${stats.maxHours} ชม.`}
+        icon={Timer}
+        classNameForIcon="bg-slate-100 text-slate-600 "
+        className="max-h-180 gap-2 p-6 items-start"
+        action={
+            <div className="w-ful h-2 rounded-full gap-2 flex">
+              <div className="h-full bg-blue-600 rounded-full" style={{ width: `${stats.progressPercent}%` }} />
+              <div className="text-right text-[10px] font-bold text-slate-400">{stats.progressPercent}%</div>
           </div>
-          <p className="text-[11px] text-slate-500 mt-1 font-medium">จาก {stats.maxHours} ชม.</p>
-        </div>
-        <div className="mt-6 flex flex-col gap-1">
-          <div className="w-full bg-slate-100 h-2 rounded-full overflow-hidden flex">
-            <div className="h-full bg-blue-600 rounded-full" style={{ width: `${stats.progressPercent}%` }} />
-          </div>
-          <div className="text-right text-[10px] font-bold text-slate-400">{stats.progressPercent}%</div>
-        </div>
-      </div>
+        }
+      />
     </div>
   );
 }

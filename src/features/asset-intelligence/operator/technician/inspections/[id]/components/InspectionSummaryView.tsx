@@ -1,6 +1,5 @@
 "use client";
 
-import { TechnicianInspectionDetail } from "@/features/asset-intelligence/operator/technician/types";
 import {
   ArrowLeft,
   Camera,
@@ -19,16 +18,17 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { getProgressPercent, getStepVisualState } from "../statusView";
+import { InspectionOrder } from "../types";
 
 interface InspectionSummaryViewProps {
-  detail: TechnicianInspectionDetail;
+  inspectionOrder: InspectionOrder;
   initialTab?: 'summary' | 'evidence';
   onTabChange?: (tab: string) => void;
   onBack: () => void;
-  onNext: () => void;
 }
 
-export function InspectionSummaryView({ detail, initialTab = 'summary', onTabChange, onBack }: InspectionSummaryViewProps) {
+export function InspectionSummaryView({ inspectionOrder, initialTab = 'summary', onTabChange, onBack }: InspectionSummaryViewProps) {
   const isSidebarCollapsed = false; // TODO: wire to real layout sidebar state if needed
   const sidebarOffset = isSidebarCollapsed ? "lg:left-20" : "lg:left-64";
 
@@ -76,7 +76,7 @@ export function InspectionSummaryView({ detail, initialTab = 'summary', onTabCha
 
           {/* Top Summary & Timeline */}
           <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm flex flex-col overflow-hidden p-8 xl:p-12 lg:p-8">
-            <SummaryHeaderSummary detail={detail} />
+            <SummaryHeaderSummary inspectionOrder={inspectionOrder} />
           </div>
 
           {/* Tabs Navigation */}
@@ -281,13 +281,13 @@ export function InspectionSummaryView({ detail, initialTab = 'summary', onTabCha
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <button className="px-5 py-2.5 rounded-[12px] bg-blue-600 text-white font-bold text-[13px] shadow-sm">
-                    ทั้งหมด (12)
+                    ทั้งหมด ({inspectionOrder.evidence.length})
                   </button>
                   <button className="px-5 py-2.5 rounded-[12px] border border-slate-200 text-slate-600 font-bold text-[13px] hover:bg-slate-50 transition-colors bg-white">
-                    รูปภาพ (10)
+                    รูปภาพ ({inspectionOrder.evidence.filter((e) => e.kind === "photo").length})
                   </button>
                   <button className="px-5 py-2.5 rounded-[12px] border border-slate-200 text-slate-600 font-bold text-[13px] hover:bg-slate-50 transition-colors bg-white">
-                    ไฟล์เอกสาร (2)
+                    ไฟล์เอกสาร ({inspectionOrder.evidence.filter((e) => e.kind === "file").length})
                   </button>
                 </div>
 
@@ -316,24 +316,13 @@ export function InspectionSummaryView({ detail, initialTab = 'summary', onTabCha
                 <h3 className="text-[15px] font-black text-slate-900">รูปภาพ (10)</h3>
 
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                  {[
-                    { id: 1, title: "ก่อนดำเนินการ - คอยล์ร้อน", date: "20 พ.ค. 2567 09:41", url: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=300&auto=format&fit=crop", grayscale: true },
-                    { id: 2, title: "ก่อนดำเนินการ - คอยล์เย็น", date: "20 พ.ค. 2567 09:41", url: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=300&auto=format&fit=crop", grayscale: true },
-                    { id: 3, title: "ป้ายสเปคเครื่อง", date: "20 พ.ค. 2567 09:42", url: "https://images.unsplash.com/photo-1581092921461-7031e4bf0e5e?q=80&w=300&auto=format&fit=crop" },
-                    { id: 4, title: "วัดอุณหภูมิก่อนดำเนินการ", date: "20 พ.ค. 2567 09:42", url: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=300&auto=format&fit=crop" },
-                    { id: 5, title: "วัดอุณหภูมิหลังดำเนินการ", date: "20 พ.ค. 2567 10:28", url: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=300&auto=format&fit=crop" },
-                    { id: 6, title: "ตรวจสอบการทำงาน", date: "20 พ.ค. 2567 09:50", url: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=300&auto=format&fit=crop" },
-                    { id: 7, title: "สภาพหน้างานหลังดำเนินการ", date: "20 พ.ค. 2567 10:29", url: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=300&auto=format&fit=crop" },
-                    { id: 8, title: "ตรวจสอบระบบไฟฟ้า", date: "20 พ.ค. 2567 10:10", url: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=300&auto=format&fit=crop" },
-                    { id: 9, title: "หลังดำเนินการ - คอยล์ร้อน", date: "20 พ.ค. 2567 10:15", url: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=300&auto=format&fit=crop" },
-                    { id: 10, title: "หลังดำเนินการ - คอยล์เย็น", date: "20 พ.ค. 2567 10:15", url: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=300&auto=format&fit=crop" },
-                  ].map((img) => (
+                  {inspectionOrder.evidence.filter((e) => e.kind === "photo").map((img, idx) => (
                     <div key={img.id} className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col group">
                       <div className="relative h-[110px] w-full bg-slate-100 overflow-hidden border-b border-slate-100">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img src={img.url} alt={img.title} className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 ${img.grayscale ? 'grayscale opacity-80' : ''}`} />
                         <div className="absolute top-1.5 left-1.5 w-5 h-5 bg-black/40 backdrop-blur-sm rounded flex items-center justify-center text-[10px] font-black text-white">
-                          {img.id}
+                          {idx + 1}
                         </div>
                         <button className="absolute top-1.5 right-1.5 w-6 h-6 bg-white/90 rounded-md flex items-center justify-center text-slate-600 hover:text-slate-900 shadow-sm opacity-0 group-hover:opacity-100 transition-opacity">
                           <MoreHorizontal className="w-4 h-4" />
@@ -341,7 +330,7 @@ export function InspectionSummaryView({ detail, initialTab = 'summary', onTabCha
                       </div>
                       <div className="p-3 flex flex-col items-center text-center gap-1 bg-white">
                         <span className="text-[11px] font-bold text-slate-800 line-clamp-1">{img.title}</span>
-                        <span className="text-[10px] font-medium text-slate-400">{img.date}</span>
+                        <span className="text-[10px] font-medium text-slate-400">{img.capturedAt}</span>
                       </div>
                     </div>
                   ))}
@@ -350,12 +339,9 @@ export function InspectionSummaryView({ detail, initialTab = 'summary', onTabCha
 
               {/* Files Section */}
               <div className="flex flex-col gap-4 mt-4">
-                <h3 className="text-[15px] font-black text-slate-900">ไฟล์เอกสาร (2)</h3>
+                <h3 className="text-[15px] font-black text-slate-900">ไฟล์เอกสาร ({inspectionOrder.evidence.filter((e) => e.kind === "file").length})</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
-                  {[
-                    { id: 1, title: "รายงานการตรวจสอบและบำรุงรักษา", meta: "PDF • 1.2 MB", date: "อัปโหลดเมื่อ 20 พ.ค. 2567 10:30" },
-                    { id: 2, title: "ใบเสนอราคาอะไหล่ (ถ้ามี)", meta: "PDF • 0.8 MB", date: "อัปโหลดเมื่อ 20 พ.ค. 2567 10:31" },
-                  ].map((doc) => (
+                  {inspectionOrder.evidence.filter((e) => e.kind === "file").map((doc) => (
                     <div key={doc.id} className="bg-white rounded-xl border border-slate-200 shadow-sm p-4 flex items-center gap-4 hover:border-blue-300 transition-colors group">
                       <div className="w-10 h-10 rounded bg-rose-100 text-rose-600 flex flex-col items-center justify-center shrink-0 shadow-sm">
                         <span className="text-[10px] font-black leading-none mt-1">PDF</span>
@@ -363,9 +349,9 @@ export function InspectionSummaryView({ detail, initialTab = 'summary', onTabCha
                       <div className="flex-1 flex flex-col overflow-hidden">
                         <span className="text-[12px] font-bold text-slate-900 truncate mb-0.5">{doc.title}</span>
                         <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 mb-0.5">
-                          <span>{doc.meta}</span>
+                          <span>PDF</span>
                         </div>
-                        <span className="text-[10px] font-medium text-slate-400">{doc.date}</span>
+                        <span className="text-[10px] font-medium text-slate-400">อัปโหลดเมื่อ {doc.capturedAt}</span>
                       </div>
                       <div className="flex items-center gap-1 shrink-0 opacity-0 group-hover:opacity-100 transition-opacity">
                         <button className="w-8 h-8 rounded-lg hover:bg-slate-100 text-blue-600 flex items-center justify-center transition-colors">
@@ -390,7 +376,7 @@ export function InspectionSummaryView({ detail, initialTab = 'summary', onTabCha
 
         {/* Right Sidebar */}
         <div className="w-full xl:w-[320px] shrink-0 flex flex-col gap-6">
-          <SummarySidebar detail={detail} />
+          <SummarySidebar inspectionOrder={inspectionOrder} />
         </div>
 
       </div>
@@ -438,7 +424,7 @@ export function InspectionSummaryView({ detail, initialTab = 'summary', onTabCha
 }
 
 // Top Summary Component (matches original header style)
-function SummaryHeaderSummary({ detail }: { detail: TechnicianInspectionDetail }) {
+function SummaryHeaderSummary({ inspectionOrder }: { inspectionOrder: InspectionOrder }) {
   return (
     <div className="flex flex-col w-full">
       <div className="flex flex-col md:flex-row md:items-start justify-between gap-6 mb-6">
@@ -454,28 +440,28 @@ function SummaryHeaderSummary({ detail }: { detail: TechnicianInspectionDetail }
 
           <div className="flex flex-col">
             <div className="flex items-center gap-3 mb-1.5">
-              <span className="text-[15px] font-black text-blue-900 tracking-tight">{detail.woNumber}</span>
+              <span className="text-[15px] font-black text-blue-900 tracking-tight">{inspectionOrder.woNumber}</span>
               <span className="px-2.5 py-0.5 rounded-full text-[10px] font-bold bg-amber-50 text-amber-600">
                 รอดำเนินการตรวจสอบ
               </span>
             </div>
-            <h2 className="text-[18px] font-black text-[#1e293b] mb-1">{detail.assetName}</h2>
-            <p className="text-[13px] font-medium text-slate-500">{detail.assetLocation}</p>
+            <h2 className="text-[18px] font-black text-[#1e293b] mb-1">{inspectionOrder.assetName}</h2>
+            <p className="text-[13px] font-medium text-slate-500">{inspectionOrder.assetLocation}</p>
           </div>
         </div>
 
         <div className="grid grid-cols-3 gap-8 pt-1">
           <div className="flex flex-col gap-1">
             <span className="text-[11px] font-bold text-slate-400">สถานที่</span>
-            <span className="text-[12px] font-bold text-slate-700">{detail.location}</span>
+            <span className="text-[12px] font-bold text-slate-700">{inspectionOrder.location}</span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-[11px] font-bold text-slate-400">ผู้แจ้ง</span>
-            <span className="text-[12px] font-bold text-slate-700">{detail.reporterName}</span>
+            <span className="text-[12px] font-bold text-slate-700">{inspectionOrder.reporterName}</span>
           </div>
           <div className="flex flex-col gap-1">
             <span className="text-[11px] font-bold text-slate-400">กำหนดตรวจสอบ</span>
-            <span className="text-[12px] font-bold text-slate-700">{detail.dueDate}</span>
+            <span className="text-[12px] font-bold text-slate-700">{inspectionOrder.dueDate}</span>
           </div>
         </div>
       </div>
@@ -489,27 +475,23 @@ function SummaryHeaderSummary({ detail }: { detail: TechnicianInspectionDetail }
         <div className="absolute top-[30px] left-[75%] right-[8.33%] h-[2px] bg-[#E2E8F0] z-0"></div>
 
         <div className="flex justify-between relative z-10">
-          {[
-            { label: "รับงานแล้ว", date: "20 พ.ค. 2567 09:15", status: "done" },
-            { label: "กำลังเดินทาง", date: "20 พ.ค. 2567 09:20", status: "done" },
-            { label: "ถึงหน้างาน", date: "20 พ.ค. 2567 09:35", status: "done" },
-            { label: "กำลังดำเนินการ", date: "20 พ.ค. 2567 09:40", status: "done" },
-            { label: "สรุปผลและหลักฐาน", date: "กำลังดำเนินการ", status: "active" },
-            { label: "ส่งตรวจรับ", date: "รอทำรายการ", status: "pending" },
-          ].map((step, idx) => (
-            <div key={idx} className="flex flex-col items-center flex-1">
-              <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-black mb-2.5 z-10 ${step.status === 'done' ? 'bg-white border-2 border-emerald-500 text-emerald-500' :
-                  step.status === 'active' ? 'bg-[#1D4ED8] text-white shadow-md shadow-blue-200' : 'bg-white border-2 border-[#E2E8F0] text-slate-400'
-                }`}>
-                {step.status === 'done' ? <Check className="w-4 h-4 stroke-[3]" /> : (idx + 1)}
+          {inspectionOrder.timeline.slice(0, 6).map((step, idx) => {
+            const state = getStepVisualState(step.status, inspectionOrder.status);
+            return (
+              <div key={step.status} className="flex flex-col items-center flex-1">
+                <div className={`w-8 h-8 rounded-full flex items-center justify-center text-[12px] font-black mb-2.5 z-10 ${state === 'completed' ? 'bg-white border-2 border-emerald-500 text-emerald-500' :
+                    state === 'active' ? 'bg-[#1D4ED8] text-white shadow-md shadow-blue-200' : 'bg-white border-2 border-[#E2E8F0] text-slate-400'
+                  }`}>
+                  {state === 'completed' ? <Check className="w-4 h-4 stroke-[3]" /> : (idx + 1)}
+                </div>
+                <span className={`text-[12px] font-bold ${state === 'completed' ? 'text-emerald-600' :
+                    state === 'active' ? 'text-[#1D4ED8]' : 'text-slate-600'
+                  }`}>{step.label}</span>
+                <span className={`text-[10px] font-medium mt-1 ${state === 'active' ? 'text-slate-500' : 'text-slate-400'
+                  }`}>{state === 'completed' ? step.at : state === 'active' ? 'กำลังดำเนินการ' : 'รอทำรายการ'}</span>
               </div>
-              <span className={`text-[12px] font-bold ${step.status === 'done' ? 'text-emerald-600' :
-                  step.status === 'active' ? 'text-[#1D4ED8]' : 'text-slate-600'
-                }`}>{step.label}</span>
-              <span className={`text-[10px] font-medium mt-1 ${step.status === 'active' ? 'text-slate-500' : 'text-slate-400'
-                }`}>{step.date}</span>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     </div>
@@ -517,15 +499,9 @@ function SummaryHeaderSummary({ detail }: { detail: TechnicianInspectionDetail }
 }
 
 // Right Sidebar Component
-function SummarySidebar({ detail }: { detail: TechnicianInspectionDetail }) {
-  const steps = [
-    { label: "รับงานแล้ว", date: "20 พ.ค. 2567 09:15", status: "completed" },
-    { label: "กำลังเดินทาง", date: "20 พ.ค. 2567 09:20", status: "completed" },
-    { label: "ถึงหน้างาน", date: "20 พ.ค. 2567 09:35", status: "completed" },
-    { label: "กำลังดำเนินการ", date: "20 พ.ค. 2567 09:40", status: "completed" },
-    { label: "สรุปผลและหลักฐาน", date: "กำลังดำเนินการ", status: "active" },
-    { label: "ส่งตรวจรับ", date: "รอทำรายการ", status: "pending" },
-  ];
+function SummarySidebar({ inspectionOrder }: { inspectionOrder: InspectionOrder }) {
+  const steps = inspectionOrder.timeline.slice(0, 6);
+  const progressPercent = getProgressPercent(inspectionOrder.status);
 
   return (
     <>
@@ -536,27 +512,27 @@ function SummarySidebar({ detail }: { detail: TechnicianInspectionDetail }) {
         <div className="flex flex-col gap-4">
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">เลขที่ใบงาน</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right">{detail.woNumber}</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right">{inspectionOrder.woNumber}</span>
           </div>
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">ประเภทงาน</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right">{detail.taskType}</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right">{inspectionOrder.taskType}</span>
           </div>
           <div className="flex justify-between items-center gap-4">
             <span className="text-[12px] font-bold text-slate-500">ความเร่งด่วน</span>
-            <span className="text-[12px] font-black text-rose-600">สูง</span>
+            <span className="text-[12px] font-black text-rose-600">{inspectionOrder.priority}</span>
           </div>
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">วันที่แจ้ง</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right">{detail.woDate}</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right">{inspectionOrder.woDate}</span>
           </div>
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">ผู้แจ้ง</span>
-            <span className="text-[12px] font-bold text-blue-600 text-right">{detail.reporterName} ({detail.reporterDept})</span>
+            <span className="text-[12px] font-bold text-blue-600 text-right">{inspectionOrder.reporterName} ({inspectionOrder.reporterDept})</span>
           </div>
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">สถานที่</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right line-clamp-2 w-[160px]">{detail.location}</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right line-clamp-2 w-[160px]">{inspectionOrder.location}</span>
           </div>
         </div>
 
@@ -570,37 +546,40 @@ function SummarySidebar({ detail }: { detail: TechnicianInspectionDetail }) {
       <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm p-6">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-[14px] font-black text-slate-900">ความคืบหน้างาน</h3>
-          <span className="text-[14px] font-black text-blue-900">83%</span>
+          <span className="text-[14px] font-black text-blue-900">{progressPercent}%</span>
         </div>
 
         <div className="w-full h-1.5 bg-slate-100 rounded-full mb-6">
-          <div className="h-full bg-[#1D4ED8] rounded-full" style={{ width: `83%` }}></div>
+          <div className="h-full bg-[#1D4ED8] rounded-full" style={{ width: `${progressPercent}%` }}></div>
         </div>
 
         <div className="relative">
           <div className="absolute top-[14px] bottom-[14px] left-[11px] w-[2px] bg-[#E2E8F0] z-0"></div>
 
           <div className="flex flex-col gap-5 relative z-10">
-            {steps.map((step, idx) => (
-              <div key={idx} className="flex items-center gap-4">
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 z-10 transition-colors ${step.status === 'completed' ? "bg-emerald-500 text-white" :
-                    step.status === 'active' ? "bg-[#1D4ED8] text-white" : "bg-white text-slate-400 border-[2px] border-[#E2E8F0]"
-                  }`}>
-                  {step.status === 'completed' ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <span className="text-[10px] font-black">{idx + 1}</span>}
-                </div>
-                <div className="flex-1 flex justify-between items-center">
-                  <span className={`text-[12px] font-bold ${step.status === 'completed' ? "text-slate-800" :
-                      step.status === 'active' ? "text-[#1D4ED8]" : "text-slate-600"
+            {steps.map((step, idx) => {
+              const state = getStepVisualState(step.status, inspectionOrder.status);
+              return (
+                <div key={step.status} className="flex items-center gap-4">
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 z-10 transition-colors ${state === 'completed' ? "bg-emerald-500 text-white" :
+                      state === 'active' ? "bg-[#1D4ED8] text-white" : "bg-white text-slate-400 border-[2px] border-[#E2E8F0]"
                     }`}>
-                    {step.label}
-                  </span>
-                  <span className={`text-[10px] font-medium ${step.status === 'active' ? "text-slate-500" : "text-slate-400"
-                    }`}>
-                    {step.date}
-                  </span>
+                    {state === 'completed' ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <span className="text-[10px] font-black">{idx + 1}</span>}
+                  </div>
+                  <div className="flex-1 flex justify-between items-center">
+                    <span className={`text-[12px] font-bold ${state === 'completed' ? "text-slate-800" :
+                        state === 'active' ? "text-[#1D4ED8]" : "text-slate-600"
+                      }`}>
+                      {step.label}
+                    </span>
+                    <span className={`text-[10px] font-medium ${state === 'pending' ? "text-slate-400" : "text-slate-500"
+                      }`}>
+                      {state === 'pending' ? "รอทำรายการ" : state === 'active' ? "กำลังดำเนินการ" : step.at}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
@@ -612,17 +591,17 @@ function SummarySidebar({ detail }: { detail: TechnicianInspectionDetail }) {
         <div className="flex items-center gap-3 mb-5">
           <div className="w-12 h-12 rounded-full bg-slate-200 overflow-hidden border border-slate-200 shrink-0 shadow-sm">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent("สมชาย ช่างเทคนิค")}&background=random&color=fff`} alt="สมชาย ช่างเทคนิค" className="w-full h-full object-cover" />
+            <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(inspectionOrder.technician.name)}&background=random&color=fff`} alt={inspectionOrder.technician.name} className="w-full h-full object-cover" />
           </div>
           <div className="flex flex-col">
-            <span className="text-[13px] font-black text-slate-900">สมชาย ช่างเทคนิค</span>
-            <span className="text-[11px] font-bold text-slate-500 mt-0.5">เจ้าหน้าที่ช่าง</span>
+            <span className="text-[13px] font-black text-slate-900">{inspectionOrder.technician.name}</span>
+            <span className="text-[11px] font-bold text-slate-500 mt-0.5">{inspectionOrder.technician.role}</span>
           </div>
         </div>
 
         <div className="flex items-center gap-2 text-[13px] font-bold text-blue-600 bg-white hover:bg-slate-50 cursor-pointer p-2.5 rounded-lg border border-slate-200 transition-colors">
           <Phone className="w-4 h-4 shrink-0" />
-          <span>081-234-5678</span>
+          <span>{inspectionOrder.technician.phone}</span>
         </div>
       </div>
 

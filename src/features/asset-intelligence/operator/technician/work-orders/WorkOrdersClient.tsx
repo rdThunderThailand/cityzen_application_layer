@@ -84,7 +84,7 @@ export function WorkOrdersClient({ stats, initialWorkOrders }: WorkOrdersClientP
     >
       <WorkOrdersStats stats={stats} />
 
-      <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm overflow-hidden flex flex-col mt-6">
+      <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm flex flex-col mt-6">
         <TechnicianFilterBar
           searchQuery={searchQuery}
           onSearchChange={(val) => {
@@ -132,7 +132,7 @@ export function WorkOrdersClient({ stats, initialWorkOrders }: WorkOrdersClientP
             setAssigneeFilter("ทั้งหมด");
             setCurrentPage(1);
           }}
-          actionButton={
+          extraActions={
             <div className="flex items-center gap-3 shrink-0 flex-wrap mt-[18px]">
               <div className="flex items-center gap-2 border border-slate-200 rounded-lg px-3 py-2 bg-white">
                 <Calendar className="w-4 h-4 text-slate-400" />
@@ -182,6 +182,7 @@ export function WorkOrdersClient({ stats, initialWorkOrders }: WorkOrdersClientP
           totalPages={totalPages}
           itemsPerPage={itemsPerPage}
           totalItems={filteredWorkOrders.length}
+          startIndex={(currentPage - 1) * itemsPerPage}
           onPageChange={setCurrentPage}
           onItemsPerPageChange={(num) => {
             setItemsPerPage(num);

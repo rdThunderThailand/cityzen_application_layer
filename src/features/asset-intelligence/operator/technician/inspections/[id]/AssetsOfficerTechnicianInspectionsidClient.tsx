@@ -1,4 +1,4 @@
-import { getTechnicianInspectionDetail } from "./mock";
+import { getInspectionOrder } from "./mock";
 import { notFound } from "next/navigation";
 import { InspectionDetailClient } from "./InspectionDetailClient";
 
@@ -11,13 +11,13 @@ interface PageProps {
 }
 
 export async function AssetsOfficerTechnicianInspectionsidClient({ params }: PageProps) {
-  const detail = await getTechnicianInspectionDetail(params.id);
+  const initialInspectionOrder = await getInspectionOrder(params.id);
 
-  if (!detail) {
+  if (!initialInspectionOrder) {
     return notFound();
   }
 
   return (
-    <InspectionDetailClient detail={detail} />
+    <InspectionDetailClient initialInspectionOrder={initialInspectionOrder} />
   );
 }

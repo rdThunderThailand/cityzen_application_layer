@@ -1,9 +1,9 @@
 "use client";
 
-import { TechnicianInspectionDetail } from "@/features/asset-intelligence/operator/technician/types";
 import { Info, Phone } from "lucide-react";
+import { InspectionOrder } from "../types";
 
-export function InspectionDetailInfo({ detail }: { detail: TechnicianInspectionDetail }) {
+export function InspectionDetailInfo({ inspectionOrder }: { inspectionOrder: InspectionOrder }) {
   return (
     <div className="h-full flex flex-col">
       <h3 className="text-[15px] font-black text-slate-800 mb-8">ข้อมูลการรับงาน</h3>
@@ -11,13 +11,13 @@ export function InspectionDetailInfo({ detail }: { detail: TechnicianInspectionD
       <div className="flex flex-col gap-8 flex-1 mt-4">
         <div className="grid grid-cols-[180px_1fr] items-start gap-2">
           <span className="text-[13px] font-bold text-slate-500 pt-0.5">วันที่รับงาน</span>
-          <span className="text-[13px] font-bold text-slate-800">{detail.woDate}</span>
+          <span className="text-[13px] font-bold text-slate-800">{inspectionOrder.woDate}</span>
         </div>
 
         <div className="grid grid-cols-[180px_1fr] items-start gap-2">
           <span className="text-[13px] font-bold text-slate-500 pt-0.5">ผู้มอบหมายงาน</span>
           <div className="flex items-center gap-2">
-            <span className="text-[13px] font-bold text-slate-800">{detail.assignerName}</span>
+            <span className="text-[13px] font-bold text-slate-800">{inspectionOrder.assignerName}</span>
             <button className="text-blue-600 hover:text-blue-700 transition-colors">
               <Phone className="w-4 h-4" />
             </button>
@@ -26,18 +26,18 @@ export function InspectionDetailInfo({ detail }: { detail: TechnicianInspectionD
 
         <div className="grid grid-cols-[180px_1fr] items-start gap-2">
           <span className="text-[13px] font-bold text-slate-500 pt-0.5">หน่วยงาน</span>
-          <span className="text-[13px] font-bold text-slate-800">{detail.assignerDept}</span>
+          <span className="text-[13px] font-bold text-slate-800">{inspectionOrder.assignerDept}</span>
         </div>
 
         <div className="grid grid-cols-[180px_1fr] items-start gap-2">
           <span className="text-[13px] font-bold text-slate-500 pt-0.5">ประเภทงาน</span>
-          <span className="text-[13px] font-bold text-slate-800">{detail.taskType}</span>
+          <span className="text-[13px] font-bold text-slate-800">{inspectionOrder.taskType}</span>
         </div>
 
         <div className="grid grid-cols-[180px_1fr] items-center gap-2">
           <span className="text-[13px] font-bold text-slate-500">ความเร่งด่วน</span>
           <span className="px-3 py-1 bg-rose-50 text-rose-600 rounded-full text-[12px] font-bold w-fit">
-            {detail.priority}
+            {inspectionOrder.priority}
           </span>
         </div>
 
@@ -49,7 +49,7 @@ export function InspectionDetailInfo({ detail }: { detail: TechnicianInspectionD
               <Info className="w-3.5 h-3.5 text-slate-400 cursor-pointer" />
             </div>
           </div>
-          <span className="text-[13px] font-bold text-slate-800">ภายใน {detail.dueDate}</span>
+          <span className="text-[13px] font-bold text-slate-800">ภายใน {inspectionOrder.dueDate}</span>
         </div>
       </div>
 

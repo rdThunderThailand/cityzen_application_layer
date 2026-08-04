@@ -1,17 +1,18 @@
 "use client";
 
-import { TechnicianInspectionDetail } from "@/features/asset-intelligence/operator/technician/types";
 import { Car, Check, Info, MapPin, MessageCircle, Navigation, Phone } from "lucide-react";
+import { getProgressPercent, getStepVisualState } from "../statusView";
+import { InspectionOrder, InspectionOrderPatch } from "../types";
 import Map, { Layer, Marker, NavigationControl, Source } from "./MockMap";
 
 interface InspectionNavigatingViewProps {
-  detail: TechnicianInspectionDetail;
+  inspectionOrder: InspectionOrder;
+  advanceStatus: (patch?: InspectionOrderPatch) => void;
   onCancelNavigation: () => void;
-  onArrived: () => void;
 }
 
 
-export function InspectionNavigatingView({ detail, onCancelNavigation, onArrived }: InspectionNavigatingViewProps) {
+export function InspectionNavigatingView({ inspectionOrder, advanceStatus, onCancelNavigation }: InspectionNavigatingViewProps) {
   const isSidebarCollapsed = false; // TODO: wire to real layout sidebar state if needed
   const sidebarOffset = isSidebarCollapsed ? "lg:left-20" : "lg:left-64";
 
@@ -23,7 +24,7 @@ export function InspectionNavigatingView({ detail, onCancelNavigation, onArrived
 
         {/* Top Summary & Timeline */}
         <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm flex flex-col overflow-hidden">
-          <NavigatingHeaderSummary detail={detail} />
+          <NavigatingHeaderSummary inspectionOrder={inspectionOrder} />
         </div>
 
         {/* Map & Travel Info */}
@@ -69,7 +70,7 @@ export function InspectionNavigatingView({ detail, onCancelNavigation, onArrived
 
           {/* Right Map Panel */}
           <div className="flex-1 bg-slate-100 relative min-h-[400px]">
-            <NavigatingLiveMap detail={detail} />
+            <NavigatingLiveMap inspectionOrder={inspectionOrder} />
           </div>
         </div>
 
@@ -84,11 +85,11 @@ export function InspectionNavigatingView({ detail, onCancelNavigation, onArrived
               <div className="flex items-center gap-3">
                 <div className="w-10 h-10 rounded-full overflow-hidden bg-slate-200 border border-slate-200 shadow-sm">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(detail.reporterName)}&background=random&color=fff`} alt={detail.reporterName} className="w-full h-full object-cover" />
+                  <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(inspectionOrder.reporterName)}&background=random&color=fff`} alt={inspectionOrder.reporterName} className="w-full h-full object-cover" />
                 </div>
                 <div className="flex flex-col">
-                  <span className="text-[13px] font-bold text-slate-800">{detail.reporterName}</span>
-                  <span className="text-[11px] font-medium text-slate-500">เบอร์โทร: {detail.reporterPhone}</span>
+                  <span className="text-[13px] font-bold text-slate-800">{inspectionOrder.reporterName}</span>
+                  <span className="text-[11px] font-medium text-slate-500">เบอร์โทร: {inspectionOrder.reporterPhone}</span>
                 </div>
               </div>
               <div className="flex flex-col items-end">
@@ -158,7 +159,7 @@ export function InspectionNavigatingView({ detail, onCancelNavigation, onArrived
 
       {/* Right Sidebar */}
       <div className="w-full xl:w-[360px] shrink-0 flex flex-col gap-6">
-        <NavigatingSidebar detail={detail} />
+        <NavigatingSidebar inspectionOrder={inspectionOrder} />
       </div>
 
       {/* Fixed Bottom Action Bar */}
@@ -173,7 +174,7 @@ export function InspectionNavigatingView({ detail, onCancelNavigation, onArrived
               ยังไม่ถึงหน้างาน
             </button>
             <button
-              onClick={onArrived}
+              onClick={() => advanceStatus()}
               className="px-8 py-2.5 rounded-[12px] bg-blue-600 text-white font-bold text-[14px] hover:bg-blue-700 transition-colors shadow-md shadow-blue-200 flex items-center gap-2"
             >
               <Check className="w-4 h-4" />
@@ -187,18 +188,8 @@ export function InspectionNavigatingView({ detail, onCancelNavigation, onArrived
 }
 
 // Map Component
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function NavigatingLiveMap({ detail: _detail }: { detail: TechnicianInspectionDetail }) {
-  // Same realistic route but focused differently
-  const routeCoords = [
-    [100.9365, 13.2798], // Start point (near Nong Mon)
-    [100.9340, 13.2795],
-    [100.9320, 13.2790],
-    [100.9300, 13.2800],
-    [100.9280, 13.2805],
-    [100.9260, 13.2810],
-    [100.9248, 13.2818]  // Destination (near Burapha University)
-  ];
+function NavigatingLiveMap({ inspectionOrder }: { inspectionOrder: InspectionOrder }) {
+  const routeCoords = inspectionOrder.route;
   const startCoords = routeCoords[0];
   const destCoords = routeCoords[routeCoords.length - 1];
 
@@ -287,7 +278,9 @@ function NavigatingLiveMap({ detail: _detail }: { detail: TechnicianInspectionDe
 }
 
 // Top Summary Component
-function NavigatingHeaderSummary({ detail }: { detail: TechnicianInspectionDetail }) {
+function NavigatingHeaderSummary({ inspectionOrder }: { inspectionOrder: InspectionOrder }) {
+  const [step1, step2, ...restSteps] = inspectionOrder.timeline;
+
   return (
     <div className="flex flex-col w-full">
       <div className="flex flex-col xl:flex-row xl:items-start gap-6 p-8 xl:p-12 lg:p-8">
@@ -304,27 +297,27 @@ function NavigatingHeaderSummary({ detail }: { detail: TechnicianInspectionDetai
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <span className="text-[16px] font-black text-blue-900 tracking-tight">{detail.woNumber}</span>
+                <span className="text-[16px] font-black text-blue-900 tracking-tight">{inspectionOrder.woNumber}</span>
                 <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-600">
                   รอแจ้งดำเนินการตรวจสอบ
                 </span>
               </div>
-              <h2 className="text-[20px] font-black text-[#1e293b] mb-1 leading-tight">{detail.assetName}</h2>
-              <p className="text-[14px] font-medium text-slate-500">{detail.assetLocation}</p>
+              <h2 className="text-[20px] font-black text-[#1e293b] mb-1 leading-tight">{inspectionOrder.assetName}</h2>
+              <p className="text-[14px] font-medium text-slate-500">{inspectionOrder.assetLocation}</p>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-4">
               <div className="flex flex-col gap-1">
                 <span className="text-[11px] font-bold text-slate-400">สถานที่</span>
-                <span className="text-[12px] font-bold text-slate-700">{detail.location}</span>
+                <span className="text-[12px] font-bold text-slate-700">{inspectionOrder.location}</span>
               </div>
               <div className="flex flex-col gap-1">
                 <span className="text-[11px] font-bold text-slate-400">ผู้แจ้ง</span>
-                <span className="text-[12px] font-bold text-slate-700">{detail.reporterName}</span>
+                <span className="text-[12px] font-bold text-slate-700">{inspectionOrder.reporterName}</span>
               </div>
               <div className="flex flex-col gap-1">
                 <span className="text-[11px] font-bold text-slate-400">กำหนดตรวจสอบ</span>
-                <span className="text-[12px] font-bold text-slate-700">{detail.dueDate}</span>
+                <span className="text-[12px] font-bold text-slate-700">{inspectionOrder.dueDate}</span>
               </div>
             </div>
           </div>
@@ -345,8 +338,8 @@ function NavigatingHeaderSummary({ detail }: { detail: TechnicianInspectionDetai
                 <div className="w-7 h-7 rounded-full bg-white border-[2px] border-emerald-500 flex items-center justify-center text-emerald-500 mb-2 z-10">
                   <Check className="w-4 h-4 stroke-[3]" />
                 </div>
-                <span className="text-[12px] font-bold text-emerald-600">รับงานแล้ว</span>
-                <span className="text-[11px] font-medium text-slate-500 mt-1">20 พ.ค. 2567 09:15</span>
+                <span className="text-[12px] font-bold text-emerald-600">{step1.label}</span>
+                <span className="text-[11px] font-medium text-slate-500 mt-1">{step1.at}</span>
               </div>
 
               {/* Step 2: Blue car */}
@@ -354,17 +347,17 @@ function NavigatingHeaderSummary({ detail }: { detail: TechnicianInspectionDetai
                 <div className="w-7 h-7 rounded-full bg-[#1D4ED8] text-white flex items-center justify-center mb-2 z-10">
                   <Car className="w-3.5 h-3.5" />
                 </div>
-                <span className="text-[12px] font-bold text-[#1D4ED8]">กำลังเดินทาง</span>
-                <span className="text-[11px] font-medium text-slate-500 mt-1">20 พ.ค. 2567 09:20</span>
+                <span className="text-[12px] font-bold text-[#1D4ED8]">{step2.label}</span>
+                <span className="text-[11px] font-medium text-slate-500 mt-1">{step2.at}</span>
               </div>
 
               {/* Steps 3 to 6 */}
-              {["ถึงหน้างาน", "กำลังตรวจสอบ", "สรุปผลและแนบหลักฐาน", "ส่งตรวจรับ"].map((label, idx) => (
-                <div key={idx} className="flex flex-col items-center flex-1">
+              {restSteps.slice(0, 4).map((step, idx) => (
+                <div key={step.status} className="flex flex-col items-center flex-1">
                   <div className="w-7 h-7 rounded-full bg-white border-[2px] border-[#E2E8F0] text-slate-400 text-[11px] font-black flex items-center justify-center mb-2 z-10">
                     {idx + 3}
                   </div>
-                  <span className="text-[12px] font-bold text-slate-700">{label}</span>
+                  <span className="text-[12px] font-bold text-slate-700">{step.label}</span>
                   <span className="text-[11px] font-medium text-slate-400 mt-1">{idx === 0 ? "รอยืนยัน" : "ยังไม่เริ่ม"}</span>
                 </div>
               ))}
@@ -377,15 +370,9 @@ function NavigatingHeaderSummary({ detail }: { detail: TechnicianInspectionDetai
 }
 
 // Right Sidebar Component
-function NavigatingSidebar({ detail }: { detail: TechnicianInspectionDetail }) {
-  const steps = [
-    { label: "รับงานแล้ว", date: "20 พ.ค. 2567 09:15", status: "completed" },
-    { label: "กำลังเดินทาง", date: "20 พ.ค. 2567 09:20", status: "active" },
-    { label: "ถึงหน้างาน", date: "รอยืนยัน", status: "pending" },
-    { label: "กำลังตรวจสอบ", date: "ยังไม่เริ่ม", status: "pending" },
-    { label: "สรุปผลและแนบหลักฐาน", date: "ยังไม่เริ่ม", status: "pending" },
-    { label: "ส่งตรวจรับ", date: "ยังไม่เริ่ม", status: "pending" },
-  ];
+function NavigatingSidebar({ inspectionOrder }: { inspectionOrder: InspectionOrder }) {
+  const steps = inspectionOrder.timeline.slice(0, 6);
+  const progressPercent = getProgressPercent(inspectionOrder.status);
 
   return (
     <>
@@ -396,27 +383,27 @@ function NavigatingSidebar({ detail }: { detail: TechnicianInspectionDetail }) {
         <div className="flex flex-col gap-4">
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">เลขที่ใบงาน</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right">{detail.woNumber}</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right">{inspectionOrder.woNumber}</span>
           </div>
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">ประเภทงาน</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right">{detail.taskType}</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right">{inspectionOrder.taskType}</span>
           </div>
           <div className="flex justify-between items-center gap-4">
             <span className="text-[12px] font-bold text-slate-500">ความเร่งด่วน</span>
-            <span className="text-[12px] font-black text-rose-600">สูง</span>
+            <span className="text-[12px] font-black text-rose-600">{inspectionOrder.priority}</span>
           </div>
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">วันที่แจ้ง</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right">{detail.woDate}</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right">{inspectionOrder.woDate}</span>
           </div>
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">ผู้แจ้ง</span>
-            <span className="text-[12px] font-bold text-blue-600 text-right">{detail.reporterName} ({detail.reporterDept})</span>
+            <span className="text-[12px] font-bold text-blue-600 text-right">{inspectionOrder.reporterName} ({inspectionOrder.reporterDept})</span>
           </div>
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">สถานที่</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right line-clamp-2 w-[160px]">{detail.location}</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right line-clamp-2 w-[160px]">{inspectionOrder.location}</span>
           </div>
         </div>
       </div>
@@ -424,7 +411,7 @@ function NavigatingSidebar({ detail }: { detail: TechnicianInspectionDetail }) {
       {/* Static Map */}
       <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm p-6">
         <h3 className="text-[14px] font-black text-slate-900 mb-1">ตำแหน่งหน้างาน</h3>
-        <p className="text-[12px] font-bold text-slate-500 mb-4 line-clamp-2">{detail.location}</p>
+        <p className="text-[12px] font-bold text-slate-500 mb-4 line-clamp-2">{inspectionOrder.location}</p>
 
         <div className="w-full h-[120px] bg-slate-100 rounded-xl mb-3 border border-slate-200 relative overflow-hidden">
           <div className="absolute inset-0 flex items-center justify-center">
@@ -441,38 +428,40 @@ function NavigatingSidebar({ detail }: { detail: TechnicianInspectionDetail }) {
       <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm p-6">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-[14px] font-black text-slate-900">ความคืบหน้างาน</h3>
-          <span className="text-[14px] font-black text-blue-900">16%</span>
+          <span className="text-[14px] font-black text-blue-900">{progressPercent}%</span>
         </div>
 
         <div className="w-full h-1.5 bg-slate-100 rounded-full mb-6">
-          <div className="h-full bg-[#1D4ED8] rounded-full" style={{ width: `16%` }}></div>
+          <div className="h-full bg-[#1D4ED8] rounded-full" style={{ width: `${progressPercent}%` }}></div>
         </div>
 
         <div className="relative">
           <div className="absolute top-[14px] bottom-[14px] left-[11px] w-[2px] bg-[#E2E8F0] z-0"></div>
 
           <div className="flex flex-col gap-5 relative z-10">
-            {steps.map((step, idx) => (
-              <div key={idx} className="flex items-center gap-4">
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 z-10 transition-colors ${step.status === 'completed' ? "bg-emerald-500 text-white" :
-                    step.status === 'active' ? "bg-[#1D4ED8] text-white" : "bg-white text-slate-400 border-[2px] border-[#E2E8F0]"
-                  }`}>
-                  {step.status === 'completed' ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <span className="text-[10px] font-black">{idx + 1}</span>}
-                </div>
-                <div className="flex-1 flex justify-between items-center">
-                  <span className={`text-[12px] font-bold ${step.status === 'completed' ? "text-slate-800" :
-                      step.status === 'active' ? "text-[#1D4ED8]" : "text-slate-700"
+            {steps.map((step, idx) => {
+              const state = getStepVisualState(step.status, inspectionOrder.status);
+              return (
+                <div key={step.status} className="flex items-center gap-4">
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 z-10 transition-colors ${state === 'completed' ? "bg-emerald-500 text-white" :
+                      state === 'active' ? "bg-[#1D4ED8] text-white" : "bg-white text-slate-400 border-[2px] border-[#E2E8F0]"
                     }`}>
-                    {step.label}
-                  </span>
-                  <span className={`text-[10px] font-medium ${step.status === 'completed' ? "text-slate-500" :
-                      step.status === 'active' ? "text-slate-500" : "text-slate-400"
-                    }`}>
-                    {step.date}
-                  </span>
+                    {state === 'completed' ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <span className="text-[10px] font-black">{idx + 1}</span>}
+                  </div>
+                  <div className="flex-1 flex justify-between items-center">
+                    <span className={`text-[12px] font-bold ${state === 'completed' ? "text-slate-800" :
+                        state === 'active' ? "text-[#1D4ED8]" : "text-slate-700"
+                      }`}>
+                      {step.label}
+                    </span>
+                    <span className={`text-[10px] font-medium ${state === 'pending' ? "text-slate-400" : "text-slate-500"
+                      }`}>
+                      {state === 'pending' ? "ยังไม่เริ่ม" : step.at}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

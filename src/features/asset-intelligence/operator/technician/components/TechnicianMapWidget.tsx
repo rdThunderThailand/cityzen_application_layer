@@ -12,7 +12,7 @@ export function TechnicianMapWidget() {
   ];
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col h-[500px] overflow-hidden">
+    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col h-[350px] overflow-hidden">
       <div className="p-6 border-b border-slate-100 flex items-center justify-between shrink-0 bg-white">
         <h2 className="text-[15px] font-bold text-slate-800">งานบนแผนที่ (วันนี้)</h2>
         <button className="text-[12px] font-bold text-blue-600 hover:underline flex items-center gap-1">

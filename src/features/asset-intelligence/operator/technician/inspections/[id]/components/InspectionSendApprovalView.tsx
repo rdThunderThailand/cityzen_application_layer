@@ -1,6 +1,5 @@
 "use client";
 
-import { TechnicianInspectionDetail } from "@/features/asset-intelligence/operator/technician/types";
 import {
   Activity,
   AlertTriangle,
@@ -17,14 +16,16 @@ import {
   Wrench
 } from "lucide-react";
 import Link from "next/link";
+import { getProgressPercent, getStepVisualState } from "../statusView";
+import { InspectionOrder, InspectionOrderPatch } from "../types";
 
 interface InspectionSendApprovalViewProps {
-  detail: TechnicianInspectionDetail;
+  inspectionOrder: InspectionOrder;
+  advanceStatus: (patch?: InspectionOrderPatch) => void;
   onBack: () => void;
-  onSubmit: () => void;
 }
 
-export function InspectionSendApprovalView({ detail, onBack, onSubmit }: InspectionSendApprovalViewProps) {
+export function InspectionSendApprovalView({ inspectionOrder, advanceStatus, onBack }: InspectionSendApprovalViewProps) {
   const isSidebarCollapsed = false; // TODO: wire to real layout sidebar state if needed
   const sidebarOffset = isSidebarCollapsed ? "lg:left-20" : "lg:left-64";
 
@@ -76,13 +77,13 @@ export function InspectionSendApprovalView({ detail, onBack, onSubmit }: Inspect
 
               <div className="flex flex-col">
                 <div className="flex items-center gap-3 mb-1">
-                  <span className="text-[14px] font-black text-blue-900 tracking-tight">{detail.woNumber}</span>
+                  <span className="text-[14px] font-black text-blue-900 tracking-tight">{inspectionOrder.woNumber}</span>
                   <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-orange-50 text-orange-600 border border-orange-100">
                     รอตรวจสอบ
                   </span>
                 </div>
-                <h2 className="text-[16px] font-black text-[#1e293b] mb-1">{detail.assetName}</h2>
-                <p className="text-[12px] font-medium text-slate-500">{detail.assetLocation}</p>
+                <h2 className="text-[16px] font-black text-[#1e293b] mb-1">{inspectionOrder.assetName}</h2>
+                <p className="text-[12px] font-medium text-slate-500">{inspectionOrder.assetLocation}</p>
               </div>
 
               <div className="hidden md:block w-[1px] h-12 bg-slate-200 mx-2"></div>
@@ -93,21 +94,21 @@ export function InspectionSendApprovalView({ detail, onBack, onSubmit }: Inspect
                     <span className="w-3.5 h-3.5 rounded-full border border-slate-300 flex items-center justify-center text-[8px]">📍</span>
                     สถานที่
                   </span>
-                  <span className="text-[12px] font-bold text-slate-700 pl-5 line-clamp-1">{detail.location}</span>
+                  <span className="text-[12px] font-bold text-slate-700 pl-5 line-clamp-1">{inspectionOrder.location}</span>
                 </div>
                 <div className="flex flex-col gap-1">
                   <span className="text-[11px] font-bold text-slate-400 flex items-center gap-1.5">
                     <span className="w-3.5 h-3.5 rounded-full border border-slate-300 flex items-center justify-center text-[8px]">👤</span>
                     ผู้แจ้ง
                   </span>
-                  <span className="text-[12px] font-bold text-slate-700 pl-5 truncate">{detail.reporterName}</span>
+                  <span className="text-[12px] font-bold text-slate-700 pl-5 truncate">{inspectionOrder.reporterName}</span>
                 </div>
                 <div className="flex flex-col gap-1">
                   <span className="text-[11px] font-bold text-slate-400 flex items-center gap-1.5">
                     <span className="w-3.5 h-3.5 rounded-full border border-slate-300 flex items-center justify-center text-[8px]">📅</span>
                     กำหนดตรวจสอบ
                   </span>
-                  <span className="text-[12px] font-bold text-slate-700 pl-5">{detail.dueDate}</span>
+                  <span className="text-[12px] font-bold text-slate-700 pl-5">{inspectionOrder.dueDate}</span>
                 </div>
               </div>
             </div>
@@ -119,31 +120,27 @@ export function InspectionSendApprovalView({ detail, onBack, onSubmit }: Inspect
               <div className="absolute top-[15px] left-[40px] right-[40px] h-[2px] bg-slate-100 z-0"></div>
               <div className="absolute top-[15px] left-[40px] right-[180px] h-[2px] bg-emerald-400 z-0"></div>
 
-              {[
-                { id: 1, label: "รับงานแล้ว", date: "20 พ.ค. 2567 09:15", status: "completed", icon: <Check className="w-4 h-4 stroke-[3]" /> },
-                { id: 2, label: "กำลังเดินทาง", date: "20 พ.ค. 2567 09:20", status: "completed", icon: <Check className="w-4 h-4 stroke-[3]" /> },
-                { id: 3, label: "ถึงหน้างาน", date: "20 พ.ค. 2567 09:35", status: "completed", icon: <Check className="w-4 h-4 stroke-[3]" /> },
-                { id: 4, label: "กำลังดำเนินการ", date: "20 พ.ค. 2567 09:40", status: "completed", icon: <Check className="w-4 h-4 stroke-[3]" /> },
-                { id: 5, label: "สรุปผลและหลักฐาน", date: "20 พ.ค. 2567 10:30", status: "completed", icon: <Check className="w-4 h-4 stroke-[3]" /> },
-                { id: 6, label: "ส่งตรวจรับ", date: "รอการตรวจรับ", status: "active", icon: <span className="font-black text-[14px]">6</span> },
-              ].map((step, idx) => (
-                <div key={idx} className="flex flex-col items-center gap-2 z-10 w-[120px]">
-                  <div className={`w-[32px] h-[32px] rounded-full flex items-center justify-center bg-white border-[2px] ${step.status === 'completed' ? 'border-emerald-500 text-emerald-500' :
-                      step.status === 'active' ? 'border-blue-600 bg-blue-600 text-white' :
-                        'border-slate-200 text-slate-300'
-                    }`}>
-                    {step.icon}
+              {inspectionOrder.timeline.slice(0, 6).map((step, idx) => {
+                const state = getStepVisualState(step.status, inspectionOrder.status);
+                return (
+                  <div key={step.status} className="flex flex-col items-center gap-2 z-10 w-[120px]">
+                    <div className={`w-[32px] h-[32px] rounded-full flex items-center justify-center bg-white border-[2px] ${state === 'completed' ? 'border-emerald-500 text-emerald-500' :
+                        state === 'active' ? 'border-blue-600 bg-blue-600 text-white' :
+                          'border-slate-200 text-slate-300'
+                      }`}>
+                      {state === 'completed' ? <Check className="w-4 h-4 stroke-[3]" /> : <span className="font-black text-[14px]">{idx + 1}</span>}
+                    </div>
+                    <div className="flex flex-col items-center text-center">
+                      <span className={`text-[12px] font-bold ${state === 'active' ? 'text-blue-600' : state === 'completed' ? 'text-emerald-600' : 'text-slate-400'}`}>
+                        {step.label}
+                      </span>
+                      <span className="text-[10px] font-medium text-slate-400">
+                        {state === 'pending' ? "รอทำรายการ" : state === 'active' ? "รอการตรวจรับ" : step.at}
+                      </span>
+                    </div>
                   </div>
-                  <div className="flex flex-col items-center text-center">
-                    <span className={`text-[12px] font-bold ${step.status === 'active' ? 'text-blue-600' : step.status === 'completed' ? 'text-emerald-600' : 'text-slate-400'}`}>
-                      {step.label}
-                    </span>
-                    <span className="text-[10px] font-medium text-slate-400">
-                      {step.date}
-                    </span>
-                  </div>
-                </div>
-              ))}
+                );
+              })}
             </div>
 
           </div>
@@ -165,7 +162,7 @@ export function InspectionSendApprovalView({ detail, onBack, onSubmit }: Inspect
                       <AlertTriangle className="w-4 h-4" />
                       <span className="text-[12px] font-bold">ปัญหาที่พบ (Root Cause)</span>
                     </div>
-                    <span className="text-[13px] font-bold text-slate-700 pl-5.5">คอยล์ร้อนสกปรก / อุดตัน</span>
+                    <span className="text-[13px] font-bold text-slate-700 pl-5.5">{inspectionOrder.rootCause}</span>
                   </div>
 
                   <div className="flex flex-col gap-1.5">
@@ -173,7 +170,7 @@ export function InspectionSendApprovalView({ detail, onBack, onSubmit }: Inspect
                       <PenTool className="w-4 h-4" />
                       <span className="text-[12px] font-bold">การแก้ไข</span>
                     </div>
-                    <span className="text-[13px] font-bold text-slate-700 pl-5.5">ล้างคอยล์ร้อน / ทำความสะอาดชุดกรองอากาศ</span>
+                    <span className="text-[13px] font-bold text-slate-700 pl-5.5">{inspectionOrder.resolution}</span>
                   </div>
 
                   <div className="flex flex-col gap-1.5">
@@ -190,22 +187,12 @@ export function InspectionSendApprovalView({ detail, onBack, onSubmit }: Inspect
                       <span className="text-[12px] font-bold">ผลการตรวจวัด (หลังดำเนินการ)</span>
                     </div>
                     <div className="grid grid-cols-4 gap-2">
-                      <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-slate-50 border border-slate-100 gap-1 text-center">
-                        <span className="text-[10px] font-bold text-slate-500 line-clamp-1 w-full truncate">อุณหภูมิห้อง (°C)</span>
-                        <span className="text-[14px] font-black text-slate-800">24.6</span>
-                      </div>
-                      <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-slate-50 border border-slate-100 gap-1 text-center">
-                        <span className="text-[10px] font-bold text-slate-500 line-clamp-1 w-full truncate">แรงดันไฟฟ้า (V)</span>
-                        <span className="text-[14px] font-black text-slate-800">219</span>
-                      </div>
-                      <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-slate-50 border border-slate-100 gap-1 text-center">
-                        <span className="text-[10px] font-bold text-slate-500 line-clamp-1 w-full truncate">กระแสไฟฟ้า (A)</span>
-                        <span className="text-[14px] font-black text-slate-800">4.0</span>
-                      </div>
-                      <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-slate-50 border border-slate-100 gap-1 text-center">
-                        <span className="text-[10px] font-bold text-slate-500 line-clamp-1 w-full truncate">ความเย็น (°C)</span>
-                        <span className="text-[14px] font-black text-slate-800">11.2</span>
-                      </div>
+                      {inspectionOrder.resultMetrics.map((metric) => (
+                        <div key={metric.label} className="flex flex-col items-center justify-center p-2 rounded-lg bg-slate-50 border border-slate-100 gap-1 text-center">
+                          <span className="text-[10px] font-bold text-slate-500 line-clamp-1 w-full truncate">{metric.label}</span>
+                          <span className="text-[14px] font-black text-slate-800">{metric.value}</span>
+                        </div>
+                      ))}
                     </div>
                   </div>
 
@@ -235,16 +222,16 @@ export function InspectionSendApprovalView({ detail, onBack, onSubmit }: Inspect
                     <div className="flex items-center gap-3">
                       <div className="w-10 h-10 rounded-full bg-white border border-slate-200 overflow-hidden shrink-0">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent("สมชาย ช่างเทคนิค")}&background=random&color=fff`} alt="สมชาย ช่างเทคนิค" className="w-full h-full object-cover" />
+                        <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(inspectionOrder.technician.name)}&background=random&color=fff`} alt={inspectionOrder.technician.name} className="w-full h-full object-cover" />
                       </div>
                       <div className="flex flex-col">
-                        <span className="text-[12px] font-black text-slate-900">สมชาย ช่างเทคนิค</span>
-                        <span className="text-[10px] font-bold text-slate-500">เจ้าหน้าที่ช่าง</span>
+                        <span className="text-[12px] font-black text-slate-900">{inspectionOrder.technician.name}</span>
+                        <span className="text-[10px] font-bold text-slate-500">{inspectionOrder.technician.role}</span>
                       </div>
                     </div>
                     <div className="flex flex-col items-center">
                       <div className="h-[40px] w-[80px] bg-white rounded border border-slate-200 flex items-center justify-center opacity-80 mix-blend-multiply">
-                        <span className="font-['Caveat'] text-blue-900 text-2xl -rotate-6">สมชาย</span>
+                        <span className="font-['Caveat'] text-blue-900 text-2xl -rotate-6">{inspectionOrder.technician.name.split(" ")[0]}</span>
                       </div>
                       <span className="text-[9px] font-bold text-slate-400 mt-1">20 พ.ค. 2567 10:30 น.</span>
                     </div>
@@ -261,50 +248,30 @@ export function InspectionSendApprovalView({ detail, onBack, onSubmit }: Inspect
                 <h3 className="text-[14px] font-black text-[#1e293b] mb-4">หลักฐาน (รูปภาพ / ไฟล์)</h3>
 
                 <div className="grid grid-cols-2 gap-3 mb-3">
-                  <div className="flex flex-col gap-1.5">
-                    <div className="w-full h-[80px] bg-slate-100 rounded-xl relative overflow-hidden group cursor-pointer border border-slate-200">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=500&q=80" alt="Before" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                      <div className="absolute top-1.5 right-1.5 w-6 h-6 bg-white/90 backdrop-blur-sm rounded-lg flex items-center justify-center shadow-sm text-blue-600">
-                        <Check className="w-3.5 h-3.5" />
+                  {inspectionOrder.evidence.filter((e) => e.kind === "photo").slice(0, 2).map((photo) => (
+                    <div key={photo.id} className="flex flex-col gap-1.5">
+                      <div className="w-full h-[80px] bg-slate-100 rounded-xl relative overflow-hidden group cursor-pointer border border-slate-200">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={photo.url} alt={photo.title} className={`w-full h-full object-cover group-hover:scale-105 transition-transform duration-300 ${photo.grayscale ? "grayscale opacity-80" : ""}`} />
+                        <div className="absolute top-1.5 right-1.5 w-6 h-6 bg-white/90 backdrop-blur-sm rounded-lg flex items-center justify-center shadow-sm text-blue-600">
+                          <Check className="w-3.5 h-3.5" />
+                        </div>
                       </div>
+                      <span className="text-[11px] font-bold text-slate-500 text-center">{photo.title}</span>
                     </div>
-                    <span className="text-[11px] font-bold text-slate-500 text-center">ก่อนดำเนินการ - คอยล์ร้อน</span>
-                  </div>
-                  <div className="flex flex-col gap-1.5">
-                    <div className="w-full h-[80px] bg-slate-100 rounded-xl relative overflow-hidden group cursor-pointer border border-slate-200">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=500&q=80" alt="After" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                      <div className="absolute top-1.5 right-1.5 w-6 h-6 bg-white/90 backdrop-blur-sm rounded-lg flex items-center justify-center shadow-sm text-blue-600">
-                        <Check className="w-3.5 h-3.5" />
-                      </div>
-                    </div>
-                    <span className="text-[11px] font-bold text-slate-500 text-center">หลังดำเนินการ - คอยล์ร้อน</span>
-                  </div>
+                  ))}
                 </div>
 
                 <div className="grid grid-cols-3 gap-2">
-                  <div className="flex flex-col gap-1">
-                    <div className="w-full aspect-square bg-slate-100 rounded-lg relative overflow-hidden group cursor-pointer border border-slate-200">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&q=80" alt="Detail 1" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                  {inspectionOrder.evidence.filter((e) => e.kind === "photo").slice(2, 5).map((photo) => (
+                    <div key={photo.id} className="flex flex-col gap-1">
+                      <div className="w-full aspect-square bg-slate-100 rounded-lg relative overflow-hidden group cursor-pointer border border-slate-200">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={photo.url} alt={photo.title} className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
+                      </div>
+                      <span className="text-[9px] font-bold text-slate-500 text-center line-clamp-1">{photo.title}</span>
                     </div>
-                    <span className="text-[9px] font-bold text-slate-500 text-center line-clamp-1">ค่ากระแสไฟฟ้า</span>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <div className="w-full aspect-square bg-slate-100 rounded-lg relative overflow-hidden group cursor-pointer border border-slate-200">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&q=80" alt="Detail 2" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                    </div>
-                    <span className="text-[9px] font-bold text-slate-500 text-center line-clamp-1">อุณหภูมิห้องลม</span>
-                  </div>
-                  <div className="flex flex-col gap-1">
-                    <div className="w-full aspect-square bg-slate-100 rounded-lg relative overflow-hidden group cursor-pointer border border-slate-200">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=500&q=80" alt="Detail 3" className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300" />
-                    </div>
-                    <span className="text-[9px] font-bold text-slate-500 text-center line-clamp-1">สภาพหน้างานหลังดำเนินการ</span>
-                  </div>
+                  ))}
                 </div>
               </div>
 
@@ -384,7 +351,7 @@ export function InspectionSendApprovalView({ detail, onBack, onSubmit }: Inspect
 
         {/* Right Sidebar */}
         <div className="w-full xl:w-[320px] shrink-0 flex flex-col gap-6">
-          <SendApprovalSidebar detail={detail} />
+          <SendApprovalSidebar inspectionOrder={inspectionOrder} />
         </div>
 
       </div>
@@ -403,7 +370,7 @@ export function InspectionSendApprovalView({ detail, onBack, onSubmit }: Inspect
               ย้อนกลับ
             </button>
             <button
-              onClick={onSubmit}
+              onClick={() => advanceStatus()}
               className="px-8 py-2.5 rounded-[12px] bg-blue-600 text-white font-bold text-[14px] hover:bg-blue-700 transition-colors shadow-md shadow-blue-200 flex items-center gap-2"
             >
               <Send className="w-4 h-4 fill-white" />
@@ -418,15 +385,9 @@ export function InspectionSendApprovalView({ detail, onBack, onSubmit }: Inspect
 }
 
 // Right Sidebar Component
-function SendApprovalSidebar({ detail }: { detail: TechnicianInspectionDetail }) {
-  const steps = [
-    { label: "รับงานแล้ว", date: "20 พ.ค. 2567 09:15", status: "completed" },
-    { label: "กำลังเดินทาง", date: "20 พ.ค. 2567 09:20", status: "completed" },
-    { label: "ถึงหน้างาน", date: "20 พ.ค. 2567 09:35", status: "completed" },
-    { label: "กำลังดำเนินการ", date: "20 พ.ค. 2567 09:40", status: "completed" },
-    { label: "สรุปผลและหลักฐาน", date: "20 พ.ค. 2567 10:30", status: "completed" },
-    { label: "ส่งตรวจรับ", date: "รอการตรวจรับ", status: "active" },
-  ];
+function SendApprovalSidebar({ inspectionOrder }: { inspectionOrder: InspectionOrder }) {
+  const steps = inspectionOrder.timeline.slice(0, 6);
+  const progressPercent = getProgressPercent(inspectionOrder.status);
 
   return (
     <>
@@ -437,11 +398,11 @@ function SendApprovalSidebar({ detail }: { detail: TechnicianInspectionDetail })
         <div className="flex flex-col gap-4">
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">เลขที่ใบงาน</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right">{detail.woNumber}</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right">{inspectionOrder.woNumber}</span>
           </div>
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">ประเภทงาน</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right">{detail.taskType}</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right">{inspectionOrder.taskType}</span>
           </div>
           <div className="flex justify-between items-center gap-4">
             <span className="text-[12px] font-bold text-slate-500">ความเร่งด่วน</span>
@@ -449,15 +410,15 @@ function SendApprovalSidebar({ detail }: { detail: TechnicianInspectionDetail })
           </div>
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">วันที่แจ้ง</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right">{detail.woDate}</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right">{inspectionOrder.woDate}</span>
           </div>
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">ผู้แจ้ง</span>
-            <span className="text-[12px] font-bold text-blue-600 text-right">{detail.reporterName} ({detail.reporterDept})</span>
+            <span className="text-[12px] font-bold text-blue-600 text-right">{inspectionOrder.reporterName} ({inspectionOrder.reporterDept})</span>
           </div>
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">สถานที่</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right line-clamp-2 w-[160px]">{detail.location}</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right line-clamp-2 w-[160px]">{inspectionOrder.location}</span>
           </div>
         </div>
 
@@ -471,35 +432,38 @@ function SendApprovalSidebar({ detail }: { detail: TechnicianInspectionDetail })
       <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm p-6">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-[14px] font-black text-slate-900">ความคืบหน้างาน</h3>
-          <span className="text-[14px] font-black text-blue-900">100%</span>
+          <span className="text-[14px] font-black text-blue-900">{progressPercent}%</span>
         </div>
 
         <div className="w-full h-1.5 bg-slate-100 rounded-full mb-6">
-          <div className="h-full bg-[#1D4ED8] rounded-full" style={{ width: `100%` }}></div>
+          <div className="h-full bg-[#1D4ED8] rounded-full" style={{ width: `${progressPercent}%` }}></div>
         </div>
 
         <div className="relative">
           <div className="absolute top-[14px] bottom-[14px] left-[11px] w-[2px] bg-[#E2E8F0] z-0"></div>
 
           <div className="flex flex-col gap-5 relative z-10">
-            {steps.map((step, idx) => (
-              <div key={idx} className="flex items-center gap-4">
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 z-10 transition-colors ${step.status === 'completed' ? "bg-emerald-500 text-white" :
-                    step.status === 'active' ? "bg-blue-600 text-white" :
-                      "bg-white text-slate-400 border-[2px] border-[#E2E8F0]"
-                  }`}>
-                  {step.status === 'active' ? <span className="text-[10px] font-black">6</span> : <Check className="w-3.5 h-3.5 stroke-[3]" />}
+            {steps.map((step, idx) => {
+              const state = getStepVisualState(step.status, inspectionOrder.status);
+              return (
+                <div key={step.status} className="flex items-center gap-4">
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 z-10 transition-colors ${state === 'completed' ? "bg-emerald-500 text-white" :
+                      state === 'active' ? "bg-blue-600 text-white" :
+                        "bg-white text-slate-400 border-[2px] border-[#E2E8F0]"
+                    }`}>
+                    {state === 'active' ? <span className="text-[10px] font-black">{idx + 1}</span> : <Check className="w-3.5 h-3.5 stroke-[3]" />}
+                  </div>
+                  <div className="flex-1 flex justify-between items-center">
+                    <span className={`text-[12px] font-bold ${state === 'active' ? 'text-blue-600' : 'text-slate-800'}`}>
+                      {step.label}
+                    </span>
+                    <span className={`text-[10px] font-medium ${state === 'active' ? 'text-blue-600' : 'text-slate-500'}`}>
+                      {state === 'pending' ? "รอทำรายการ" : state === 'active' ? "รอการตรวจรับ" : step.at}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex-1 flex justify-between items-center">
-                  <span className={`text-[12px] font-bold ${step.status === 'active' ? 'text-blue-600' : 'text-slate-800'}`}>
-                    {step.label}
-                  </span>
-                  <span className={`text-[10px] font-medium ${step.status === 'active' ? 'text-blue-600' : 'text-slate-500'}`}>
-                    {step.date}
-                  </span>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
@@ -511,17 +475,17 @@ function SendApprovalSidebar({ detail }: { detail: TechnicianInspectionDetail })
         <div className="flex items-center gap-3 mb-5">
           <div className="w-12 h-12 rounded-full bg-slate-200 overflow-hidden border border-slate-200 shrink-0 shadow-sm">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent("จิราภรณ์ วงศ์สุวรรณ")}&background=random&color=fff`} alt="จิราภรณ์ วงศ์สุวรรณ" className="w-full h-full object-cover" />
+            <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(inspectionOrder.approver.name)}&background=random&color=fff`} alt={inspectionOrder.approver.name} className="w-full h-full object-cover" />
           </div>
           <div className="flex flex-col">
-            <span className="text-[13px] font-black text-slate-900 line-clamp-1">นางสาวจิราภรณ์ วงศ์สุวรรณ</span>
-            <span className="text-[11px] font-bold text-slate-500 mt-0.5">หัวหน้าฝ่ายอาคารสถานที่</span>
+            <span className="text-[13px] font-black text-slate-900 line-clamp-1">{inspectionOrder.approver.name}</span>
+            <span className="text-[11px] font-bold text-slate-500 mt-0.5">{inspectionOrder.approver.role}</span>
           </div>
         </div>
 
         <div className="flex items-center gap-2 text-[13px] font-bold text-blue-600 bg-blue-50/50 p-2.5 rounded-lg border border-blue-100">
           <Phone className="w-4 h-4 shrink-0" />
-          <span>02-123-4567 ต่อ 210</span>
+          <span>{inspectionOrder.approver.phone}</span>
         </div>
       </div>
 

@@ -85,22 +85,18 @@ export function MyTasksClient({ stats, initialTasks }: MyTasksClientProps) {
       description="ติดตามและจัดการงานที่ได้รับมอบหมาย"
       headerActions={
         <div className="flex flex-col items-end">
-          <div className="flex items-center gap-1.5 text-[13px] font-bold text-slate-800">
-            20 พฤษภาคม 2567 <Sun className="w-4 h-4 text-amber-500 ml-1" />
-          </div>
-          <div className="text-[11px] font-bold text-slate-500 mt-0.5">09:30 น.</div>
         </div>
       }
     >
       <MyTasksStats stats={stats} />
 
       {/* Tabs */}
-      <div className="flex border-b border-slate-200 mt-8 mb-2">
+      <div className="flex border-b border-slate-200 mt-2">
         {["รายการงาน", "งานที่มอบหมายให้ฉัน", "งานที่ฉันสร้าง", "งานยกเลิก"].map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-4 py-3 text-[13px] font-bold border-b-2 transition-colors -mb-[1px] ${activeTab === tab
+            className={`px-4 py-3 text-[13px] font-bold border-b-2 transition-colors ${activeTab === tab
                 ? "border-blue-600 text-blue-600"
                 : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
               }`}
@@ -110,7 +106,7 @@ export function MyTasksClient({ stats, initialTasks }: MyTasksClientProps) {
         ))}
       </div>
 
-      <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+      <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm flex flex-col mt-4">
         <TechnicianFilterBar
           searchQuery={searchQuery}
           onSearchChange={(val) => {
@@ -157,9 +153,9 @@ export function MyTasksClient({ stats, initialTasks }: MyTasksClientProps) {
             setPriorityFilter("ทั้งหมด");
             setCurrentPage(1);
           }}
-          actionButton={
-            <div className="flex items-center gap-3 shrink-0 flex-wrap mt-[18px]">
-              <div className="flex items-center gap-2 border border-slate-200 rounded-lg px-3 py-2 bg-white">
+          extraActions={
+            <div className="flex items-center gap-3 shrink-0 flex-wrap">
+              <div className="flex items-center gap-2 border border-slate-200 rounded-lg bg-white">
                 <Calendar className="w-4 h-4 text-slate-400" />
                 <span className="text-[12px] font-bold text-slate-700">20/05/2567 - 20/05/2567</span>
                 <Calendar className="w-4 h-4 text-slate-400 ml-2" />
@@ -208,6 +204,7 @@ export function MyTasksClient({ stats, initialTasks }: MyTasksClientProps) {
           itemsPerPage={itemsPerPage}
           totalItems={filteredTasks.length}
           onPageChange={setCurrentPage}
+          startIndex={(currentPage - 1) * itemsPerPage}
           onItemsPerPageChange={(num) => {
             setItemsPerPage(num);
             setCurrentPage(1);
@@ -216,7 +213,7 @@ export function MyTasksClient({ stats, initialTasks }: MyTasksClientProps) {
       </div>
 
       {/* Info Footer */}
-      <div className="bg-blue-50/50 rounded-xl p-4 border border-blue-100 flex items-start gap-3 mt-6">
+      <div className="bg-blue-50/50 rounded-xl p-4 border border-blue-100 flex items-start gap-3 mt-3">
         <div className="w-5 h-5 rounded-full bg-blue-100 flex items-center justify-center shrink-0 mt-0.5">
           <span className="text-blue-600 font-bold text-[10px]">i</span>
         </div>

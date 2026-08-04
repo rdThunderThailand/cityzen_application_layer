@@ -35,7 +35,7 @@ export const WeatherCard = ({
 
     return (
         <div className={cn(
-            "flex items-center gap-3 px-3 py-1.5 rounded-xl bg-slate-50 border border-slate-100",
+            "flex items-center gap-3 px-3 py-1.5 rounded-xl",
             className
         )}>
             <Icon className="w-6 h-6 text-amber-400 shrink-0" />

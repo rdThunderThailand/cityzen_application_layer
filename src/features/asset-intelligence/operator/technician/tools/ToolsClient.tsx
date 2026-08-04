@@ -14,7 +14,7 @@ import {
   Wrench
 } from "lucide-react";
 import { TechnicianPageLayout } from "../components/shared/TechnicianPageLayout";
-import { TechnicianMetricCard } from "../components/shared/TechnicianMetricCard";
+import { CardMetric } from "@/components/dashboard/CardMetric";
 import { TechnicianFilterBar } from "../components/shared/TechnicianFilterBar";
 import { TechnicianTable } from "../components/shared/TechnicianTable";
 import { TechnicianPagination } from "../components/shared/TechnicianPagination";
@@ -99,40 +99,46 @@ export default function ToolsClient() {
 
       {/* Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <TechnicianMetricCard
+        <CardMetric
           title="เครื่องมือทั้งหมด"
           value={stats.all}
           subtitle="รายการ"
-          icon={<Briefcase className="w-6 h-6 text-blue-600" />}
+          icon={Briefcase}
+          classNameForIcon="bg-blue-50 text-blue-600"
+          className="max-h-180 gap-2 p-5"
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="พร้อมใช้งาน"
           value={stats.ready}
           subtitle="รายการ"
-          icon={<CheckCircle2 className="w-6 h-6 text-emerald-600" />}
-          iconBgColor="bg-emerald-50"
+          icon={CheckCircle2}
+          classNameForIcon="bg-emerald-50 text-emerald-600"
+          className="max-h-180 gap-2 p-5"
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="ถูกใช้งาน"
           value={stats.inUse}
           subtitle="รายการ"
-          icon={<Wrench className="w-6 h-6 text-amber-500" />}
-          iconBgColor="bg-amber-50"
+          icon={Wrench}
+          classNameForIcon="bg-amber-50 text-amber-500"
+          className="max-h-180 gap-2 p-5"
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="ต้องตรวจสอบ"
           value={stats.inspect}
           subtitle="รายการ"
-          icon={<AlertCircle className="w-6 h-6 text-rose-500" />}
-          iconBgColor="bg-rose-50"
+          icon={AlertCircle}
+          classNameForIcon="bg-rose-50 text-rose-500"
+          className="max-h-180 gap-2 p-5"
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="ครบกำหนดสอบเทียบ"
           value={stats.calibrationDue}
           subtitle="รายการ"
-          icon={<Calendar className="w-6 h-6 text-purple-600" />}
-          iconBgColor="bg-purple-50"
-          customFooter={
+          icon={Calendar}
+          classNameForIcon="bg-purple-50 text-purple-600"
+          className="max-h-180 gap-2 p-5"
+          action={
             <div className="w-full flex items-center justify-between">
               <span className="text-[11px] font-bold text-purple-900">รายการ</span>
               <button className="text-[11px] font-bold text-blue-600 flex items-center gap-1 hover:text-blue-800 transition-colors">
@@ -144,7 +150,7 @@ export default function ToolsClient() {
       </div>
 
       {/* Main Content Area */}
-      <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm flex flex-col overflow-hidden">
+      <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm flex flex-col mt-6">
 
         {/* Tabs */}
         <div className="flex items-center gap-8 px-6 border-b border-slate-200">
@@ -211,7 +217,7 @@ export default function ToolsClient() {
             setStatusFilter("สถานะ");
             setLocationFilter("ตำแหน่ง");
           }}
-          actionButton={
+          extraActions={
             <button className="px-4 py-2.5 rounded-lg border border-slate-200 bg-white text-blue-600 font-bold text-[13px] hover:bg-slate-50 flex items-center gap-2 transition-colors whitespace-nowrap shrink-0 shadow-sm">
               <Download className="w-4 h-4" /> ส่งออกข้อมูล
             </button>
@@ -314,6 +320,7 @@ export default function ToolsClient() {
           totalPages={totalPages}
           itemsPerPage={itemsPerPage}
           totalItems={totalItems}
+          startIndex={startIndex}
           onPageChange={setCurrentPage}
           onItemsPerPageChange={(num) => {
             setItemsPerPage(num);

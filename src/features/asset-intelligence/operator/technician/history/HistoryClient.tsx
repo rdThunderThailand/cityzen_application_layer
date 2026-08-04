@@ -14,7 +14,7 @@ import {
   XCircle
 } from "lucide-react";
 import { TechnicianPageLayout } from "../components/shared/TechnicianPageLayout";
-import { TechnicianMetricCard } from "../components/shared/TechnicianMetricCard";
+import { CardMetric } from "@/components/dashboard/CardMetric";
 import { TechnicianFilterBar } from "../components/shared/TechnicianFilterBar";
 import { TechnicianTable } from "../components/shared/TechnicianTable";
 import { TechnicianPagination } from "../components/shared/TechnicianPagination";
@@ -96,53 +96,64 @@ export default function HistoryClient() {
     >
       {/* Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <TechnicianMetricCard
+        <CardMetric
           title="ใบงานที่ซ่อมเสร็จแล้ว"
           value="128"
           subtitle="ใบงาน"
-          icon={<FileText className="w-6 h-6" />}
-          trend={{ value: "12%", isPositive: true, label: "เดือนที่ 28 ใบงาน" }}
+          icon={FileText}
+          classNameForIcon="bg-blue-50 text-blue-600"
+          className="max-h-180 gap-2 p-5"
+          subValue={12}
+          subUnit="%"
+          status="เดือนที่ 28 ใบงาน"
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="ซ่อมสำเร็จ"
           value="122"
           subtitle="ใบงาน"
-          icon={<CheckCircle2 className="w-6 h-6" />}
-          iconBgColor="bg-emerald-50"
-          iconColor="text-emerald-600"
-          trend={{ value: "10%", isPositive: true, label: "เดือนที่ 26 ใบงาน" }}
+          icon={CheckCircle2}
+          classNameForIcon="bg-emerald-50 text-emerald-600"
+          className="max-h-180 gap-2 p-5"
+          subValue={10}
+          subUnit="%"
+          status="เดือนที่ 26 ใบงาน"
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="กำลังดำเนินการ"
           value="6"
           subtitle="ใบงาน"
-          icon={<Clock className="w-6 h-6" />}
-          iconBgColor="bg-orange-50"
-          iconColor="text-orange-500"
-          trend={{ value: "20%", isPositive: false, label: "เดือนที่ 2 ใบงาน" }}
+          icon={Clock}
+          classNameForIcon="bg-orange-50 text-orange-500"
+          className="max-h-180 gap-2 p-5"
+          subValue={-20}
+          subUnit="%"
+          status="เดือนที่ 2 ใบงาน"
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="เฉลี่ยเวลาซ่อม"
           value="2.45"
           subtitle="ชั่วโมง"
-          icon={<Calendar className="w-6 h-6" />}
-          iconBgColor="bg-purple-50"
-          iconColor="text-purple-600"
-          trend={{ value: "8%", isPositive: true, label: "เดือนที่" }}
+          icon={Calendar}
+          classNameForIcon="bg-purple-50 text-purple-600"
+          className="max-h-180 gap-2 p-5"
+          subValue={8}
+          subUnit="%"
+          status="เดือนที่"
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="ความพึงพอใจเฉลี่ย"
           value="4.6 / 5"
           subtitle="จาก 32 รีวิว"
-          icon={<Star className="w-6 h-6 fill-amber-500" />}
-          iconBgColor="bg-amber-50"
-          iconColor="text-amber-500"
-          trend={{ value: "9%", isPositive: true }}
+          icon={Star}
+          classNameForIcon="bg-amber-50 text-amber-500"
+          className="max-h-180 gap-2 p-5"
+          subValue={9}
+          subUnit="%"
         />
       </div>
 
       {/* Main Content Area */}
-      <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm flex flex-col overflow-hidden">
+      <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm flex flex-col mt-6">
         <TechnicianFilterBar
           searchQuery={searchQuery}
           searchPlaceholder="ค้นหาใบงาน, อุปกรณ์, สถานที่..."

@@ -1,20 +1,16 @@
 "use client";
 
-import { TechnicianInspectionDetail } from "@/features/asset-intelligence/operator/technician/types";
 import { Car, Info, MapPin, Navigation } from "lucide-react";
+import { InspectionOrder, InspectionOrderPatch } from "../types";
 import Map, { Layer, Marker, NavigationControl, Source } from "./MockMap";
 
-export function InspectionDetailMap({ detail, onStartNavigation }: { detail: TechnicianInspectionDetail, onStartNavigation?: () => void }) {
-  // Realistic mock route following roads in Saen Suk (firmly on land)
-  const routeCoords = [
-    [100.9365, 13.2798], // Start point (near Nong Mon)
-    [100.9340, 13.2795],
-    [100.9320, 13.2790],
-    [100.9300, 13.2800],
-    [100.9280, 13.2805],
-    [100.9260, 13.2810],
-    [100.9248, 13.2818]  // Destination (near Burapha University)
-  ];
+interface InspectionDetailMapProps {
+  inspectionOrder: InspectionOrder;
+  advanceStatus: (patch?: InspectionOrderPatch) => void;
+}
+
+export function InspectionDetailMap({ inspectionOrder, advanceStatus }: InspectionDetailMapProps) {
+  const routeCoords = inspectionOrder.route;
 
   const startCoords = routeCoords[0];
   const destCoords = routeCoords[routeCoords.length - 1];
@@ -37,9 +33,9 @@ export function InspectionDetailMap({ detail, onStartNavigation }: { detail: Tec
       <div className="flex items-start justify-between gap-4 mb-5">
         <div>
           <h3 className="text-[15px] font-black text-slate-800 mb-2">ตำแหน่งหน้างาน</h3>
-          <p className="text-[14px] font-bold text-slate-700 leading-snug">{detail.location}</p>
+          <p className="text-[14px] font-bold text-slate-700 leading-snug">{inspectionOrder.location}</p>
           <p className="text-[12px] font-medium text-slate-500 mt-1">
-            ถ.แสนสุข ต.แสนสุข อ.เมืองชลบุรี จ.ชลบุรี 20130
+            {inspectionOrder.addressLine}
           </p>
         </div>
         <button className="flex items-center gap-2 px-3 py-1.5 border border-slate-200 rounded-lg text-blue-600 font-bold hover:bg-slate-50 transition-colors shrink-0 bg-white">
@@ -95,7 +91,7 @@ export function InspectionDetailMap({ detail, onStartNavigation }: { detail: Tec
                 </div>
                 <div>
                   <h4 className="text-[13px] font-black text-slate-800">หน้างาน</h4>
-                  <p className="text-[11px] font-bold text-slate-500 whitespace-nowrap">{detail.location}</p>
+                  <p className="text-[11px] font-bold text-slate-500 whitespace-nowrap">{inspectionOrder.location}</p>
                 </div>
               </div>
               {/* Custom triangle pointer */}
@@ -106,8 +102,8 @@ export function InspectionDetailMap({ detail, onStartNavigation }: { detail: Tec
           {/* Estimated Time Pill (Middle of route) */}
           <Marker longitude={midLng} latitude={midLat} anchor="center">
             <div className="bg-white px-3 py-1.5 rounded-full shadow-md border border-slate-200 flex flex-col items-center mt-6">
-              <span className="text-[12px] font-black text-blue-700">ประมาณ 15 นาที</span>
-              <span className="text-[10px] font-bold text-slate-500">(6.2 กม.)</span>
+              <span className="text-[12px] font-black text-blue-700">ประมาณ {inspectionOrder.travelMinutes} นาที</span>
+              <span className="text-[10px] font-bold text-slate-500">({inspectionOrder.distanceKm} กม.)</span>
             </div>
           </Marker>
         </Map>
@@ -128,7 +124,7 @@ export function InspectionDetailMap({ detail, onStartNavigation }: { detail: Tec
         </div>
 
         <div className="grid grid-cols-[1.5fr_1fr] gap-3">
-          <button onClick={onStartNavigation} className="flex items-center justify-center gap-2 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-[12px] text-[14px] font-bold transition-colors shadow-sm shadow-blue-200">
+          <button onClick={() => advanceStatus()} className="flex items-center justify-center gap-2 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-[12px] text-[14px] font-bold transition-colors shadow-sm shadow-blue-200">
             <Car className="w-4 h-4" />
             <span>เริ่มเดินทาง</span>
           </button>

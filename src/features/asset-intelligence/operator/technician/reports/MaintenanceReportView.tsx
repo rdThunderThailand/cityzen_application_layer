@@ -18,7 +18,7 @@ import {
   Save,
   Wrench
 } from "lucide-react";
-import { TechnicianMetricCard } from "../components/shared/TechnicianMetricCard";
+import { CardMetric } from "@/components/dashboard/CardMetric";
 import { TechnicianFilterBar } from "../components/shared/TechnicianFilterBar";
 import { TechnicianTable } from "../components/shared/TechnicianTable";
 import { useEffect, useState } from "react";
@@ -102,40 +102,53 @@ export default function MaintenanceReportView({ onBack }: { onBack: () => void }
 
       {/* Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <TechnicianMetricCard
+        <CardMetric
           title="งานซ่อมบำรุงทั้งหมด"
           value={metrics.totalJobs}
           subtitle="งาน"
-          icon={<Wrench className="w-6 h-6 text-blue-600" />}
-          trend={{ value: "12% จากเดือนที่แล้ว", isPositive: true, label: "เพิ่มขึ้น" }}
+          icon={Wrench}
+          classNameForIcon="bg-blue-50 text-blue-600"
+          className="max-h-180 gap-2 p-5"
+          status={
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600">
+              <ArrowUp className="w-3 h-3" />เพิ่มขึ้น 12% จากเดือนที่แล้ว
+            </span>
+          }
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="ซ่อมบำรุงสำเร็จ"
           value={metrics.completed}
           subtitle="งาน"
-          icon={<CheckCircle2 className="w-6 h-6 text-emerald-600" />}
-          iconBgColor="bg-emerald-50"
-          customFooter={
+          icon={CheckCircle2}
+          classNameForIcon="bg-emerald-50 text-emerald-600"
+          className="max-h-180 gap-2 p-5"
+          action={
             <div className="w-full flex justify-end">
               <span className="text-[11px] font-bold text-emerald-600">{metrics.completedPercent}</span>
             </div>
           }
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="กำลังดำเนินการ"
           value={metrics.inProgress}
           subtitle="งาน"
-          icon={<Clock className="w-6 h-6 text-orange-500" />}
-          iconBgColor="bg-orange-50"
-          trend={{ value: "20% จากเดือนที่แล้ว", isPositive: true, label: "ลดลง" }}
+          icon={Clock}
+          classNameForIcon="bg-orange-50 text-orange-500"
+          className="max-h-180 gap-2 p-5"
+          status={
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600">
+              <ArrowUp className="w-3 h-3" />ลดลง 20% จากเดือนที่แล้ว
+            </span>
+          }
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="ยกเลิก / ไม่พบปัญหา"
           value={metrics.canceled}
           subtitle="งาน"
-          icon={<AlertTriangle className="w-6 h-6 text-rose-500" />}
-          iconBgColor="bg-rose-50"
-          customFooter={
+          icon={AlertTriangle}
+          classNameForIcon="bg-rose-50 text-rose-500"
+          className="max-h-180 gap-2 p-5"
+          action={
             <div className="w-full flex justify-end">
               <div className="flex items-center gap-1 text-rose-600">
                 <span className="text-[11px] font-bold">เพิ่มขึ้น 14% จากเดือนที่แล้ว</span>
@@ -144,13 +157,18 @@ export default function MaintenanceReportView({ onBack }: { onBack: () => void }
             </div>
           }
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="ค่าใช้จ่ายรวม"
           value="85,450.00"
           subtitle="บาท"
-          icon={<Banknote className="w-6 h-6 text-purple-600" />}
-          iconBgColor="bg-purple-50"
-          trend={{ value: "8% จากเดือนที่แล้ว", isPositive: true, label: "ลดลง" }}
+          icon={Banknote}
+          classNameForIcon="bg-purple-50 text-purple-600"
+          className="max-h-180 gap-2 p-5"
+          status={
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600">
+              <ArrowUp className="w-3 h-3" />ลดลง 8% จากเดือนที่แล้ว
+            </span>
+          }
         />
       </div>
 
@@ -323,7 +341,7 @@ export default function MaintenanceReportView({ onBack }: { onBack: () => void }
                 <RechartsTooltip
                   cursor={{ fill: 'transparent' }}
                   contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                  formatter={(value: number | string) => [`${Number(value || 0).toLocaleString()} บาท`, 'ค่าใช้จ่าย']}
+                  formatter={(value) => [`${Number(value || 0).toLocaleString()} บาท`, 'ค่าใช้จ่าย']}
                 />
                 <Bar dataKey="cost" fill="#93c5fd" radius={[4, 4, 0, 0]} maxBarSize={40}>
                   {/* Top value labels */}

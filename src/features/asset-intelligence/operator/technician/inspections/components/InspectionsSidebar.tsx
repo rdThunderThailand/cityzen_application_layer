@@ -18,7 +18,7 @@ export function InspectionsSidebar({ item }: InspectionsSidebarProps) {
   }
 
   return (
-    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col overflow-hidden h-full">
+    <div className="bg-white rounded-2xl border border-slate-200 shadow-sm flex flex-col overflow-hidden">
       <div className="p-5 border-b border-slate-100 flex items-center justify-between">
         <h3 className="text-[14px] font-bold text-slate-800">รายละเอียดใบงาน</h3>
         <button className="text-[11px] font-bold text-blue-600 flex items-center gap-1 hover:underline">
@@ -148,7 +148,7 @@ export function InspectionsSidebar({ item }: InspectionsSidebarProps) {
       {/* Footer Action */}
       <div className="p-4 border-t border-slate-100 bg-white">
         <Link
-          href={`/dashboard/assets/officer/technician/inspections/${item.id}`}
+          href={`/asset-intelligence/operator/main/technician/inspections/${item.id}`}
           className="w-full flex items-center justify-center gap-2 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-[13px] font-bold transition-colors shadow-sm shadow-blue-200"
         >
           <Play className="w-4 h-4 fill-white" />

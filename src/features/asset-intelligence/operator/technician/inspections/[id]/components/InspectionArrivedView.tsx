@@ -1,6 +1,5 @@
 "use client";
 
-import { TechnicianInspectionDetail } from "@/features/asset-intelligence/operator/technician/types";
 import {
   ArrowLeft,
   Camera,
@@ -17,15 +16,17 @@ import {
   X
 } from "lucide-react";
 import Link from "next/link";
+import { getProgressPercent, getStepVisualState } from "../statusView";
+import { InspectionOrder, InspectionOrderPatch } from "../types";
 import Map, { Marker, NavigationControl, Source } from "./MockMap";
 
 interface InspectionArrivedViewProps {
-  detail: TechnicianInspectionDetail;
+  inspectionOrder: InspectionOrder;
+  advanceStatus: (patch?: InspectionOrderPatch) => void;
   onBack: () => void;
-  onStartInspection: () => void;
 }
 
-export function InspectionArrivedView({ detail, onBack, onStartInspection }: InspectionArrivedViewProps) {
+export function InspectionArrivedView({ inspectionOrder, advanceStatus, onBack }: InspectionArrivedViewProps) {
   const isSidebarCollapsed = false; // TODO: wire to real layout sidebar state if needed
   const sidebarOffset = isSidebarCollapsed ? "lg:left-20" : "lg:left-64";
 
@@ -65,7 +66,7 @@ export function InspectionArrivedView({ detail, onBack, onStartInspection }: Ins
 
           {/* Top Summary & Timeline */}
           <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm flex flex-col overflow-hidden">
-            <ArrivedHeaderSummary detail={detail} />
+            <ArrivedHeaderSummary inspectionOrder={inspectionOrder} />
           </div>
 
           {/* Middle Row: Arrival Confirm, Map, Photos */}
@@ -123,11 +124,11 @@ export function InspectionArrivedView({ detail, onBack, onStartInspection }: Ins
             {/* 2. Map */}
             <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm flex flex-col p-2">
               <div className="flex-1 bg-slate-100 rounded-xl relative overflow-hidden">
-                <ArrivedMiniMap detail={detail} />
+                <ArrivedMiniMap inspectionOrder={inspectionOrder} />
               </div>
               <div className="p-3 pb-2 flex flex-col">
-                <h4 className="text-[13px] font-black text-slate-800 leading-tight mb-1">{detail.location}</h4>
-                <p className="text-[11px] font-medium text-slate-500 leading-tight mb-2">ถ.แสนสุข ต.แสนสุข อ.เมืองชลบุรี จ.ชลบุรี 20130</p>
+                <h4 className="text-[13px] font-black text-slate-800 leading-tight mb-1">{inspectionOrder.location}</h4>
+                <p className="text-[11px] font-medium text-slate-500 leading-tight mb-2">{inspectionOrder.addressLine}</p>
                 <div className="flex justify-end">
                   <button className="text-[12px] font-bold text-blue-600 hover:text-blue-700 flex items-center gap-1">
                     นำทาง <ChevronRight className="w-3 h-3" />
@@ -230,7 +231,7 @@ export function InspectionArrivedView({ detail, onBack, onStartInspection }: Ins
 
         {/* Right Sidebar */}
         <div className="w-full xl:w-[360px] shrink-0 flex flex-col gap-6">
-          <ArrivedSidebar detail={detail} />
+          <ArrivedSidebar inspectionOrder={inspectionOrder} />
         </div>
 
       </div>
@@ -247,7 +248,7 @@ export function InspectionArrivedView({ detail, onBack, onStartInspection }: Ins
               บันทึกชั่วคราว
             </button>
             <button
-              onClick={onStartInspection}
+              onClick={() => advanceStatus()}
               className="px-8 py-2.5 rounded-[12px] bg-blue-600 text-white font-bold text-[14px] hover:bg-blue-700 transition-colors shadow-md shadow-blue-200 flex items-center gap-2"
             >
               <Play className="w-4 h-4 fill-white" />
@@ -261,11 +262,9 @@ export function InspectionArrivedView({ detail, onBack, onStartInspection }: Ins
 }
 
 // Map Component for Middle Area
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-function ArrivedMiniMap({ detail: _detail }: { detail: TechnicianInspectionDetail }) {
-  // Approximate coordinates
-  const siteCoords = [100.9248, 13.2818];
-  const userCoords = [100.9240, 13.2810]; // Slightly off center
+function ArrivedMiniMap({ inspectionOrder }: { inspectionOrder: InspectionOrder }) {
+  const siteCoords = inspectionOrder.siteCoordinates;
+  const userCoords: [number, number] = [siteCoords[0] - 0.0008, siteCoords[1] - 0.0008]; // Slightly off center
 
   return (
     <Map
@@ -324,7 +323,9 @@ function ArrivedMiniMap({ detail: _detail }: { detail: TechnicianInspectionDetai
 }
 
 // Top Summary Component
-function ArrivedHeaderSummary({ detail }: { detail: TechnicianInspectionDetail }) {
+function ArrivedHeaderSummary({ inspectionOrder }: { inspectionOrder: InspectionOrder }) {
+  const [step1, step2, step3, ...restSteps] = inspectionOrder.timeline;
+
   return (
     <div className="flex flex-col w-full">
       <div className="flex flex-col xl:flex-row xl:items-start gap-6 p-8 xl:p-12 lg:p-8">
@@ -341,27 +342,27 @@ function ArrivedHeaderSummary({ detail }: { detail: TechnicianInspectionDetail }
           <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div>
               <div className="flex items-center gap-3 mb-2">
-                <span className="text-[16px] font-black text-blue-900 tracking-tight">{detail.woNumber}</span>
+                <span className="text-[16px] font-black text-blue-900 tracking-tight">{inspectionOrder.woNumber}</span>
                 <span className="px-2.5 py-0.5 rounded-full text-[11px] font-bold bg-amber-50 text-amber-600">
                   รอแจ้งดำเนินการตรวจสอบ
                 </span>
               </div>
-              <h2 className="text-[20px] font-black text-[#1e293b] mb-1 leading-tight">{detail.assetName}</h2>
-              <p className="text-[14px] font-medium text-slate-500">{detail.assetLocation}</p>
+              <h2 className="text-[20px] font-black text-[#1e293b] mb-1 leading-tight">{inspectionOrder.assetName}</h2>
+              <p className="text-[14px] font-medium text-slate-500">{inspectionOrder.assetLocation}</p>
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-x-8 gap-y-4">
               <div className="flex flex-col gap-1">
                 <span className="text-[11px] font-bold text-slate-400">สถานที่</span>
-                <span className="text-[12px] font-bold text-slate-700">{detail.location}</span>
+                <span className="text-[12px] font-bold text-slate-700">{inspectionOrder.location}</span>
               </div>
               <div className="flex flex-col gap-1">
                 <span className="text-[11px] font-bold text-slate-400">ผู้แจ้ง</span>
-                <span className="text-[12px] font-bold text-slate-700">{detail.reporterName}</span>
+                <span className="text-[12px] font-bold text-slate-700">{inspectionOrder.reporterName}</span>
               </div>
               <div className="flex flex-col gap-1">
                 <span className="text-[11px] font-bold text-slate-400">กำหนดตรวจสอบ</span>
-                <span className="text-[12px] font-bold text-slate-700">{detail.dueDate}</span>
+                <span className="text-[12px] font-bold text-slate-700">{inspectionOrder.dueDate}</span>
               </div>
             </div>
           </div>
@@ -382,8 +383,8 @@ function ArrivedHeaderSummary({ detail }: { detail: TechnicianInspectionDetail }
                 <div className="w-7 h-7 rounded-full bg-white border-[2px] border-emerald-500 flex items-center justify-center text-emerald-500 mb-2 z-10">
                   <Check className="w-4 h-4 stroke-[3]" />
                 </div>
-                <span className="text-[12px] font-bold text-emerald-600">รับงานแล้ว</span>
-                <span className="text-[11px] font-medium text-slate-500 mt-1">20 พ.ค. 2567 09:15</span>
+                <span className="text-[12px] font-bold text-emerald-600">{step1.label}</span>
+                <span className="text-[11px] font-medium text-slate-500 mt-1">{step1.at}</span>
               </div>
 
               {/* Step 2: Green Car outline */}
@@ -391,8 +392,8 @@ function ArrivedHeaderSummary({ detail }: { detail: TechnicianInspectionDetail }
                 <div className="w-7 h-7 rounded-full bg-white border-[2px] border-emerald-500 flex items-center justify-center text-emerald-500 mb-2 z-10">
                   <Car className="w-3.5 h-3.5" />
                 </div>
-                <span className="text-[12px] font-bold text-emerald-600">กำลังเดินทาง</span>
-                <span className="text-[11px] font-medium text-slate-500 mt-1">20 พ.ค. 2567 09:20</span>
+                <span className="text-[12px] font-bold text-emerald-600">{step2.label}</span>
+                <span className="text-[11px] font-medium text-slate-500 mt-1">{step2.at}</span>
               </div>
 
               {/* Step 3: Blue Map Pin */}
@@ -400,17 +401,17 @@ function ArrivedHeaderSummary({ detail }: { detail: TechnicianInspectionDetail }
                 <div className="w-7 h-7 rounded-full bg-[#1D4ED8] flex items-center justify-center text-white mb-2 z-10 shadow-md shadow-blue-200">
                   <MapPin className="w-3.5 h-3.5 fill-white" />
                 </div>
-                <span className="text-[12px] font-bold text-[#1D4ED8]">ถึงหน้างาน</span>
-                <span className="text-[11px] font-medium text-slate-500 mt-1">20 พ.ค. 2567 09:35</span>
+                <span className="text-[12px] font-bold text-[#1D4ED8]">{step3.label}</span>
+                <span className="text-[11px] font-medium text-slate-500 mt-1">{step3.at}</span>
               </div>
 
               {/* Steps 4 to 6 */}
-              {["ดำเนินการแก้ไข", "สรุปผลและแนบหลักฐาน", "ส่งตรวจรับ"].map((label, idx) => (
-                <div key={idx} className="flex flex-col items-center flex-1">
+              {restSteps.slice(0, 3).map((step) => (
+                <div key={step.status} className="flex flex-col items-center flex-1">
                   <div className="w-7 h-7 rounded-full bg-white border-[2px] border-[#E2E8F0] text-slate-400 text-[11px] font-black flex items-center justify-center mb-2 z-10">
-                    {idx + 4}
+                    {inspectionOrder.timeline.indexOf(step) + 1}
                   </div>
-                  <span className="text-[12px] font-bold text-slate-700">{label}</span>
+                  <span className="text-[12px] font-bold text-slate-700">{step.label}</span>
                   <span className="text-[11px] font-medium text-slate-400 mt-1">ยังไม่เริ่ม</span>
                 </div>
               ))}
@@ -423,15 +424,9 @@ function ArrivedHeaderSummary({ detail }: { detail: TechnicianInspectionDetail }
 }
 
 // Right Sidebar Component
-function ArrivedSidebar({ detail }: { detail: TechnicianInspectionDetail }) {
-  const steps = [
-    { label: "รับงานแล้ว", date: "20 พ.ค. 2567 09:15", status: "completed" },
-    { label: "กำลังเดินทาง", date: "20 พ.ค. 2567 09:20", status: "completed" },
-    { label: "ถึงหน้างาน", date: "20 พ.ค. 2567 09:35", status: "active" },
-    { label: "ดำเนินการแก้ไข", date: "ยังไม่เริ่ม", status: "pending" },
-    { label: "สรุปผลและแนบหลักฐาน", date: "ยังไม่เริ่ม", status: "pending" },
-    { label: "ส่งตรวจรับ", date: "ยังไม่เริ่ม", status: "pending" },
-  ];
+function ArrivedSidebar({ inspectionOrder }: { inspectionOrder: InspectionOrder }) {
+  const steps = inspectionOrder.timeline.slice(0, 6);
+  const progressPercent = getProgressPercent(inspectionOrder.status);
 
   return (
     <>
@@ -442,27 +437,27 @@ function ArrivedSidebar({ detail }: { detail: TechnicianInspectionDetail }) {
         <div className="flex flex-col gap-4">
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">เลขที่ใบงาน</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right">{detail.woNumber}</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right">{inspectionOrder.woNumber}</span>
           </div>
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">ประเภทงาน</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right">{detail.taskType}</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right">{inspectionOrder.taskType}</span>
           </div>
           <div className="flex justify-between items-center gap-4">
             <span className="text-[12px] font-bold text-slate-500">ความเร่งด่วน</span>
-            <span className="text-[12px] font-black text-rose-600">สูง</span>
+            <span className="text-[12px] font-black text-rose-600">{inspectionOrder.priority}</span>
           </div>
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">วันที่แจ้ง</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right">{detail.woDate}</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right">{inspectionOrder.woDate}</span>
           </div>
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">ผู้แจ้ง</span>
-            <span className="text-[12px] font-bold text-blue-600 text-right">{detail.reporterName} ({detail.reporterDept})</span>
+            <span className="text-[12px] font-bold text-blue-600 text-right">{inspectionOrder.reporterName} ({inspectionOrder.reporterDept})</span>
           </div>
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">สถานที่</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right line-clamp-2 w-[160px]">{detail.location}</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right line-clamp-2 w-[160px]">{inspectionOrder.location}</span>
           </div>
         </div>
       </div>
@@ -479,24 +474,24 @@ function ArrivedSidebar({ detail }: { detail: TechnicianInspectionDetail }) {
               <div className="flex justify-center my-0.5">
                 <span className="text-slate-300">↓</span>
               </div>
-              <span className="text-[12px] font-bold text-slate-800">อาคารสำนักงาน ชั้น 2 ห้อง 201</span>
+              <span className="text-[12px] font-bold text-slate-800">{inspectionOrder.location}</span>
             </div>
           </div>
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">ระยะทาง</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right">12.4 กม.</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right">{inspectionOrder.distanceKm} กม.</span>
           </div>
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">เวลาเดินทาง</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right">15 นาที</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right">{inspectionOrder.travelMinutes} นาที</span>
           </div>
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">ออกเดินทาง</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right">20 พ.ค. 2567 09:20 น.</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right">{inspectionOrder.departedAt}</span>
           </div>
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">ถึงหน้างาน</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right">20 พ.ค. 2567 09:35 น.</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right">{inspectionOrder.arrivedAt}</span>
           </div>
         </div>
       </div>
@@ -505,38 +500,40 @@ function ArrivedSidebar({ detail }: { detail: TechnicianInspectionDetail }) {
       <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm p-6">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-[14px] font-black text-slate-900">ความคืบหน้างาน</h3>
-          <span className="text-[14px] font-black text-blue-900">33%</span>
+          <span className="text-[14px] font-black text-blue-900">{progressPercent}%</span>
         </div>
 
         <div className="w-full h-1.5 bg-slate-100 rounded-full mb-6">
-          <div className="h-full bg-[#1D4ED8] rounded-full" style={{ width: `33%` }}></div>
+          <div className="h-full bg-[#1D4ED8] rounded-full" style={{ width: `${progressPercent}%` }}></div>
         </div>
 
         <div className="relative">
           <div className="absolute top-[14px] bottom-[14px] left-[11px] w-[2px] bg-[#E2E8F0] z-0"></div>
 
           <div className="flex flex-col gap-5 relative z-10">
-            {steps.map((step, idx) => (
-              <div key={idx} className="flex items-center gap-4">
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 z-10 transition-colors ${step.status === 'completed' ? "bg-emerald-500 text-white" :
-                    step.status === 'active' ? "bg-[#1D4ED8] text-white" : "bg-white text-slate-400 border-[2px] border-[#E2E8F0]"
-                  }`}>
-                  {step.status === 'completed' ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <span className="text-[10px] font-black">{idx + 1}</span>}
-                </div>
-                <div className="flex-1 flex justify-between items-center">
-                  <span className={`text-[12px] font-bold ${step.status === 'completed' ? "text-slate-800" :
-                      step.status === 'active' ? "text-[#1D4ED8]" : "text-slate-700"
+            {steps.map((step, idx) => {
+              const state = getStepVisualState(step.status, inspectionOrder.status);
+              return (
+                <div key={step.status} className="flex items-center gap-4">
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 z-10 transition-colors ${state === 'completed' ? "bg-emerald-500 text-white" :
+                      state === 'active' ? "bg-[#1D4ED8] text-white" : "bg-white text-slate-400 border-[2px] border-[#E2E8F0]"
                     }`}>
-                    {step.label}
-                  </span>
-                  <span className={`text-[10px] font-medium ${step.status === 'completed' ? "text-slate-500" :
-                      step.status === 'active' ? "text-slate-500" : "text-slate-400"
-                    }`}>
-                    {step.date}
-                  </span>
+                    {state === 'completed' ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <span className="text-[10px] font-black">{idx + 1}</span>}
+                  </div>
+                  <div className="flex-1 flex justify-between items-center">
+                    <span className={`text-[12px] font-bold ${state === 'completed' ? "text-slate-800" :
+                        state === 'active' ? "text-[#1D4ED8]" : "text-slate-700"
+                      }`}>
+                      {step.label}
+                    </span>
+                    <span className={`text-[10px] font-medium ${state === 'pending' ? "text-slate-400" : "text-slate-500"
+                      }`}>
+                      {state === 'pending' ? "ยังไม่เริ่ม" : step.at}
+                    </span>
+                  </div>
                 </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>

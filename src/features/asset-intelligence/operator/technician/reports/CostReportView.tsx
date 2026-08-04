@@ -3,6 +3,8 @@
 import { TechnicianCostReportData } from "@/features/asset-intelligence/operator/technician/types";
 import { getTechnicianCostReportData } from "./mock";
 import {
+  ArrowDown,
+  ArrowUp,
   ChevronDown,
   ChevronLeft,
   ChevronRight,
@@ -15,7 +17,7 @@ import {
   Wallet,
   Wrench
 } from "lucide-react";
-import { TechnicianMetricCard } from "../components/shared/TechnicianMetricCard";
+import { CardMetric } from "@/components/dashboard/CardMetric";
 import { TechnicianFilterBar } from "../components/shared/TechnicianFilterBar";
 import { TechnicianTable } from "../components/shared/TechnicianTable";
 import { TechnicianPagination } from "../components/shared/TechnicianPagination";
@@ -117,44 +119,70 @@ export default function CostReportView({ onBack }: { onBack: () => void }) {
 
       {/* Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <TechnicianMetricCard
+        <CardMetric
           title="ค่าใช้จ่ายรวม"
           value={metrics.totalCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}
           subtitle="บาท"
-          icon={<Wallet className="w-6 h-6 text-blue-600" />}
-          trend={{ value: metrics.totalCostTrend, isPositive: false, label: "" }}
+          icon={Wallet}
+          classNameForIcon="bg-blue-50 text-blue-600"
+          className="max-h-180 gap-2 p-5"
+          status={
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-rose-600">
+              <ArrowDown className="w-3 h-3" />{metrics.totalCostTrend}
+            </span>
+          }
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="ค่าซ่อมบำรุง"
           value={metrics.maintenanceCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}
           subtitle="บาท"
-          icon={<Wrench className="w-6 h-6 text-emerald-600" />}
-          iconBgColor="bg-emerald-50"
-          trend={{ value: metrics.maintenanceCostTrend, isPositive: false, label: "" }}
+          icon={Wrench}
+          classNameForIcon="bg-emerald-50 text-emerald-600"
+          className="max-h-180 gap-2 p-5"
+          status={
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-rose-600">
+              <ArrowDown className="w-3 h-3" />{metrics.maintenanceCostTrend}
+            </span>
+          }
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="ค่าอะไหล่"
           value={metrics.partsCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}
           subtitle="บาท"
-          icon={<ShoppingCart className="w-6 h-6 text-orange-500" />}
-          iconBgColor="bg-orange-50"
-          trend={{ value: metrics.partsCostTrend, isPositive: true, label: "" }}
+          icon={ShoppingCart}
+          classNameForIcon="bg-orange-50 text-orange-500"
+          className="max-h-180 gap-2 p-5"
+          status={
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-emerald-600">
+              <ArrowUp className="w-3 h-3" />{metrics.partsCostTrend}
+            </span>
+          }
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="ค่าใช้จ่ายอื่นๆ"
           value={metrics.otherCost.toLocaleString('en-US', { minimumFractionDigits: 2 })}
           subtitle="บาท"
-          icon={<FileText className="w-6 h-6 text-purple-600" />}
-          iconBgColor="bg-purple-50"
-          trend={{ value: metrics.otherCostTrend, isPositive: false, label: "" }}
+          icon={FileText}
+          classNameForIcon="bg-purple-50 text-purple-600"
+          className="max-h-180 gap-2 p-5"
+          status={
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-rose-600">
+              <ArrowDown className="w-3 h-3" />{metrics.otherCostTrend}
+            </span>
+          }
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="ค่าใช้จ่ายเฉลี่ยต่อวัน"
           value={metrics.dailyAverage.toLocaleString('en-US', { minimumFractionDigits: 2 })}
           subtitle="บาท/วัน"
-          icon={<Receipt className="w-6 h-6 text-rose-500" />}
-          iconBgColor="bg-rose-50"
-          trend={{ value: metrics.dailyAverageTrend, isPositive: false, label: "" }}
+          icon={Receipt}
+          classNameForIcon="bg-rose-50 text-rose-500"
+          className="max-h-180 gap-2 p-5"
+          status={
+            <span className="inline-flex items-center gap-1 text-[11px] font-bold text-rose-600">
+              <ArrowDown className="w-3 h-3" />{metrics.dailyAverageTrend}
+            </span>
+          }
         />
       </div>
 
@@ -235,7 +263,7 @@ export default function CostReportView({ onBack }: { onBack: () => void }) {
                   contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                   itemStyle={{ fontSize: '12px', fontWeight: 'bold' }}
                   labelStyle={{ fontSize: '12px', color: '#64748b', marginBottom: '4px' }}
-                  formatter={(value: number | string) => [`${(Number(value) || 0).toLocaleString()} บาท`, 'ค่าใช้จ่าย']}
+                  formatter={(value) => [`${(Number(value) || 0).toLocaleString()} บาท`, 'ค่าใช้จ่าย']}
                 />
                 <Line type="monotone" dataKey="cost" name="ค่าใช้จ่ายรวม" stroke="#2563eb" strokeWidth={3}
                   dot={(props: { cx?: number; cy?: number; payload?: { month: string; cost: number; active?: boolean } }) => {
@@ -289,7 +317,7 @@ export default function CostReportView({ onBack }: { onBack: () => void }) {
                   <RechartsTooltip
                     contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                     itemStyle={{ fontSize: '12px', fontWeight: 'bold' }}
-                    formatter={(value: number | string) => [`${(Number(value) || 0).toLocaleString()} บาท`, '']}
+                    formatter={(value) => [`${(Number(value) || 0).toLocaleString()} บาท`, '']}
                   />
                 </PieChart>
               </ResponsiveContainer>
@@ -357,7 +385,7 @@ export default function CostReportView({ onBack }: { onBack: () => void }) {
                 <RechartsTooltip
                   cursor={{ fill: 'transparent' }}
                   contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                  formatter={(value: number | string) => [`${(Number(value) || 0).toLocaleString()} บาท`, 'ค่าใช้จ่าย']}
+                  formatter={(value) => [`${(Number(value) || 0).toLocaleString()} บาท`, 'ค่าใช้จ่าย']}
                 />
                 <Bar dataKey="prevMonth" fill="#93c5fd" radius={[4, 4, 0, 0]} maxBarSize={20} name="เม.ย. 2567" />
                 <Bar dataKey="currMonth" fill="#2563eb" radius={[4, 4, 0, 0]} maxBarSize={20} name="พ.ค. 2567" />
@@ -448,6 +476,7 @@ export default function CostReportView({ onBack }: { onBack: () => void }) {
             totalPages={totalPages}
             itemsPerPage={itemsPerPage}
             totalItems={totalItems}
+            startIndex={(currentPage - 1) * itemsPerPage}
             onPageChange={handlePageChange}
             onItemsPerPageChange={() => {}}
           />
@@ -506,7 +535,7 @@ export default function CostReportView({ onBack }: { onBack: () => void }) {
                   <RechartsTooltip
                     contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
                     itemStyle={{ fontSize: '12px', fontWeight: 'bold' }}
-                    formatter={(value: number | string) => [`${(Number(value) || 0).toLocaleString()} บาท`, '']}
+                    formatter={(value) => [`${(Number(value) || 0).toLocaleString()} บาท`, '']}
                   />
                 </PieChart>
               </ResponsiveContainer>

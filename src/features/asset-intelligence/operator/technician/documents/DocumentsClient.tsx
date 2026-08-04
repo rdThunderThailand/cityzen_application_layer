@@ -19,7 +19,7 @@ import {
   Search
 } from "lucide-react";
 import { TechnicianPageLayout } from "../components/shared/TechnicianPageLayout";
-import { TechnicianMetricCard } from "../components/shared/TechnicianMetricCard";
+import { CardMetric } from "@/components/dashboard/CardMetric";
 import { TechnicianFilterBar } from "../components/shared/TechnicianFilterBar";
 import { TechnicianTable } from "../components/shared/TechnicianTable";
 import { TechnicianPagination } from "../components/shared/TechnicianPagination";
@@ -121,59 +121,75 @@ export default function DocumentsClient() {
     >
       {/* Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <TechnicianMetricCard
+        <CardMetric
           title="เอกสารทั้งหมด"
           value="256"
           subtitle="รายการ"
-          icon={<FileText className="w-6 h-6" />}
-          actionLabel="ดูทั้งหมด"
-          onActionClick={() => {}}
+          icon={FileText}
+          classNameForIcon="bg-blue-50 text-blue-600"
+          className="max-h-180 gap-2 p-5"
+          action={
+            <button className="flex items-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-800 transition-colors">
+              ดูทั้งหมด <ChevronRight className="w-3 h-3" />
+            </button>
+          }
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="คู่มือการใช้งาน"
           value="128"
           subtitle="รายการ"
-          icon={<Book className="w-6 h-6" />}
-          iconBgColor="bg-emerald-50"
-          iconColor="text-emerald-600"
-          actionLabel="ดูทั้งหมด"
-          onActionClick={() => {}}
+          icon={Book}
+          classNameForIcon="bg-emerald-50 text-emerald-600"
+          className="max-h-180 gap-2 p-5"
+          action={
+            <button className="flex items-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-800 transition-colors">
+              ดูทั้งหมด <ChevronRight className="w-3 h-3" />
+            </button>
+          }
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="คู่มือซ่อมบำรุง"
           value="64"
           subtitle="รายการ"
-          icon={<FileCheck className="w-6 h-6" />}
-          iconBgColor="bg-amber-50"
-          iconColor="text-amber-500"
-          actionLabel="ดูทั้งหมด"
-          onActionClick={() => {}}
+          icon={FileCheck}
+          classNameForIcon="bg-amber-50 text-amber-500"
+          className="max-h-180 gap-2 p-5"
+          action={
+            <button className="flex items-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-800 transition-colors">
+              ดูทั้งหมด <ChevronRight className="w-3 h-3" />
+            </button>
+          }
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="เอกสารมาตรฐาน (SOP)"
           value="32"
           subtitle="รายการ"
-          icon={<ClipboardList className="w-6 h-6" />}
-          iconBgColor="bg-purple-50"
-          iconColor="text-purple-600"
-          actionLabel="ดูทั้งหมด"
-          onActionClick={() => {}}
+          icon={ClipboardList}
+          classNameForIcon="bg-purple-50 text-purple-600"
+          className="max-h-180 gap-2 p-5"
+          action={
+            <button className="flex items-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-800 transition-colors">
+              ดูทั้งหมด <ChevronRight className="w-3 h-3" />
+            </button>
+          }
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="ไฟล์ดาวน์โหลดบ่อย"
           value="89"
           subtitle="ครั้ง (เดือนนี้)"
-          icon={<CloudDownload className="w-6 h-6" />}
-          iconBgColor="bg-white border border-[#e5edff] shadow-sm"
-          iconColor="text-blue-600"
-          className="bg-[#f8faff] border-[#e5edff]"
-          actionLabel="ดูสถิติ"
-          onActionClick={() => {}}
+          icon={CloudDownload}
+          classNameForIcon="bg-blue-50 text-blue-600"
+          className="max-h-180 gap-2 p-5"
+          action={
+            <button className="flex items-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-800 transition-colors">
+              ดูสถิติ <ChevronRight className="w-3 h-3" />
+            </button>
+          }
         />
       </div>
 
       {/* Main Layout Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mt-6">
 
         {/* Left Column (Table Area) */}
         <div className="lg:col-span-3 flex flex-col gap-6">

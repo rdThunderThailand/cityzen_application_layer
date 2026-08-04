@@ -19,7 +19,7 @@ import {
   XCircle
 } from "lucide-react";
 import { TechnicianPageLayout } from "../components/shared/TechnicianPageLayout";
-import { TechnicianMetricCard } from "../components/shared/TechnicianMetricCard";
+import { CardMetric } from "@/components/dashboard/CardMetric";
 import { TechnicianFilterBar } from "../components/shared/TechnicianFilterBar";
 import { TechnicianTable } from "../components/shared/TechnicianTable";
 import { TechnicianPagination } from "../components/shared/TechnicianPagination";
@@ -114,110 +114,115 @@ export default function RequestsClient() {
       }
     >
 
-      {/* Metrics Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mb-6">
-        <TechnicianMetricCard
-          title="ทั้งหมด"
-          value={stats.all}
-          subtitle="รายการ"
-          icon={<FileText className="w-6 h-6 text-blue-600" />}
-          customFooter={
-            <div className="w-full">
-              <button className="text-[11px] font-bold text-blue-600 flex items-center gap-1 hover:text-blue-800 transition-colors">
-                ดูทั้งหมด <ArrowRight className="w-3 h-3" />
-              </button>
-            </div>
-          }
-        />
-        <TechnicianMetricCard
-          title="รอดำเนินการ"
-          value={stats.pending}
-          subtitle="รายการ"
-          icon={<Clock className="w-6 h-6 text-orange-500" />}
-          iconBgColor="bg-orange-50"
-        />
-        <TechnicianMetricCard
-          title="กำลังดำเนินการ"
-          value={stats.inProgress}
-          subtitle="รายการ"
-          icon={<Wrench className="w-6 h-6 text-purple-600" />}
-          iconBgColor="bg-purple-50"
-        />
-        <TechnicianMetricCard
-          title="เสร็จสิ้น"
-          value={stats.completed}
-          subtitle="รายการ"
-          icon={<CheckCircle2 className="w-6 h-6 text-emerald-600" />}
-          iconBgColor="bg-emerald-50"
-        />
-        <TechnicianMetricCard
-          title="ยกเลิก"
-          value={stats.cancelled}
-          subtitle="รายการ"
-          icon={<XCircle className="w-6 h-6 text-rose-500" />}
-          iconBgColor="bg-rose-50"
-        />
-      </div>
-
-      {/* Filters Bar */}
-      <div className="rounded-xl border border-slate-200 shadow-sm mb-6 overflow-hidden">
-        <TechnicianFilterBar
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
-          searchPlaceholder="ค้นหาเลขที่แจ้งซ่อม, ครุภัณฑ์, สถานที่, ผู้แจ้ง..."
-          filters={[
-            {
-              label: "สถานะ",
-              value: statusFilter,
-              options: statuses,
-              onChange: setStatusFilter,
-              minWidth: "120px"
-            },
-            {
-              label: "ประเภทคำขอ",
-              value: typeFilter,
-              options: types,
-              onChange: setTypeFilter,
-              minWidth: "120px"
-            },
-            {
-              label: "ความเร่งด่วน",
-              value: urgencyFilter,
-              options: urgencies,
-              onChange: setUrgencyFilter,
-              minWidth: "120px"
-            },
-            {
-              label: "สถานที่",
-              value: locationFilter,
-              options: locations,
-              onChange: setLocationFilter,
-              minWidth: "120px"
-            },
-            {
-              label: "ช่วงวันที่แจ้ง",
-              value: "01/05/2567 - 20/05/2567",
-              options: ["01/05/2567 - 20/05/2567"],
-              onChange: () => {},
-              prefixIcon: <Calendar className="w-4 h-4 text-blue-600" />,
-              minWidth: "180px"
-            }
-          ]}
-          onClearFilters={() => {
-            setSearchQuery("");
-            setStatusFilter("ทั้งหมด");
-            setTypeFilter("ทั้งหมด");
-            setUrgencyFilter("ทั้งหมด");
-            setLocationFilter("ทั้งหมด");
-          }}
-        />
-      </div>
-
       {/* Main Layout Grid */}
-      <div className="flex flex-col xl:flex-row gap-6">
+      <div className="flex flex-col xl:flex-row justify-between gap-4 mt-4">
 
-        {/* Left Column: Data Table */}
-        <div className="flex-1 bg-white rounded-[16px] border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+        {/* Left Column: Metrics + Filter Bar + Data Table */}
+        <div className="flex-1 min-w-0 flex flex-col gap-4">
+
+          {/* Metrics Grid */}
+          <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
+            <CardMetric
+              title="ทั้งหมด"
+              value={stats.all}
+              subtitle="รายการ"
+              icon={FileText}
+              classNameForIcon="bg-blue-50 text-blue-600"
+              className="max-h-180 gap-2 p-5"
+              action={
+                <div className="w-full">
+                  <button className="text-[11px] font-bold text-blue-600 flex items-center gap-1 hover:text-blue-800 transition-colors">
+                    ดูทั้งหมด <ArrowRight className="w-3 h-3" />
+                  </button>
+                </div>
+              }
+            />
+            <CardMetric
+              title="รอดำเนินการ"
+              value={stats.pending}
+              subtitle="รายการ"
+              icon={Clock}
+              classNameForIcon="bg-orange-50 text-orange-500"
+              className="max-h-180 gap-2 p-5"
+            />
+            <CardMetric
+              title="กำลังดำเนินการ"
+              value={stats.inProgress}
+              subtitle="รายการ"
+              icon={Wrench}
+              classNameForIcon="bg-purple-50 text-purple-600"
+              className="max-h-180 gap-2 p-5"
+            />
+            <CardMetric
+              title="เสร็จสิ้น"
+              value={stats.completed}
+              subtitle="รายการ"
+              icon={CheckCircle2}
+              classNameForIcon="bg-emerald-50 text-emerald-600"
+              className="max-h-180 gap-2 p-5"
+            />
+            <CardMetric
+              title="ยกเลิก"
+              value={stats.cancelled}
+              subtitle="รายการ"
+              icon={XCircle}
+              classNameForIcon="bg-rose-50 text-rose-500"
+              className="max-h-180 gap-2 p-5"
+            />
+          </div>
+
+          {/* Filter Bar + Data Table (same card, same width) */}
+          <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm overflow-hidden flex flex-col mt-2">
+          <TechnicianFilterBar
+            searchQuery={searchQuery}
+            onSearchChange={setSearchQuery}
+            searchPlaceholder="ค้นหาเลขที่แจ้งซ่อม, ครุภัณฑ์, สถานที่, ผู้แจ้ง..."
+            filters={[
+              {
+                label: "สถานะ",
+                value: statusFilter,
+                options: statuses,
+                onChange: setStatusFilter,
+                minWidth: "120px"
+              },
+              {
+                label: "ประเภทคำขอ",
+                value: typeFilter,
+                options: types,
+                onChange: setTypeFilter,
+                minWidth: "120px"
+              },
+              {
+                label: "ความเร่งด่วน",
+                value: urgencyFilter,
+                options: urgencies,
+                onChange: setUrgencyFilter,
+                minWidth: "120px"
+              },
+              {
+                label: "สถานที่",
+                value: locationFilter,
+                options: locations,
+                onChange: setLocationFilter,
+                minWidth: "120px"
+              }
+            ]}
+            extraActions={
+              <div className="flex items-center gap-2 border border-slate-200 rounded-lg px-3 py-2 bg-white shrink-0">
+                <Calendar className="w-4 h-4 text-slate-400" />
+                <span className="text-[12px] font-bold text-slate-700">01/05/2567 - 20/05/2567</span>
+                <Calendar className="w-4 h-4 text-slate-400 ml-2" />
+              </div>
+            }
+            onClearFilters={() => {
+              setSearchQuery("");
+              setStatusFilter("ทั้งหมด");
+              setTypeFilter("ทั้งหมด");
+              setUrgencyFilter("ทั้งหมด");
+              setLocationFilter("ทั้งหมด");
+            }}
+          />
+
           <TechnicianTable
             minWidth="1000px"
             loading={loading}
@@ -321,12 +326,14 @@ export default function RequestsClient() {
             totalPages={totalPages}
             itemsPerPage={itemsPerPage}
             totalItems={totalItems}
+            startIndex={startIndex}
             onPageChange={setCurrentPage}
             onItemsPerPageChange={(num) => {
               setItemsPerPage(num);
               setCurrentPage(1);
             }}
           />
+          </div>
         </div>
 
         {/* Right Column: Widgets */}
@@ -412,6 +419,7 @@ export default function RequestsClient() {
                 <span className="text-[14px] font-black text-slate-900">4</span>
               </div>
             </div>
+            
           </div>
 
           {/* Statistics Chart */}

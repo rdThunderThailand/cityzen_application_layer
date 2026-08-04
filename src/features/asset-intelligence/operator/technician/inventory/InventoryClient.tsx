@@ -5,6 +5,7 @@ import { getTechnicianInventory } from "./mock";
 import {
   AlertTriangle,
   CheckCircle2,
+  ChevronRight,
   ClipboardList,
   Edit,
   MoreVertical,
@@ -16,7 +17,7 @@ import {
   XCircle
 } from "lucide-react";
 import { TechnicianPageLayout } from "../components/shared/TechnicianPageLayout";
-import { TechnicianMetricCard } from "../components/shared/TechnicianMetricCard";
+import { CardMetric } from "@/components/dashboard/CardMetric";
 import { TechnicianFilterBar } from "../components/shared/TechnicianFilterBar";
 import { TechnicianTable } from "../components/shared/TechnicianTable";
 import { TechnicianPagination } from "../components/shared/TechnicianPagination";
@@ -118,54 +119,60 @@ export default function InventoryClient() {
     >
       {/* Metrics Grid */}
       <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <TechnicianMetricCard
+        <CardMetric
           title="รายการอะไหล่ทั้งหมด"
           value={stats.all.toString()}
           subtitle="รายการ"
-          icon={<PackageSearch className="w-7 h-7 text-blue-600" />}
-          iconBgColor="bg-white border border-[#e5edff] shadow-sm"
-          className="bg-[#f8faff] border-[#eff4ff]"
+          icon={PackageSearch}
+          classNameForIcon="bg-blue-50 text-blue-600"
+          className="max-h-180 gap-2 p-5"
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="มีสต๊อกพร้อมใช้"
           value={stats.inStock.toString()}
           subtitle="รายการ"
-          icon={<CheckCircle2 className="w-7 h-7 text-emerald-600" />}
-          iconBgColor="bg-white border border-[#e0f9ed] shadow-sm"
-          className="bg-[#f5fdf9] border-[#ecfcf4]"
+          icon={CheckCircle2}
+          classNameForIcon="bg-emerald-50 text-emerald-600"
+          className="max-h-180 gap-2 p-5"
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="สต๊อกต่ำ"
           value={stats.lowStock.toString()}
           subtitle="รายการ"
-          icon={<AlertTriangle className="w-7 h-7 text-amber-500" />}
-          iconBgColor="bg-white border border-[#ffeed5] shadow-sm"
-          className="bg-[#fffbf5] border-[#fff6ea]"
-          actionLabel="ดูรายการ"
-          onActionClick={() => {}}
+          icon={AlertTriangle}
+          classNameForIcon="bg-orange-50 text-orange-500"
+          className="max-h-180 gap-2 p-5"
+          action={
+            <button className="flex items-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-800 transition-colors">
+              ดูรายการ <ChevronRight className="w-3 h-3" />
+            </button>
+          }
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="สต๊อกหมด"
           value={stats.outOfStock.toString()}
           subtitle="รายการ"
-          icon={<XCircle className="w-7 h-7 text-rose-500" />}
-          iconBgColor="bg-white border border-[#ffe0e0] shadow-sm"
-          className="bg-[#fff6f6] border-[#ffebeb]"
-          actionLabel="ดูรายการ"
-          onActionClick={() => {}}
+          icon={XCircle}
+          classNameForIcon="bg-rose-50 text-rose-500"
+          className="max-h-180 gap-2 p-5"
+          action={
+            <button className="flex items-center gap-1 text-[11px] font-bold text-blue-600 hover:text-blue-800 transition-colors">
+              ดูรายการ <ChevronRight className="w-3 h-3" />
+            </button>
+          }
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="มูลค่าคงคลังรวม"
           value={stats.totalValue.toLocaleString('en-US', { minimumFractionDigits: 2 })}
           subtitle="บาท"
-          icon={<ClipboardList className="w-7 h-7 text-purple-600" />}
-          iconBgColor="bg-white border border-[#efe5ff] shadow-sm"
-          className="bg-[#fbf8ff] border-[#f5edff]"
+          icon={ClipboardList}
+          classNameForIcon="bg-purple-50 text-purple-600 "
+          className="max-h-180 gap-2 p-5"
         />
       </div>
 
       {/* Main Content Area */}
-      <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm flex flex-col overflow-hidden">
+      <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm flex flex-col mt-6">
 
         {/* Tabs */}
         <div className="flex items-center gap-8 px-6 border-b border-slate-200">

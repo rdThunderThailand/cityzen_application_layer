@@ -1,6 +1,5 @@
 "use client";
 
-import { TechnicianInspectionDetail } from "@/features/asset-intelligence/operator/technician/types";
 import {
   ArrowLeft,
   Check,
@@ -13,23 +12,24 @@ import {
   Trash2
 } from "lucide-react";
 import Link from "next/link";
+import { getProgressPercent, getStepVisualState } from "../statusView";
+import { InspectionOrder } from "../types";
 
 interface InspectionSummaryCostsViewProps {
-  detail: TechnicianInspectionDetail;
+  inspectionOrder: InspectionOrder;
   onTabChange?: (tab: string) => void;
   onBack: () => void;
   onNext: () => void;
 }
 
-export function InspectionSummaryCostsView({ detail, onTabChange, onBack, onNext }: InspectionSummaryCostsViewProps) {
+export function InspectionSummaryCostsView({ inspectionOrder, onTabChange, onBack, onNext }: InspectionSummaryCostsViewProps) {
   const isSidebarCollapsed = false; // TODO: wire to real layout sidebar state if needed
   const sidebarOffset = isSidebarCollapsed ? "lg:left-20" : "lg:left-64";
 
-  const costs = [
-    { id: 1, type: "ค่าบริการล้างทำความสะอาด", desc: "ค่าล้างคอยล์ร้อน - คอยล์เย็น", provider: "บจก. คลีนแอร์ เซอร์วิส", amount: 300.00, doc: "ใบเสร็จ.pdf", docType: "pdf" },
-    { id: 2, type: "ค่าขนส่ง / เดินทางพิเศษ", desc: "ค่าขนส่งน้ำยาแอร์ส่วน", provider: "Flash Express", amount: 120.00, doc: "ใบเสร็จ.pdf", docType: "pdf" },
-    { id: 3, type: "ค่าธรรมเนียมจอดรถ", desc: "ค่าจอดรถอาคารจอด B", provider: "อาคารจอดรถ", amount: 60.00, doc: "รูปภาพ.jpg", docType: "image" },
-  ];
+  const costs = inspectionOrder.costs;
+  const subtotal = costs.reduce((sum, c) => sum + c.amount, 0);
+  const vat = subtotal * 0.07;
+  const grandTotal = subtotal + vat;
 
   return (
     <div className="min-h-full flex-1 bg-slate-50 p-8 xl:p-12 w-full pb-40">
@@ -75,13 +75,13 @@ export function InspectionSummaryCostsView({ detail, onTabChange, onBack, onNext
 
             <div className="flex flex-col">
               <div className="flex items-center gap-3 mb-1">
-                <span className="text-[14px] font-black text-blue-900 tracking-tight">{detail.woNumber}</span>
+                <span className="text-[14px] font-black text-blue-900 tracking-tight">{inspectionOrder.woNumber}</span>
                 <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-100">
                   ปิดงานแล้ว (Closed)
                 </span>
               </div>
-              <h2 className="text-[16px] font-black text-[#1e293b] mb-1">{detail.assetName}</h2>
-              <p className="text-[12px] font-medium text-slate-500">{detail.assetLocation}</p>
+              <h2 className="text-[16px] font-black text-[#1e293b] mb-1">{inspectionOrder.assetName}</h2>
+              <p className="text-[12px] font-medium text-slate-500">{inspectionOrder.assetLocation}</p>
             </div>
 
             <div className="hidden md:block w-[1px] h-12 bg-slate-200 mx-2"></div>
@@ -92,21 +92,21 @@ export function InspectionSummaryCostsView({ detail, onTabChange, onBack, onNext
                   <span className="w-3.5 h-3.5 rounded-full border border-slate-300 flex items-center justify-center text-[8px]">📍</span>
                   สถานที่
                 </span>
-                <span className="text-[12px] font-bold text-slate-700 pl-5 line-clamp-1">{detail.location}</span>
+                <span className="text-[12px] font-bold text-slate-700 pl-5 line-clamp-1">{inspectionOrder.location}</span>
               </div>
               <div className="flex flex-col gap-1">
                 <span className="text-[11px] font-bold text-slate-400 flex items-center gap-1.5">
                   <span className="w-3.5 h-3.5 rounded-full border border-slate-300 flex items-center justify-center text-[8px]">👤</span>
                   ผู้แจ้ง
                 </span>
-                <span className="text-[12px] font-bold text-slate-700 pl-5 truncate">{detail.reporterName}</span>
+                <span className="text-[12px] font-bold text-slate-700 pl-5 truncate">{inspectionOrder.reporterName}</span>
               </div>
               <div className="flex flex-col gap-1">
                 <span className="text-[11px] font-bold text-slate-400 flex items-center gap-1.5">
                   <span className="w-3.5 h-3.5 rounded-full border border-slate-300 flex items-center justify-center text-[8px]">📅</span>
                   กำหนดตรวจสอบ
                 </span>
-                <span className="text-[12px] font-bold text-slate-700 pl-5">{detail.dueDate}</span>
+                <span className="text-[12px] font-bold text-slate-700 pl-5">{inspectionOrder.dueDate}</span>
               </div>
             </div>
           </div>
@@ -172,13 +172,13 @@ export function InspectionSummaryCostsView({ detail, onTabChange, onBack, onNext
                       </td>
                       <td className="py-4 px-4 text-[12px] font-bold text-slate-500">{item.id}</td>
                       <td className="py-4 px-4 text-[12px] font-bold text-slate-700">{item.type}</td>
-                      <td className="py-4 px-4 text-[12px] font-medium text-slate-500">{item.desc}</td>
+                      <td className="py-4 px-4 text-[12px] font-medium text-slate-500">{item.description}</td>
                       <td className="py-4 px-4 text-[12px] font-bold text-slate-700">{item.provider}</td>
                       <td className="py-4 px-4 text-[12px] font-bold text-slate-900 text-right">{item.amount.toFixed(2)}</td>
                       <td className="py-4 px-4">
                         <div className="flex items-center gap-1.5 text-[12px] font-bold text-blue-600 hover:underline cursor-pointer">
-                          {item.docType === 'pdf' ? <FileText className="w-3.5 h-3.5" /> : <ImageIcon className="w-3.5 h-3.5" />}
-                          {item.doc}
+                          {item.documentType === 'pdf' ? <FileText className="w-3.5 h-3.5" /> : <ImageIcon className="w-3.5 h-3.5" />}
+                          {item.documentName}
                         </div>
                       </td>
                       <td className="py-4 px-5 text-center">
@@ -202,16 +202,16 @@ export function InspectionSummaryCostsView({ detail, onTabChange, onBack, onNext
               <div className="w-[320px] flex flex-col gap-3">
                 <div className="flex justify-between items-center">
                   <span className="text-[12px] font-bold text-slate-500">รวมค่าใช้จ่ายอื่นๆ</span>
-                  <span className="text-[12px] font-bold text-slate-700">480.00</span>
+                  <span className="text-[12px] font-bold text-slate-700">{subtotal.toFixed(2)}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-[12px] font-bold text-slate-500">ภาษีมูลค่าเพิ่ม 7%</span>
-                  <span className="text-[12px] font-bold text-slate-700">33.60</span>
+                  <span className="text-[12px] font-bold text-slate-700">{vat.toFixed(2)}</span>
                 </div>
                 <div className="w-full h-[1px] bg-slate-200 my-1"></div>
                 <div className="flex justify-between items-center">
                   <span className="text-[14px] font-black text-blue-600">รวมทั้งสิ้น</span>
-                  <span className="text-[16px] font-black text-blue-600">513.60</span>
+                  <span className="text-[16px] font-black text-blue-600">{grandTotal.toFixed(2)}</span>
                 </div>
               </div>
             </div>
@@ -233,7 +233,7 @@ export function InspectionSummaryCostsView({ detail, onTabChange, onBack, onNext
 
         {/* Right Sidebar */}
         <div className="w-full xl:w-[320px] shrink-0 flex flex-col gap-6">
-          <SummaryCostsSidebar detail={detail} />
+          <SummaryCostsSidebar inspectionOrder={inspectionOrder} />
         </div>
 
       </div>
@@ -267,16 +267,9 @@ export function InspectionSummaryCostsView({ detail, onTabChange, onBack, onNext
 }
 
 // Right Sidebar Component
-function SummaryCostsSidebar({ detail }: { detail: TechnicianInspectionDetail }) {
-  const steps = [
-    { label: "รับงานแล้ว", date: "20 พ.ค. 2567 09:15", status: "completed" },
-    { label: "กำลังเดินทาง", date: "20 พ.ค. 2567 09:20", status: "completed" },
-    { label: "ถึงหน้างาน", date: "20 พ.ค. 2567 09:35", status: "completed" },
-    { label: "กำลังดำเนินการ", date: "20 พ.ค. 2567 09:40", status: "completed" },
-    { label: "สรุปผลและหลักฐาน", date: "20 พ.ค. 2567 10:30", status: "completed" },
-    { label: "ส่งตรวจรับ", date: "20 พ.ค. 2567 10:35", status: "completed" },
-    { label: "ปิดงานแล้ว", date: "20 พ.ค. 2567 14:25", status: "closed" },
-  ];
+function SummaryCostsSidebar({ inspectionOrder }: { inspectionOrder: InspectionOrder }) {
+  const steps = inspectionOrder.timeline;
+  const progressPercent = getProgressPercent(inspectionOrder.status);
 
   return (
     <>
@@ -287,27 +280,27 @@ function SummaryCostsSidebar({ detail }: { detail: TechnicianInspectionDetail })
         <div className="flex flex-col gap-4">
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">เลขที่ใบงาน</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right">{detail.woNumber}</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right">{inspectionOrder.woNumber}</span>
           </div>
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">ประเภทงาน</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right">{detail.taskType}</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right">{inspectionOrder.taskType}</span>
           </div>
           <div className="flex justify-between items-center gap-4">
             <span className="text-[12px] font-bold text-slate-500">ความเร่งด่วน</span>
-            <span className="text-[12px] font-black text-rose-600">สูง</span>
+            <span className="text-[12px] font-black text-rose-600">{inspectionOrder.priority}</span>
           </div>
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">วันที่แจ้ง</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right">{detail.woDate}</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right">{inspectionOrder.woDate}</span>
           </div>
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">ผู้แจ้ง</span>
-            <span className="text-[12px] font-bold text-blue-600 text-right">{detail.reporterName} ({detail.reporterDept})</span>
+            <span className="text-[12px] font-bold text-blue-600 text-right">{inspectionOrder.reporterName} ({inspectionOrder.reporterDept})</span>
           </div>
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">สถานที่</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right line-clamp-2 w-[160px]">{detail.location}</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right line-clamp-2 w-[160px]">{inspectionOrder.location}</span>
           </div>
         </div>
 
@@ -321,33 +314,36 @@ function SummaryCostsSidebar({ detail }: { detail: TechnicianInspectionDetail })
       <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm p-6">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-[14px] font-black text-slate-900">ความคืบหน้างาน</h3>
-          <span className="text-[14px] font-black text-blue-900">100%</span>
+          <span className="text-[14px] font-black text-blue-900">{progressPercent}%</span>
         </div>
 
         <div className="w-full h-1.5 bg-slate-100 rounded-full mb-6">
-          <div className="h-full bg-[#1D4ED8] rounded-full" style={{ width: `100%` }}></div>
+          <div className="h-full bg-[#1D4ED8] rounded-full" style={{ width: `${progressPercent}%` }}></div>
         </div>
 
         <div className="relative">
           <div className="absolute top-[14px] bottom-[14px] left-[11px] w-[2px] bg-[#E2E8F0] z-0"></div>
 
           <div className="flex flex-col gap-5 relative z-10">
-            {steps.map((step, idx) => (
-              <div key={idx} className="flex items-center gap-4">
-                <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 z-10 transition-colors ${step.status === 'completed' || step.status === 'closed' ? "bg-emerald-500 text-white" : "bg-white text-slate-400 border-[2px] border-[#E2E8F0]"
-                  }`}>
-                  {step.status === 'closed' ? <span className="text-[10px] font-black">7</span> : <Check className="w-3.5 h-3.5 stroke-[3]" />}
+            {steps.map((step, idx) => {
+              const state = getStepVisualState(step.status, inspectionOrder.status);
+              return (
+                <div key={step.status} className="flex items-center gap-4">
+                  <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 z-10 transition-colors ${state === 'completed' ? "bg-emerald-500 text-white" : state === 'active' ? "bg-[#1D4ED8] text-white" : "bg-white text-slate-400 border-[2px] border-[#E2E8F0]"
+                    }`}>
+                    {state === 'completed' ? <Check className="w-3.5 h-3.5 stroke-[3]" /> : <span className="text-[10px] font-black">{idx + 1}</span>}
+                  </div>
+                  <div className="flex-1 flex justify-between items-center">
+                    <span className={`text-[12px] font-bold text-slate-800`}>
+                      {step.label}
+                    </span>
+                    <span className={`text-[10px] font-medium text-slate-500`}>
+                      {state === 'pending' ? "ยังไม่เริ่ม" : step.at}
+                    </span>
+                  </div>
                 </div>
-                <div className="flex-1 flex justify-between items-center">
-                  <span className={`text-[12px] font-bold text-slate-800`}>
-                    {step.label}
-                  </span>
-                  <span className={`text-[10px] font-medium text-slate-500`}>
-                    {step.date}
-                  </span>
-                </div>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </div>
@@ -359,17 +355,17 @@ function SummaryCostsSidebar({ detail }: { detail: TechnicianInspectionDetail })
         <div className="flex items-center gap-3 mb-5">
           <div className="w-12 h-12 rounded-full bg-slate-200 overflow-hidden border border-slate-200 shrink-0 shadow-sm">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent("สมชาย ช่างเทคนิค")}&background=random&color=fff`} alt="สมชาย ช่างเทคนิค" className="w-full h-full object-cover" />
+            <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(inspectionOrder.technician.name)}&background=random&color=fff`} alt={inspectionOrder.technician.name} className="w-full h-full object-cover" />
           </div>
           <div className="flex flex-col">
-            <span className="text-[13px] font-black text-slate-900">สมชาย ช่างเทคนิค</span>
-            <span className="text-[11px] font-bold text-slate-500 mt-0.5">เจ้าหน้าที่ช่าง</span>
+            <span className="text-[13px] font-black text-slate-900">{inspectionOrder.technician.name}</span>
+            <span className="text-[11px] font-bold text-slate-500 mt-0.5">{inspectionOrder.technician.role}</span>
           </div>
         </div>
 
         <div className="flex items-center gap-2 text-[13px] font-bold text-blue-600 bg-blue-50/50 p-2.5 rounded-lg border border-blue-100">
           <Phone className="w-4 h-4 shrink-0" />
-          <span>081-234-5678</span>
+          <span>{inspectionOrder.technician.phone}</span>
         </div>
       </div>
 

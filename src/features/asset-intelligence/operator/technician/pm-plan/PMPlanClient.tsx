@@ -68,98 +68,101 @@ export function PMPlanClient({ stats, initialPlans, freqSummary }: PMPlanClientP
       }
     >
 
-      {/* Tabs */}
-      <div className="flex border-b border-slate-200 mb-6 overflow-x-auto hide-scrollbar">
-        {["แผนบำรุงรักษาทั้งหมด", "รออนุมัติ", "รอใช้งาน", "รอปรับปรุง", "ยกเลิก"].map(tab => (
-          <button
-            key={tab}
-            onClick={() => { setActiveTab(tab); setCurrentPage(1); }}
-            className={`px-4 py-3 text-[13px] font-bold border-b-2 transition-colors whitespace-nowrap -mb-[1px] ${activeTab === tab
-                ? "border-blue-600 text-blue-600"
-                : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
-              }`}
-          >
-            {tab}
-          </button>
-        ))}
-      </div>
-
-      <PMPlanStats stats={stats} />
-
-      {/* Main Layout (Left: Table, Right: Sidebar) */}
-      <div className="flex flex-col xl:flex-row gap-6 mt-6">
+      {/* Main Layout (Left: Tabs + Stats + Table, Right: Sidebar) */}
+      <div className="flex flex-col xl:flex-row gap-6">
 
         {/* Left Column */}
-        <div className="flex-1 bg-white rounded-[16px] border border-slate-200 shadow-sm overflow-hidden flex flex-col">
-          {/* Toolbar */}
-          <TechnicianFilterBar
-            searchQuery={searchQuery}
-            onSearchChange={(val) => {
-              setSearchQuery(val);
-              setCurrentPage(1);
-            }}
-            searchPlaceholder="ค้นหาแผน PM, รหัสครุภัณฑ์, ชื่อครุภัณฑ์..."
-            filters={[
-              {
-                label: "ประเภทครุภัณฑ์",
-                value: assetTypeFilter,
-                options: ["ทั้งหมด", "เครื่องปรับอากาศ", "ลิฟต์"],
-                onChange: (val) => {
-                  setAssetTypeFilter(val);
-                  setCurrentPage(1);
-                },
-                minWidth: "140px"
-              },
-              {
-                label: "สถานะ",
-                value: statusFilter,
-                options: ["ทั้งหมด", "ใกล้ถึงกำหนด", "รอใช้งาน", "เกินกำหนด"],
-                onChange: (val) => {
-                  setStatusFilter(val);
-                  setCurrentPage(1);
-                },
-                minWidth: "140px"
-              },
-              {
-                label: "ความถี่",
-                value: priorityFilter,
-                options: ["ทั้งหมด", "รายเดือน", "ราย 3 เดือน", "ราย 6 เดือน", "รายปี"],
-                onChange: (val) => {
-                  setPriorityFilter(val);
-                  setCurrentPage(1);
-                },
-                minWidth: "140px"
-              }
-            ]}
-            onClearFilters={() => {
-              setSearchQuery("");
-              setAssetTypeFilter("ทั้งหมด");
-              setStatusFilter("ทั้งหมด");
-              setPriorityFilter("ทั้งหมด");
-              setCurrentPage(1);
-            }}
-            actionButton={
-              <button className="flex items-center gap-2 px-4 py-2 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors font-bold shrink-0">
-                <SlidersHorizontal className="w-4 h-4" />
-                <span className="text-[13px]">ตัวกรองเพิ่มเติม</span>
+        <div className="flex-1 flex flex-col gap-6 min-w-0">
+          {/* Tabs */}
+          <div className="flex border-b border-slate-200 hide-scrollbar">
+            {["แผนบำรุงรักษาทั้งหมด", "รออนุมัติ", "รอใช้งาน", "รอปรับปรุง", "ยกเลิก"].map(tab => (
+              <button
+                key={tab}
+                onClick={() => { setActiveTab(tab); setCurrentPage(1); }}
+                className={`px-4 py-3 text-[13px] font-bold border-b-2 transition-colors whitespace-nowrap -mb-[1px] ${activeTab === tab
+                    ? "border-blue-600 text-blue-600"
+                    : "border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300"
+                  }`}
+              >
+                {tab}
               </button>
-            }
-          />
+            ))}
+          </div>
 
-          <PMPlanTable plans={paginatedPlans} />
+          <PMPlanStats stats={stats} />
 
-          {/* Footer Pagination */}
-          <TechnicianPagination
-            currentPage={currentPage}
-            totalPages={totalPages}
-            itemsPerPage={itemsPerPage}
-            totalItems={filteredPlans.length}
-            onPageChange={setCurrentPage}
-            onItemsPerPageChange={(num) => {
-              setItemsPerPage(num);
-              setCurrentPage(1);
-            }}
-          />
+          <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm overflow-hidden flex flex-col">
+            {/* Toolbar */}
+            <TechnicianFilterBar
+              searchQuery={searchQuery}
+              onSearchChange={(val) => {
+                setSearchQuery(val);
+                setCurrentPage(1);
+              }}
+              searchPlaceholder="ค้นหาแผน PM, รหัสครุภัณฑ์, ชื่อครุภัณฑ์..."
+              filters={[
+                {
+                  label: "ประเภทครุภัณฑ์",
+                  value: assetTypeFilter,
+                  options: ["ทั้งหมด", "เครื่องปรับอากาศ", "ลิฟต์"],
+                  onChange: (val) => {
+                    setAssetTypeFilter(val);
+                    setCurrentPage(1);
+                  },
+                  minWidth: "140px"
+                },
+                {
+                  label: "สถานะ",
+                  value: statusFilter,
+                  options: ["ทั้งหมด", "ใกล้ถึงกำหนด", "รอใช้งาน", "เกินกำหนด"],
+                  onChange: (val) => {
+                    setStatusFilter(val);
+                    setCurrentPage(1);
+                  },
+                  minWidth: "140px"
+                },
+                {
+                  label: "ความถี่",
+                  value: priorityFilter,
+                  options: ["ทั้งหมด", "รายเดือน", "ราย 3 เดือน", "ราย 6 เดือน", "รายปี"],
+                  onChange: (val) => {
+                    setPriorityFilter(val);
+                    setCurrentPage(1);
+                  },
+                  minWidth: "140px"
+                }
+              ]}
+              onClearFilters={() => {
+                setSearchQuery("");
+                setAssetTypeFilter("ทั้งหมด");
+                setStatusFilter("ทั้งหมด");
+                setPriorityFilter("ทั้งหมด");
+                setCurrentPage(1);
+              }}
+              extraActions={
+                <button className="flex items-center gap-2 px-4 py-2 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors font-bold shrink-0">
+                  <SlidersHorizontal className="w-4 h-4" />
+                  <span className="text-[13px]">ตัวกรองเพิ่มเติม</span>
+                </button>
+              }
+            />
+
+            <PMPlanTable plans={paginatedPlans} />
+
+            {/* Footer Pagination */}
+            <TechnicianPagination
+              currentPage={currentPage}
+              totalPages={totalPages}
+              itemsPerPage={itemsPerPage}
+              totalItems={filteredPlans.length}
+              onPageChange={setCurrentPage}
+              onItemsPerPageChange={(num) => {
+                setItemsPerPage(num);
+                setCurrentPage(1);
+              }}
+              startIndex={(currentPage - 1) * itemsPerPage}
+            />
+          </div>
         </div>
 
         {/* Right Sidebar */}

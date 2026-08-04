@@ -1,6 +1,5 @@
 "use client";
 
-import { TechnicianInspectionDetail } from "@/features/asset-intelligence/operator/technician/types";
 import {
   AlertTriangle,
   ArrowLeft,
@@ -18,20 +17,23 @@ import {
 } from "lucide-react";
 import Link from "next/link";
 import { useState } from "react";
+import { getProgressPercent, getStepVisualState } from "../statusView";
+import { InspectionOrder } from "../types";
 
 interface InspectionClosedViewProps {
-  detail: TechnicianInspectionDetail;
+  inspectionOrder: InspectionOrder;
   onBack: () => void;
 }
 
-export function InspectionClosedView({ detail, onBack }: InspectionClosedViewProps) {
+export function InspectionClosedView({ inspectionOrder, onBack }: InspectionClosedViewProps) {
   const isSidebarCollapsed = false; // TODO: wire to real layout sidebar state if needed
   const sidebarOffset = isSidebarCollapsed ? "lg:left-20" : "lg:left-64";
   const [activeTab, setActiveTab] = useState<'summary' | 'details' | 'evidence' | 'timeline' | 'docs'>('summary');
 
   // Dynamic Header Content
+  const closedAt = inspectionOrder.timeline.find((s) => s.status === "closed")?.at ?? "";
   const tabInfo = {
-    summary: { title: "งานปิดแล้ว", subtitle: "งานนี้ดำเนินการเรียบร้อยแล้ว ปิดงานเมื่อวันที่ 20 พ.ค. 2567 เวลา 14:25 น." },
+    summary: { title: "งานปิดแล้ว", subtitle: `งานนี้ดำเนินการเรียบร้อยแล้ว ปิดงานเมื่อวันที่ ${closedAt}` },
     details: { title: "รายละเอียดการดำเนินงาน", subtitle: "แสดงขั้นตอนการดำเนินงานและข้อมูลผลการปฏิบัติงานโดยละเอียด" },
     evidence: { title: "หลักฐาน (รูปภาพ / ไฟล์)", subtitle: "รูปภาพและเอกสารที่เกี่ยวข้องกับการดำเนินงาน" },
     timeline: { title: "ไทม์ไลน์การทำงาน", subtitle: "ประวัติและลำดับขั้นตอนการดำเนินงานทั้งหมด" },
@@ -95,14 +97,14 @@ export function InspectionClosedView({ detail, onBack }: InspectionClosedViewPro
 
               <div className="flex flex-col">
                 <div className="flex items-center gap-3 mb-1">
-                  <span className="text-[14px] font-black text-blue-900 tracking-tight">{detail.woNumber}</span>
+                  <span className="text-[14px] font-black text-blue-900 tracking-tight">{inspectionOrder.woNumber}</span>
                   <span className="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-50 text-emerald-600 border border-emerald-100 flex items-center gap-1">
                     <CheckCircle2 className="w-3 h-3" />
                     Closed
                   </span>
                 </div>
-                <h2 className="text-[16px] font-black text-[#1e293b] mb-1">{detail.assetName}</h2>
-                <p className="text-[12px] font-medium text-slate-500">{detail.assetLocation}</p>
+                <h2 className="text-[16px] font-black text-[#1e293b] mb-1">{inspectionOrder.assetName}</h2>
+                <p className="text-[12px] font-medium text-slate-500">{inspectionOrder.assetLocation}</p>
               </div>
 
               <div className="hidden md:block w-[1px] h-12 bg-slate-200 mx-2"></div>
@@ -113,21 +115,21 @@ export function InspectionClosedView({ detail, onBack }: InspectionClosedViewPro
                     <span className="w-3.5 h-3.5 rounded-full border border-slate-300 flex items-center justify-center text-[8px]">📍</span>
                     สถานที่
                   </span>
-                  <span className="text-[12px] font-bold text-slate-700 pl-5 line-clamp-1">{detail.location}</span>
+                  <span className="text-[12px] font-bold text-slate-700 pl-5 line-clamp-1">{inspectionOrder.location}</span>
                 </div>
                 <div className="flex flex-col gap-1">
                   <span className="text-[11px] font-bold text-slate-400 flex items-center gap-1.5">
                     <span className="w-3.5 h-3.5 rounded-full border border-slate-300 flex items-center justify-center text-[8px]">👤</span>
                     ผู้แจ้ง
                   </span>
-                  <span className="text-[12px] font-bold text-slate-700 pl-5 truncate">{detail.reporterName}</span>
+                  <span className="text-[12px] font-bold text-slate-700 pl-5 truncate">{inspectionOrder.reporterName}</span>
                 </div>
                 <div className="flex flex-col gap-1">
                   <span className="text-[11px] font-bold text-slate-400 flex items-center gap-1.5">
                     <span className="w-3.5 h-3.5 rounded-full border border-slate-300 flex items-center justify-center text-[8px]">📅</span>
                     กำหนดตรวจสอบ
                   </span>
-                  <span className="text-[12px] font-bold text-slate-700 pl-5">{detail.dueDate}</span>
+                  <span className="text-[12px] font-bold text-slate-700 pl-5">{inspectionOrder.dueDate}</span>
                 </div>
               </div>
             </div>
@@ -139,32 +141,32 @@ export function InspectionClosedView({ detail, onBack }: InspectionClosedViewPro
                 <div className="flex items-center justify-between relative px-2">
                   <div className="absolute top-[15px] left-[30px] right-[30px] h-[2px] bg-emerald-400 z-0"></div>
 
-                  {[
-                    { id: 1, label: "รับงานแล้ว", date: "20 พ.ค. 2567\n09:15", status: "completed", icon: <Check className="w-4 h-4 stroke-[3]" /> },
-                    { id: 2, label: "กำลังเดินทาง", date: "20 พ.ค. 2567\n09:20", status: "completed", icon: <span className="font-black text-[14px]">2</span> },
-                    { id: 3, label: "ถึงหน้างาน", date: "20 พ.ค. 2567\n09:35", status: "completed", icon: <span className="text-[12px]">📍</span> },
-                    { id: 4, label: "กำลังดำเนินการ", date: "20 พ.ค. 2567\n09:40", status: "completed", icon: <Check className="w-4 h-4 stroke-[3]" /> },
-                    { id: 5, label: "สรุปผลและหลักฐาน", date: "20 พ.ค. 2567\n10:30", status: "completed", icon: <Check className="w-4 h-4 stroke-[3]" /> },
-                    { id: 6, label: "ส่งตรวจรับ", date: "20 พ.ค. 2567\n10:35", status: "completed", icon: <Check className="w-4 h-4 stroke-[3]" /> },
-                    { id: 7, label: "ปิดงานแล้ว", date: "20 พ.ค. 2567\n14:25", status: "active", icon: <Check className="w-4 h-4 stroke-[3]" /> },
-                  ].map((step, idx) => (
-                    <div key={idx} className="flex flex-col items-center gap-2 z-10 w-[100px]">
-                      <div className={`w-[32px] h-[32px] rounded-full flex items-center justify-center border-[2px] ${step.status === 'completed' ? 'bg-white border-emerald-500 text-emerald-500' :
-                          step.status === 'active' ? 'border-emerald-600 bg-emerald-600 text-white' :
-                            'bg-white border-slate-200 text-slate-300'
-                        }`}>
-                        {step.icon}
+                  {inspectionOrder.timeline.map((step, idx) => {
+                    const state = getStepVisualState(step.status, inspectionOrder.status);
+                    return (
+                      <div key={step.status} className="flex flex-col items-center gap-2 z-10 w-[100px]">
+                        <div className={`w-[32px] h-[32px] rounded-full flex items-center justify-center border-[2px] ${state === 'completed' ? 'bg-white border-emerald-500 text-emerald-500' :
+                            state === 'active' ? 'border-emerald-600 bg-emerald-600 text-white' :
+                              'bg-white border-slate-200 text-slate-300'
+                          }`}>
+                          {state === 'completed' || state === 'active' ? <Check className="w-4 h-4 stroke-[3]" /> : <span className="font-black text-[14px]">{idx + 1}</span>}
+                        </div>
+                        <div className="flex flex-col items-center text-center">
+                          <span className={`text-[11px] font-bold ${state === 'active' ? 'text-emerald-700' : state === 'completed' ? 'text-emerald-600' : 'text-slate-400'}`}>
+                            {step.label}
+                          </span>
+                          <span className="text-[10px] font-medium text-slate-400">
+                            {state === 'pending' ? "ยังไม่เริ่ม" : (
+                              <>
+                                {step.at.split(' ').slice(0, 3).join(' ')}<br />
+                                {step.at.split(' ').slice(3).join(' ')}
+                              </>
+                            )}
+                          </span>
+                        </div>
                       </div>
-                      <div className="flex flex-col items-center text-center">
-                        <span className={`text-[11px] font-bold ${step.status === 'active' ? 'text-emerald-700' : step.status === 'completed' ? 'text-emerald-600' : 'text-slate-400'}`}>
-                          {step.label}
-                        </span>
-                        <span className="text-[10px] font-medium text-slate-400">
-                          {step.date.split('\n').map((s, i) => <span key={i}>{s}<br /></span>)}
-                        </span>
-                      </div>
-                    </div>
-                  ))}
+                    );
+                  })}
                 </div>
               </>
             )}
@@ -207,7 +209,7 @@ export function InspectionClosedView({ detail, onBack }: InspectionClosedViewPro
                         <AlertTriangle className="w-4 h-4" />
                         <span className="text-[12px] font-bold">ปัญหาที่พบ (Root Cause)</span>
                       </div>
-                      <span className="text-[13px] font-bold text-slate-700 pl-5.5">คอยล์ร้อนสกปรก / อุดตัน</span>
+                      <span className="text-[13px] font-bold text-slate-700 pl-5.5">{inspectionOrder.rootCause}</span>
                     </div>
 
                     <div className="flex flex-col gap-1.5">
@@ -215,29 +217,19 @@ export function InspectionClosedView({ detail, onBack }: InspectionClosedViewPro
                         <PenTool className="w-4 h-4" />
                         <span className="text-[12px] font-bold">การแก้ไข</span>
                       </div>
-                      <span className="text-[13px] font-bold text-slate-700 pl-5.5 leading-snug">ล้างคอยล์ร้อน / ทำความสะอาดชุดกรองอากาศ</span>
+                      <span className="text-[13px] font-bold text-slate-700 pl-5.5 leading-snug">{inspectionOrder.resolution}</span>
                     </div>
 
                     <div className="flex flex-col gap-3">
                       <span className="text-[12px] font-bold text-slate-900">ผลการตรวจวัดหลังดำเนินการ</span>
 
                       <div className="grid grid-cols-4 gap-2">
-                        <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-slate-50 border border-slate-100 gap-1 text-center">
-                          <span className="text-[8px] font-bold text-slate-500 line-clamp-1 w-full">อุณหภูมิห้อง (°C)</span>
-                          <span className="text-[12px] font-black text-slate-800">24.6</span>
-                        </div>
-                        <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-slate-50 border border-slate-100 gap-1 text-center">
-                          <span className="text-[8px] font-bold text-slate-500 line-clamp-1 w-full">แรงดันไฟฟ้า (V)</span>
-                          <span className="text-[12px] font-black text-slate-800">219</span>
-                        </div>
-                        <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-slate-50 border border-slate-100 gap-1 text-center">
-                          <span className="text-[8px] font-bold text-slate-500 line-clamp-1 w-full">กระแสไฟฟ้า (A)</span>
-                          <span className="text-[12px] font-black text-slate-800">4.0</span>
-                        </div>
-                        <div className="flex flex-col items-center justify-center p-2 rounded-lg bg-slate-50 border border-slate-100 gap-1 text-center">
-                          <span className="text-[8px] font-bold text-slate-500 line-clamp-1 w-full">ความเย็น (°C)</span>
-                          <span className="text-[12px] font-black text-slate-800">11.2</span>
-                        </div>
+                        {inspectionOrder.resultMetrics.map((metric) => (
+                          <div key={metric.label} className="flex flex-col items-center justify-center p-2 rounded-lg bg-slate-50 border border-slate-100 gap-1 text-center">
+                            <span className="text-[8px] font-bold text-slate-500 line-clamp-1 w-full">{metric.label}</span>
+                            <span className="text-[12px] font-black text-slate-800">{metric.value}</span>
+                          </div>
+                        ))}
                       </div>
                     </div>
 
@@ -270,43 +262,26 @@ export function InspectionClosedView({ detail, onBack }: InspectionClosedViewPro
                     <span className="text-[12px] font-black text-[#1e293b] text-center border-b border-slate-200 pb-2">ก่อนดำเนินการ</span>
                     <span className="text-[12px] font-black text-[#1e293b] text-center border-b border-slate-200 pb-2">หลังดำเนินการ</span>
 
-                    <div className="w-full h-[100px] bg-slate-100 rounded-xl relative overflow-hidden border border-slate-200">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="https://images.unsplash.com/photo-1621905252507-b35492cc74b4?w=500&q=80" alt="Before 1" className="w-full h-full object-cover" />
-                    </div>
-                    <div className="w-full h-[100px] bg-slate-100 rounded-xl relative overflow-hidden border border-slate-200">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="https://images.unsplash.com/photo-1581092918056-0c4c3acd3789?w=500&q=80" alt="After 1" className="w-full h-full object-cover" />
-                    </div>
+                    {inspectionOrder.evidence.filter((e) => e.kind === "photo").slice(0, 2).map((photo) => (
+                      <div key={photo.id} className="w-full h-[100px] bg-slate-100 rounded-xl relative overflow-hidden border border-slate-200">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={photo.url} alt={photo.title} className={`w-full h-full object-cover ${photo.grayscale ? "grayscale opacity-80" : ""}`} />
+                      </div>
+                    ))}
                   </div>
 
                   <div className="grid grid-cols-3 gap-2 flex-1">
-                    <div className="w-full h-[80px] bg-slate-100 rounded-xl relative overflow-hidden border border-slate-200">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=500&q=80" alt="Detail 1" className="w-full h-full object-cover" />
-                    </div>
-                    <div className="w-full h-[80px] bg-slate-100 rounded-xl relative overflow-hidden border border-slate-200">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="https://images.unsplash.com/photo-1497366216548-37526070297c?w=500&q=80" alt="Detail 2" className="w-full h-full object-cover" />
-                    </div>
-                    <div className="w-full h-[80px] bg-slate-100 rounded-xl relative overflow-hidden border border-slate-200">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?w=500&q=80" alt="Detail 3" className="w-full h-full object-cover" />
-                    </div>
-
-                    <div className="w-full h-[80px] bg-slate-100 rounded-xl relative overflow-hidden border border-slate-200">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="https://images.unsplash.com/photo-1497366754035-f200968a6e72?w=500&q=80" alt="Detail 4" className="w-full h-full object-cover" />
-                    </div>
-                    <div className="w-full h-[80px] bg-slate-100 rounded-xl relative overflow-hidden border border-slate-200">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img src="https://images.unsplash.com/photo-1504384308090-c894fdcc538d?w=500&q=80" alt="Detail 5" className="w-full h-full object-cover" />
-                    </div>
+                    {inspectionOrder.evidence.filter((e) => e.kind === "photo").slice(2, 7).map((photo) => (
+                      <div key={photo.id} className="w-full h-[80px] bg-slate-100 rounded-xl relative overflow-hidden border border-slate-200">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={photo.url} alt={photo.title} className="w-full h-full object-cover" />
+                      </div>
+                    ))}
                   </div>
 
                   <button className="w-full mt-4 py-2.5 rounded-[10px] border border-blue-200 text-blue-600 font-bold text-[13px] hover:bg-blue-50 transition-colors flex items-center justify-center gap-2">
                     <ImageIcon className="w-4 h-4" />
-                    ดูรูปภาพทั้งหมด (12)
+                    ดูรูปภาพทั้งหมด ({inspectionOrder.evidence.length})
                   </button>
                 </div>
               </div>
@@ -333,11 +308,11 @@ export function InspectionClosedView({ detail, onBack }: InspectionClosedViewPro
                       <div className="flex items-center gap-3">
                         <div className="w-10 h-10 rounded-full bg-slate-200 overflow-hidden border border-slate-200 shrink-0 shadow-sm">
                           {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent("จิราภรณ์ วงศ์สุวรรณ")}&background=random&color=fff`} alt="จิราภรณ์ วงศ์สุวรรณ" className="w-full h-full object-cover" />
+                          <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(inspectionOrder.approver.name)}&background=random&color=fff`} alt={inspectionOrder.approver.name} className="w-full h-full object-cover" />
                         </div>
                         <div className="flex flex-col">
-                          <span className="text-[12px] font-black text-slate-900 line-clamp-1">นางสาวจิราภรณ์ วงศ์สุวรรณ</span>
-                          <span className="text-[10px] font-bold text-slate-500">หัวหน้าฝ่ายอาคารสถานที่</span>
+                          <span className="text-[12px] font-black text-slate-900 line-clamp-1">{inspectionOrder.approver.name}</span>
+                          <span className="text-[10px] font-bold text-slate-500">{inspectionOrder.approver.role}</span>
                         </div>
                       </div>
                     </div>
@@ -348,14 +323,14 @@ export function InspectionClosedView({ detail, onBack }: InspectionClosedViewPro
                       <span className="text-[12px] font-bold text-slate-900">วันที่ตรวจรับ</span>
                       <div className="flex items-center gap-2 text-slate-600">
                         <Clock className="w-3.5 h-3.5" />
-                        <span className="text-[12px] font-medium">20 พ.ค. 2567 14:20 น.</span>
+                        <span className="text-[12px] font-medium">{inspectionOrder.approvedAt}</span>
                       </div>
                     </div>
 
                     <div className="flex flex-col gap-1">
                       <span className="text-[12px] font-bold text-slate-900">หมายเหตุจากผู้ตรวจรับ</span>
                       <div className="bg-slate-50 border border-slate-100 p-3 rounded-lg">
-                        <span className="text-[12px] font-medium text-slate-500">-</span>
+                        <span className="text-[12px] font-medium text-slate-500">{inspectionOrder.approvalNote}</span>
                       </div>
                     </div>
                   </div>
@@ -406,7 +381,7 @@ export function InspectionClosedView({ detail, onBack }: InspectionClosedViewPro
                     </div>
                     <div className="flex justify-between items-start gap-4">
                       <span className="text-[12px] font-bold text-slate-500 flex items-center gap-2"><span className="text-[12px]">👤</span> ผู้ดำเนินการ</span>
-                      <span className="text-[12px] font-bold text-slate-800 text-right">นายสมชาย ช่างเทคนิค</span>
+                      <span className="text-[12px] font-bold text-slate-800 text-right">{inspectionOrder.technician.name}</span>
                     </div>
                     <div className="flex justify-between items-start gap-4">
                       <span className="text-[12px] font-bold text-slate-500 flex items-center gap-2"><span className="text-[12px]">👥</span> ผู้ร่วมดำเนินการ</span>
@@ -463,12 +438,12 @@ export function InspectionClosedView({ detail, onBack }: InspectionClosedViewPro
                 {/* Root Cause */}
                 <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm p-6">
                   <h3 className="text-[14px] font-black text-[#1e293b] mb-3">สาเหตุของปัญหา (Root Cause)</h3>
-                  <p className="text-[13px] font-medium text-slate-600">คอยล์ร้อนสกปรก / อุดตัน ทำให้การระบายความร้อนไม่ดี</p>
+                  <p className="text-[13px] font-medium text-slate-600">{inspectionOrder.rootCause} ทำให้การระบายความร้อนไม่ดี</p>
                 </div>
                 {/* Fixes */}
                 <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm p-6">
                   <h3 className="text-[14px] font-black text-[#1e293b] mb-3">แนวทางการแก้ไข</h3>
-                  <p className="text-[13px] font-medium text-slate-600">ทำความสะอาดคอยล์ร้อน ล้างคอยล์เย็น และเติมน้ำยาแอร์</p>
+                  <p className="text-[13px] font-medium text-slate-600">{inspectionOrder.resolution}</p>
                 </div>
               </div>
 
@@ -524,26 +499,15 @@ export function InspectionClosedView({ detail, onBack }: InspectionClosedViewPro
           {activeTab === 'evidence' && (
             <div className="flex flex-col gap-6 w-full">
               <div className="flex items-center gap-2">
-                <button className="px-5 py-2.5 rounded-[12px] bg-blue-600 text-white font-bold text-[13px] shadow-sm">ทั้งหมด (12)</button>
-                <button className="px-5 py-2.5 rounded-[12px] border border-slate-200 text-slate-600 font-bold text-[13px] hover:bg-slate-50 transition-colors bg-white">รูปภาพ (10)</button>
-                <button className="px-5 py-2.5 rounded-[12px] border border-slate-200 text-slate-600 font-bold text-[13px] hover:bg-slate-50 transition-colors bg-white">ไฟล์เอกสาร (2)</button>
+                <button className="px-5 py-2.5 rounded-[12px] bg-blue-600 text-white font-bold text-[13px] shadow-sm">ทั้งหมด ({inspectionOrder.evidence.length})</button>
+                <button className="px-5 py-2.5 rounded-[12px] border border-slate-200 text-slate-600 font-bold text-[13px] hover:bg-slate-50 transition-colors bg-white">รูปภาพ ({inspectionOrder.evidence.filter((e) => e.kind === "photo").length})</button>
+                <button className="px-5 py-2.5 rounded-[12px] border border-slate-200 text-slate-600 font-bold text-[13px] hover:bg-slate-50 transition-colors bg-white">ไฟล์เอกสาร ({inspectionOrder.evidence.filter((e) => e.kind === "file").length})</button>
               </div>
 
               <div className="flex flex-col gap-4">
-                <h3 className="text-[15px] font-black text-slate-900">รูปภาพ (10)</h3>
+                <h3 className="text-[15px] font-black text-slate-900">รูปภาพ ({inspectionOrder.evidence.filter((e) => e.kind === "photo").length})</h3>
                 <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-5 gap-4">
-                  {[
-                    { id: 1, title: "ก่อนดำเนินการ - คอยล์ร้อน", date: "20 พ.ค. 2567 09:41", url: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=300&auto=format&fit=crop", grayscale: true },
-                    { id: 2, title: "ก่อนดำเนินการ - คอยล์เย็น", date: "20 พ.ค. 2567 09:41", url: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=300&auto=format&fit=crop", grayscale: true },
-                    { id: 3, title: "ป้ายสเปคเครื่อง", date: "20 พ.ค. 2567 09:42", url: "https://images.unsplash.com/photo-1581092921461-7031e4bf0e5e?q=80&w=300&auto=format&fit=crop" },
-                    { id: 4, title: "วัดอุณหภูมิก่อนดำเนินการ", date: "20 พ.ค. 2567 09:42", url: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=300&auto=format&fit=crop" },
-                    { id: 5, title: "วัดอุณหภูมิหลังดำเนินการ", date: "20 พ.ค. 2567 10:28", url: "https://images.unsplash.com/photo-1581092160562-40aa08e78837?q=80&w=300&auto=format&fit=crop" },
-                    { id: 6, title: "ตรวจสอบการทำงาน", date: "20 พ.ค. 2567 09:50", url: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=300&auto=format&fit=crop" },
-                    { id: 7, title: "สภาพหน้างานหลังดำเนินการ", date: "20 พ.ค. 2567 10:29", url: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=300&auto=format&fit=crop" },
-                    { id: 8, title: "ตรวจสอบระบบไฟฟ้า", date: "20 พ.ค. 2567 10:10", url: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=300&auto=format&fit=crop" },
-                    { id: 9, title: "หลังดำเนินการ - คอยล์ร้อน", date: "20 พ.ค. 2567 10:15", url: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=300&auto=format&fit=crop" },
-                    { id: 10, title: "หลังดำเนินการ - คอยล์เย็น", date: "20 พ.ค. 2567 10:15", url: "https://images.unsplash.com/photo-1621905251189-08b45d6a269e?q=80&w=300&auto=format&fit=crop" },
-                  ].map((img) => (
+                  {inspectionOrder.evidence.filter((e) => e.kind === "photo").map((img) => (
                     <div key={img.id} className="bg-white rounded-xl border border-slate-200 shadow-sm overflow-hidden flex flex-col">
                       <div className="relative h-[110px] w-full bg-slate-100 overflow-hidden border-b border-slate-100">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -551,7 +515,7 @@ export function InspectionClosedView({ detail, onBack }: InspectionClosedViewPro
                       </div>
                       <div className="p-3 flex flex-col items-center text-center gap-1 bg-white">
                         <span className="text-[11px] font-bold text-slate-800 line-clamp-1">{img.title}</span>
-                        <span className="text-[10px] font-medium text-slate-400">{img.date}</span>
+                        <span className="text-[10px] font-medium text-slate-400">{img.capturedAt}</span>
                       </div>
                     </div>
                   ))}
@@ -566,22 +530,15 @@ export function InspectionClosedView({ detail, onBack }: InspectionClosedViewPro
               <h3 className="text-[15px] font-black text-[#1e293b] mb-6">ประวัติและลำดับขั้นตอนการดำเนินงานทั้งหมด</h3>
               <div className="flex flex-col gap-6 relative ml-2">
                 <div className="absolute top-2 bottom-2 left-[11px] w-0.5 bg-slate-200"></div>
-                {[
-                  { time: "20 พ.ค. 2567 14:25 น.", title: "ปิดงานแล้ว", desc: "โดย นางสาวจิราภรณ์ วงศ์สุวรรณ" },
-                  { time: "20 พ.ค. 2567 10:35 น.", title: "ส่งตรวจรับ", desc: "โดย นายสมชาย ช่างเทคนิค" },
-                  { time: "20 พ.ค. 2567 09:40 น.", title: "กำลังดำเนินการ", desc: "เริ่มดำเนินการซ่อมแซม" },
-                  { time: "20 พ.ค. 2567 09:35 น.", title: "ถึงหน้างาน", desc: "ช่างเทคนิคถึงหน้างาน" },
-                  { time: "20 พ.ค. 2567 09:20 น.", title: "กำลังเดินทาง", desc: "ช่างเทคนิคกำลังเดินทางไปหน้างาน" },
-                  { time: "20 พ.ค. 2567 09:15 น.", title: "รับงานแล้ว", desc: "โดย นายสมชาย ช่างเทคนิค" },
-                ].map((t, idx) => (
-                  <div key={idx} className="flex gap-4 relative z-10">
+                {[...inspectionOrder.timeline].reverse().map((step) => (
+                  <div key={step.status} className="flex gap-4 relative z-10">
                     <div className="w-6 h-6 rounded-full bg-emerald-100 flex items-center justify-center shrink-0 border border-emerald-200 mt-0.5">
                       <Check className="w-3.5 h-3.5 text-emerald-600 stroke-[3]" />
                     </div>
                     <div className="flex flex-col">
-                      <span className="text-[13px] font-bold text-slate-800">{t.title}</span>
-                      <span className="text-[12px] font-medium text-slate-500">{t.desc}</span>
-                      <span className="text-[11px] font-bold text-slate-400 mt-1">{t.time}</span>
+                      <span className="text-[13px] font-bold text-slate-800">{step.label}</span>
+                      <span className="text-[12px] font-medium text-slate-500">{step.actorName ? `โดย ${step.actorName}` : step.detail}</span>
+                      <span className="text-[11px] font-bold text-slate-400 mt-1">{step.at}</span>
                     </div>
                   </div>
                 ))}
@@ -592,22 +549,19 @@ export function InspectionClosedView({ detail, onBack }: InspectionClosedViewPro
           {/* Tab Content: Docs */}
           {activeTab === 'docs' && (
             <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm p-8 xl:p-12 w-full">
-              <h3 className="text-[15px] font-black text-[#1e293b] mb-4">เอกสารแนบ (2)</h3>
+              <h3 className="text-[15px] font-black text-[#1e293b] mb-4">เอกสารแนบ ({inspectionOrder.documents.length})</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                {[
-                  { id: 1, title: "รายงานการตรวจสอบและบำรุงรักษา", meta: "PDF • 1.2 MB", date: "อัปโหลดเมื่อ 20 พ.ค. 2567 10:30" },
-                  { id: 2, title: "ใบเสนอราคาอะไหล่ (ถ้ามี)", meta: "PDF • 0.8 MB", date: "อัปโหลดเมื่อ 20 พ.ค. 2567 10:31" },
-                ].map((doc) => (
+                {inspectionOrder.documents.map((doc) => (
                   <div key={doc.id} className="bg-slate-50 rounded-xl border border-slate-200 p-4 flex items-center gap-4 group cursor-pointer hover:border-blue-300 hover:bg-white transition-colors shadow-sm">
                     <div className="w-10 h-10 rounded bg-rose-100 text-rose-600 flex flex-col items-center justify-center shrink-0 shadow-sm">
                       <span className="text-[10px] font-black leading-none mt-1">PDF</span>
                     </div>
                     <div className="flex-1 flex flex-col overflow-hidden">
-                      <span className="text-[12px] font-bold text-slate-900 truncate mb-0.5 group-hover:text-blue-600 transition-colors">{doc.title}</span>
+                      <span className="text-[12px] font-bold text-slate-900 truncate mb-0.5 group-hover:text-blue-600 transition-colors">{doc.name}</span>
                       <div className="flex items-center gap-2 text-[10px] font-bold text-slate-500 mb-0.5">
-                        <span>{doc.meta}</span>
+                        <span>{doc.fileType.toUpperCase()} • {doc.sizeLabel}</span>
                       </div>
-                      <span className="text-[10px] font-medium text-slate-400">{doc.date}</span>
+                      <span className="text-[10px] font-medium text-slate-400">อัปโหลดเมื่อ {doc.uploadedAt}</span>
                     </div>
                     <Download className="w-4 h-4 text-slate-400 group-hover:text-blue-600 transition-colors opacity-0 group-hover:opacity-100" />
                   </div>
@@ -620,7 +574,7 @@ export function InspectionClosedView({ detail, onBack }: InspectionClosedViewPro
 
         {/* Right Sidebar */}
         <div className="w-full xl:w-[320px] shrink-0 flex flex-col gap-6">
-          <ClosedSidebar detail={detail} />
+          <ClosedSidebar inspectionOrder={inspectionOrder} />
         </div>
 
       </div>
@@ -651,16 +605,9 @@ export function InspectionClosedView({ detail, onBack }: InspectionClosedViewPro
 }
 
 // Right Sidebar Component
-function ClosedSidebar({ detail }: { detail: TechnicianInspectionDetail }) {
-  const steps = [
-    { label: "รับงานแล้ว", date: "20 พ.ค. 2567 09:15", status: "completed" },
-    { label: "กำลังเดินทาง", date: "20 พ.ค. 2567 09:20", status: "completed" },
-    { label: "ถึงหน้างาน", date: "20 พ.ค. 2567 09:35", status: "completed" },
-    { label: "กำลังดำเนินการ", date: "20 พ.ค. 2567 09:40", status: "completed" },
-    { label: "สรุปผลและหลักฐาน", date: "20 พ.ค. 2567 10:30", status: "completed" },
-    { label: "ส่งตรวจรับ", date: "20 พ.ค. 2567 10:35", status: "completed" },
-    { label: "ปิดงานแล้ว", date: "20 พ.ค. 2567 14:25", status: "completed" },
-  ];
+function ClosedSidebar({ inspectionOrder }: { inspectionOrder: InspectionOrder }) {
+  const steps = inspectionOrder.timeline;
+  const progressPercent = getProgressPercent(inspectionOrder.status);
 
   return (
     <>
@@ -671,11 +618,11 @@ function ClosedSidebar({ detail }: { detail: TechnicianInspectionDetail }) {
         <div className="flex flex-col gap-4">
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">เลขที่ใบงาน</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right">{detail.woNumber}</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right">{inspectionOrder.woNumber}</span>
           </div>
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">ประเภทงาน</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right">{detail.taskType}</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right">{inspectionOrder.taskType}</span>
           </div>
           <div className="flex justify-between items-center gap-4">
             <span className="text-[12px] font-bold text-slate-500">ความเร่งด่วน</span>
@@ -683,11 +630,11 @@ function ClosedSidebar({ detail }: { detail: TechnicianInspectionDetail }) {
           </div>
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">วันที่แจ้ง</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right">{detail.woDate}</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right">{inspectionOrder.woDate}</span>
           </div>
           <div className="flex justify-between items-start gap-4">
             <span className="text-[12px] font-bold text-slate-500">สถานที่</span>
-            <span className="text-[12px] font-bold text-slate-800 text-right line-clamp-2 w-[160px]">{detail.location}</span>
+            <span className="text-[12px] font-bold text-slate-800 text-right line-clamp-2 w-[160px]">{inspectionOrder.location}</span>
           </div>
         </div>
 
@@ -701,19 +648,19 @@ function ClosedSidebar({ detail }: { detail: TechnicianInspectionDetail }) {
       <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm p-6">
         <div className="flex items-center justify-between mb-2">
           <h3 className="text-[14px] font-black text-slate-900">ความคืบหน้างาน</h3>
-          <span className="text-[14px] font-black text-blue-900">100%</span>
+          <span className="text-[14px] font-black text-blue-900">{progressPercent}%</span>
         </div>
 
         <div className="w-full h-1.5 bg-slate-100 rounded-full mb-6">
-          <div className="h-full bg-[#1D4ED8] rounded-full" style={{ width: `100%` }}></div>
+          <div className="h-full bg-[#1D4ED8] rounded-full" style={{ width: `${progressPercent}%` }}></div>
         </div>
 
         <div className="relative">
           <div className="absolute top-[14px] bottom-[14px] left-[11px] w-[2px] bg-[#10b981] z-0"></div>
 
           <div className="flex flex-col gap-5 relative z-10">
-            {steps.map((step, idx) => (
-              <div key={idx} className="flex items-center gap-4">
+            {steps.map((step) => (
+              <div key={step.status} className="flex items-center gap-4">
                 <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 z-10 transition-colors bg-emerald-500 text-white`}>
                   <Check className="w-3.5 h-3.5 stroke-[3]" />
                 </div>
@@ -722,7 +669,7 @@ function ClosedSidebar({ detail }: { detail: TechnicianInspectionDetail }) {
                     {step.label}
                   </span>
                   <span className={`text-[10px] font-medium text-slate-500`}>
-                    {step.date}
+                    {step.at}
                   </span>
                 </div>
               </div>

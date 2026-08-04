@@ -110,7 +110,7 @@ export default function WorkOrderClient() {
                 />
             </div>
 
-            <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-5">
+            <div className="flex-1 min-h-0 grid grid-cols-1 lg:grid-cols-[1fr_260px] gap-5">
                 <div className="flex flex-col gap-4 min-h-0 h-full min-w-0">
                     {/* Search + sort */}
                     <div className="shrink-0 flex flex-col sm:flex-row gap-3">

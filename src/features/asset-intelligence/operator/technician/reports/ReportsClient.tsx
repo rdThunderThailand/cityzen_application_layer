@@ -19,7 +19,7 @@ import {
   Search
 } from "lucide-react";
 import { TechnicianPageLayout } from "../components/shared/TechnicianPageLayout";
-import { TechnicianMetricCard } from "../components/shared/TechnicianMetricCard";
+import { CardMetric } from "@/components/dashboard/CardMetric";
 import { useEffect, useState } from "react";
 import { Bar, BarChart, CartesianGrid, Cell, Line, LineChart, Pie, PieChart, Tooltip as RechartsTooltip, ResponsiveContainer, XAxis, YAxis } from 'recharts';
 import CostReportView from "./CostReportView";
@@ -85,41 +85,50 @@ export default function ReportsClient() {
       }
     >
       {/* Metrics Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-5 gap-4">
-        <TechnicianMetricCard
+      <div className="grid grid-cols-1 md:grid-cols-5 gap-4 mt-4">
+        <CardMetric
           title="ใบงานทั้งหมด"
           value={metrics.totalWorkOrders}
           subtitle="ใบงาน"
-          icon={<FileText className="w-6 h-6 text-blue-600" />}
-          trend={{ value: "12% จากเดือนที่แล้ว", isPositive: true, label: "เพิ่มขึ้น" }}
+          icon={FileText}
+          classNameForIcon="bg-blue-50 text-blue-600"
+          className="max-h-180 gap-2 p-5"
+          subValue={12}
+          subUnit="% จากเดือนที่แล้ว"
+          status="เพิ่มขึ้น"
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="ซ่อมสำเร็จ"
           value={metrics.completed}
           subtitle="ใบงาน"
-          icon={<CheckCircle2 className="w-6 h-6 text-emerald-600" />}
-          iconBgColor="bg-emerald-50"
-          customFooter={
+          icon={CheckCircle2}
+          classNameForIcon="bg-emerald-50 text-emerald-600"
+          className="max-h-180 gap-2 p-5"
+          action={
             <div className="w-full flex justify-end">
               <span className="text-[11px] font-bold text-emerald-600">{metrics.completedPercent}</span>
             </div>
           }
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="กำลังดำเนินการ"
           value={metrics.inProgress}
           subtitle="ใบงาน"
-          icon={<Clock className="w-6 h-6 text-orange-500" />}
-          iconBgColor="bg-orange-50"
-          trend={{ value: "20% จากเดือนที่แล้ว", isPositive: true, label: "ลดลง" }}
+          icon={Clock}
+          classNameForIcon="bg-orange-50 text-orange-500"
+          className="max-h-180 gap-2 p-5"
+          subValue={20}
+          subUnit="% จากเดือนที่แล้ว"
+          status="ลดลง"
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="ล่าช้า"
           value={metrics.delayed}
           subtitle="ใบงาน"
-          icon={<AlertTriangle className="w-6 h-6 text-rose-500" />}
-          iconBgColor="bg-rose-50"
-          customFooter={
+          icon={AlertTriangle}
+          classNameForIcon="bg-rose-50 text-rose-500"
+          className="max-h-180 gap-2 p-5"
+          action={
             <div className="w-full flex justify-end">
               <div className="flex items-center gap-1 text-rose-600">
                 <span className="text-[11px] font-bold">เพิ่มขึ้น 2 ใบงาน</span>
@@ -128,18 +137,21 @@ export default function ReportsClient() {
             </div>
           }
         />
-        <TechnicianMetricCard
+        <CardMetric
           title="ค่าใช้จ่ายรวม"
           value="85,450.00"
           subtitle="บาท"
-          icon={<Banknote className="w-6 h-6 text-purple-600" />}
-          iconBgColor="bg-purple-50"
-          trend={{ value: "8% จากเดือนที่แล้ว", isPositive: true, label: "ลดลง" }}
+          icon={Banknote}
+          classNameForIcon="bg-purple-50 text-purple-600"
+          className="max-h-180 gap-2 p-5"
+          subValue={8}
+          subUnit="% จากเดือนที่แล้ว"
+          status="ลดลง"
         />
       </div>
 
       {/* Tabs and Filters */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-2 mt-2">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-200 pb-2 mt-6">
         <div className="flex items-center gap-6 overflow-x-auto no-scrollbar">
           {(['ภาพรวม', 'การซ่อมบำรุง', 'ค่าใช้จ่าย', 'อะไหล่', 'เครื่องมือ', 'ผู้ปฏิบัติงาน'] as const).map(tab => (
             <button
@@ -178,7 +190,7 @@ export default function ReportsClient() {
       </div>
 
       {/* Top Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-5">
 
         {/* Work Orders Line Chart */}
         <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm p-5 flex flex-col h-[360px]">
@@ -313,7 +325,7 @@ export default function ReportsClient() {
                 <RechartsTooltip
                   cursor={{ fill: 'transparent' }}
                   contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                  formatter={(value: number | string) => [`${Number(value || 0).toLocaleString()} บาท`, 'ค่าใช้จ่าย']}
+                  formatter={(value) => [`${Number(value || 0).toLocaleString()} บาท`, 'ค่าใช้จ่าย']}
                 />
                 <Bar dataKey="cost" radius={[4, 4, 0, 0]} maxBarSize={40}>
                   {costChart.map((entry, index) => (
@@ -334,7 +346,7 @@ export default function ReportsClient() {
       </div>
 
       {/* Bottom Lists Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 ">
 
         {/* Top Equipment */}
         <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm p-5 flex flex-col">
