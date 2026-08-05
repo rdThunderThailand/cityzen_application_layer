@@ -2,6 +2,10 @@ import { AssetsOfficerTechnicianInspectionsidClient } from '@/features/asset-int
 
 export const dynamic = 'force-dynamic'
 
-export default async function TechnicianOfficerInspectionDetailPage(props: any) {
-    return <AssetsOfficerTechnicianInspectionsidClient {...props} />
+export default async function TechnicianOfficerInspectionDetailPage({
+  params,
+}: {
+  params: Promise<{ id: string }>;
+}) {
+  return <AssetsOfficerTechnicianInspectionsidClient params={params} />;
 }

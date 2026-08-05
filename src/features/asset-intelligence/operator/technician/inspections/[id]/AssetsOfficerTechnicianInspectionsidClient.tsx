@@ -5,13 +5,12 @@ import { InspectionDetailClient } from "./InspectionDetailClient";
 // TODO: wire to CityZen session (getWorkspaceUser() from '@/lib/workspace-user') once this module is connected to real auth
 
 interface PageProps {
-  params: {
-    id: string;
-  };
+  params: Promise<{ id: string }>;
 }
 
 export async function AssetsOfficerTechnicianInspectionsidClient({ params }: PageProps) {
-  const initialInspectionOrder = await getInspectionOrder(params.id);
+  const { id } = await params;
+  const initialInspectionOrder = await getInspectionOrder(id);
 
   if (!initialInspectionOrder) {
     return notFound();

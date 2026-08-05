@@ -48,6 +48,7 @@ export function InspectionDetailClient({ initialInspectionOrder }: InspectionDet
 
   const viewState = viewOverride ?? viewStateForStatus(inspectionOrder.status);
 
+  // status: summary — สรุปผลตรวจสอบ แท็บภาพรวม/หลักฐาน
   if (viewState === "summary") {
     return (
       <InspectionSummaryView
@@ -64,6 +65,7 @@ export function InspectionDetailClient({ initialInspectionOrder }: InspectionDet
     );
   }
 
+  // status: summary — แท็บย่อย "อะไหล่ที่ใช้" (peek จาก summary, ไม่มี status แยก)
   if (viewState === "summary_parts") {
     return (
       <InspectionSummaryPartsView
@@ -87,6 +89,7 @@ export function InspectionDetailClient({ initialInspectionOrder }: InspectionDet
     );
   }
 
+  // status: summary — แท็บย่อย "ค่าใช้จ่าย" (peek จาก summary, ไม่มี status แยก)
   if (viewState === "summary_costs") {
     return (
       <InspectionSummaryCostsView
@@ -107,6 +110,7 @@ export function InspectionDetailClient({ initialInspectionOrder }: InspectionDet
     );
   }
 
+  // status: summary — แท็บย่อย "เอกสาร/หลักฐานแนบ" (peek จาก summary, กด advanceStatus ที่นี่เพื่อไป submitted)
   if (viewState === "summary_docs") {
     return (
       <InspectionSummaryDocsView
@@ -127,6 +131,7 @@ export function InspectionDetailClient({ initialInspectionOrder }: InspectionDet
     );
   }
 
+  // status: submitted — ส่งผลตรวจสอบขออนุมัติแล้ว รอกดยืนยันส่ง
   if (viewState === "send_approval") {
     return (
       <InspectionSendApprovalView
@@ -137,6 +142,7 @@ export function InspectionDetailClient({ initialInspectionOrder }: InspectionDet
     );
   }
 
+  // status: pending_approval — ส่งตรวจรับแล้ว รอผู้มอบหมายงานอนุมัติ (ขั้นตอนที่ 6 ในไทม์ไลน์)
   if (viewState === "pending_acceptance") {
     return (
       <InspectionPendingAcceptanceView
@@ -148,10 +154,12 @@ export function InspectionDetailClient({ initialInspectionOrder }: InspectionDet
     );
   }
 
+  // status: closed — งานตรวจสอบเสร็จสิ้น ปิดงานแล้ว
   if (viewState === "closed") {
     return <InspectionClosedView inspectionOrder={inspectionOrder} onBack={() => setViewOverride("default")} />;
   }
 
+  // status: in_progress — ถึงหน้างานแล้วและกำลังตรวจสอบ (ขั้นตอนที่ 4 ในไทม์ไลน์)
   if (viewState === "in_progress") {
     return (
       <InspectionInProgressView
@@ -162,6 +170,7 @@ export function InspectionDetailClient({ initialInspectionOrder }: InspectionDet
     );
   }
 
+  // status: arrived — ถึงหน้างานแล้ว รอกดเริ่มตรวจสอบ (ขั้นตอนที่ 3 ในไทม์ไลน์)
   if (viewState === "arrived") {
     return (
       <InspectionArrivedView
@@ -172,9 +181,10 @@ export function InspectionDetailClient({ initialInspectionOrder }: InspectionDet
     );
   }
 
+  // status: traveling — กำลังเดินทางไปหน้างาน (ขั้นตอนที่ 2 ในไทม์ไลน์, มีแผนที่นำทาง)
   if (viewState === "navigating") {
     return (
-      <div className="min-h-full flex-1 bg-slate-50 w-full p-6 pb-40">
+      <div className="min-h-full flex-1  w-full p-6 pb-40">
         <div className="mb-6">
           <InspectionDetailHeader isNavigating={true} />
         </div>
@@ -187,8 +197,9 @@ export function InspectionDetailClient({ initialInspectionOrder }: InspectionDet
     );
   }
 
+  // status: accepted (default) — รับงานแล้ว รอกดเริ่มเดินทาง (ขั้นตอนที่ 1 ในไทม์ไลน์, หน้ารายละเอียดหลัก)
   return (
-    <div className="min-h-full flex-1 bg-slate-50 w-full p-6 pb-40">
+    <div className="min-h-full flex-1 w-full p-6 pb-40">
       <div className="mb-6">
         <InspectionDetailHeader isNavigating={false} />
       </div>
@@ -216,8 +227,8 @@ export function InspectionDetailClient({ initialInspectionOrder }: InspectionDet
             </div>
           </div>
 
-          {/* Red Box: Notes Section */}
-          <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm lg:p-8">
+          {/* Red Box: Notes Section หมายเหตุจากผู้มอบหมาย*/}
+          <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm lg:p-8 ">
             <h3 className="text-[15px] font-black text-slate-900 mb-4">หมายเหตุจากผู้มอบหมายงาน</h3>
             <div className="flex flex-col md:flex-row gap-4 justify-between items-end">
               <p className="text-[14px] text-slate-700 leading-relaxed font-bold max-w-3xl">
@@ -230,7 +241,7 @@ export function InspectionDetailClient({ initialInspectionOrder }: InspectionDet
         </div>
 
         {/* Right Sidebar (Purple, Pink, Green Boxes) */}
-        <div className="w-full xl:w-[380px] shrink-0">
+        <div className="w-full xl:w-[380px] shrink-0 mb-6">
           <InspectionDetailSidebar inspectionOrder={inspectionOrder} />
         </div>
       </div>

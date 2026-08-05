@@ -44,7 +44,7 @@ export function InspectionPendingAcceptanceView({ inspectionOrder, advanceStatus
   }, [showSuccessNotification, countdown, advanceStatus]);
 
   return (
-    <div className="min-h-full flex-1 bg-slate-50 p-8 xl:p-12 w-full pb-40">
+    <div className="flex-1 p-8 w-full pb-40">
 
       {/* Header */}
       <div className="mb-6 flex flex-col gap-5">

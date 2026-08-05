@@ -17,7 +17,7 @@ export function InspectionNavigatingView({ inspectionOrder, advanceStatus, onCan
   const sidebarOffset = isSidebarCollapsed ? "lg:left-20" : "lg:left-64";
 
   return (
-    <div className="flex flex-col xl:flex-row gap-6">
+    <div className="flex flex-col xl:flex-row gap-6 pb-28">
 
       {/* Left Column (Main Content) */}
       <div className="flex-1 flex flex-col gap-6">
@@ -83,7 +83,7 @@ export function InspectionNavigatingView({ inspectionOrder, advanceStatus, onCan
 
             <div className="flex items-center justify-between mb-6">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-full overflow-hidden bg-slate-200 border border-slate-200 shadow-sm">
+                <div className="w-10 h-10 rounded-full overflow-hidden border border-slate-200 shadow-sm">
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src={`https://ui-avatars.com/api/?name=${encodeURIComponent(inspectionOrder.reporterName)}&background=random&color=fff`} alt={inspectionOrder.reporterName} className="w-full h-full object-cover" />
                 </div>

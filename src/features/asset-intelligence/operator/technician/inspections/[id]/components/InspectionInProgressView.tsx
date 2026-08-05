@@ -28,7 +28,7 @@ export function InspectionInProgressView({ inspectionOrder, advanceStatus, onBac
   const sidebarOffset = isSidebarCollapsed ? "lg:left-20" : "lg:left-64";
 
   return (
-    <div className="min-h-full flex-1 bg-slate-50 p-8 xl:p-12 w-full pb-40">
+    <div className="flex-1 p-8 xl w-full pb-40">
 
       {/* Header */}
       <div className="mb-6 flex flex-col gap-5">
@@ -254,7 +254,7 @@ export function InspectionInProgressView({ inspectionOrder, advanceStatus, onBac
               {/* Logs / Notes */}
               <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm p-5 flex flex-col lg:col-span-1">
                 <h3 className="text-[14px] font-black text-slate-900 mb-3">บันทึกการดำเนินงาน / หมายเหตุ</h3>
-                <div className="relative flex-1 bg-slate-50 rounded-xl p-3 border border-slate-100">
+                <div className="relative flex-1 rounded-xl p-3">
                   <textarea
                     className="w-full h-full min-h-[80px] border-none resize-none text-[13px] font-medium text-slate-700 placeholder:text-slate-400 focus:outline-none bg-transparent"
                     defaultValue="ตรวจพบคอยล์ร้อนสกปรกและน้ำทิ้งอุดตัน ทำความสะอาดคอยล์ร้อนและล้างท่อน้ำทิ้ง"

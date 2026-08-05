@@ -31,7 +31,7 @@ export function InspectionArrivedView({ inspectionOrder, advanceStatus, onBack }
   const sidebarOffset = isSidebarCollapsed ? "lg:left-20" : "lg:left-64";
 
   return (
-    <div className="min-h-full flex-1 bg-slate-50 p-8 xl:p-12 w-full pb-40">
+    <div className="flex-1p-8 xl:p-12 w-full pb-40 xl:pb-40">
 
       {/* Header */}
       <div className="mb-6 flex flex-col gap-5">
@@ -238,7 +238,7 @@ export function InspectionArrivedView({ inspectionOrder, advanceStatus, onBack }
 
       {/* Fixed Bottom Action Bar */}
       <div className={`fixed bottom-0 left-0 ${sidebarOffset} right-0 h-20 bg-white border-t border-slate-200 shadow-[0_-4px_20px_rgba(0,0,0,0.05)] z-40 flex items-center justify-between px-8 md:px-12 transition-all duration-300`}>
-        <div className="w-full w-full flex items-center justify-between">
+        <div className="w-full flex items-center justify-between">
           <button onClick={onBack} className="px-6 py-2.5 rounded-[12px] border border-slate-200 text-blue-600 font-bold text-[14px] hover:bg-slate-50 transition-colors bg-white shadow-sm">
             ย้อนกลับ
           </button>
