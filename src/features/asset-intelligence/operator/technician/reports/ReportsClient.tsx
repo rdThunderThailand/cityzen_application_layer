@@ -190,7 +190,7 @@ export default function ReportsClient() {
       </div>
 
       {/* Top Charts Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-5">
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mt-4">
 
         {/* Work Orders Line Chart */}
         <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm p-5 flex flex-col h-[360px]">
@@ -325,7 +325,7 @@ export default function ReportsClient() {
                 <RechartsTooltip
                   cursor={{ fill: 'transparent' }}
                   contentStyle={{ borderRadius: '8px', border: 'none', boxShadow: '0 4px 6px -1px rgb(0 0 0 / 0.1)' }}
-                  formatter={(value) => [`${Number(value || 0).toLocaleString()} บาท`, 'ค่าใช้จ่าย']}
+                  formatter={(value: number | string) => [`${Number(value || 0).toLocaleString()} บาท`, 'ค่าใช้จ่าย']}
                 />
                 <Bar dataKey="cost" radius={[4, 4, 0, 0]} maxBarSize={40}>
                   {costChart.map((entry, index) => (
@@ -346,7 +346,7 @@ export default function ReportsClient() {
       </div>
 
       {/* Bottom Lists Row */}
-      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 ">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 mt-6">
 
         {/* Top Equipment */}
         <div className="bg-white rounded-[16px] border border-slate-200 shadow-sm p-5 flex flex-col">
